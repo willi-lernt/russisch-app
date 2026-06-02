@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Russisch Lernen v6</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#060b14;--bg2:#0a1120;
+  --glass:rgba(255,255,255,0.04);--glass2:rgba(255,255,255,0.07);--glass3:rgba(255,255,255,0.10);
+  --border:rgba(255,255,255,0.08);--border2:rgba(0,229,200,0.25);
+  --cyan:#00e5c8;--cyan2:#00bfa5;
+  --green:#22c55e;--green2:rgba(34,197,94,0.15);
+  --red:#ef4444;--red2:rgba(239,68,68,0.15);
+  --orange:#f97316;--orange2:rgba(249,115,22,0.15);
+  --text:#f0f6ff;--text2:#8ba0b8;--text3:#4a6180;
+  --pad:1.5rem;--r:16px;--r-sm:10px;
+}
+@media(max-width:600px){:root{--pad:1rem;}}
+html,body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;top:-30%;left:-20%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(0,229,200,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(124,58,237,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
+.app{position:relative;z-index:1;max-width:700px;margin:0 auto;}
+.sc{display:none;padding:var(--pad);}.sc.active{display:block;}
+.glass{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.glass2{background:var(--glass2);border:1px solid var(--border);border-radius:var(--r);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);}
+.glass-cyan{background:linear-gradient(135deg,rgba(0,229,200,0.08),rgba(0,191,165,0.04));border:1px solid var(--border2);border-radius:var(--r);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.btn{background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);padding:.6rem 1.2rem;font-size:.88rem;font-weight:600;cursor:pointer;color:var(--text);transition:all .2s;font-family:inherit;}
+.btn:hover{background:var(--glass3);border-color:rgba(0,229,200,0.3);transform:translateY(-1px);}
+.btn:active{transform:scale(.97);}
+.btn.primary{background:linear-gradient(135deg,var(--cyan),var(--cyan2));border-color:var(--cyan);color:#000;font-weight:700;box-shadow:0 0 20px rgba(0,229,200,0.25);}
+.btn.primary:hover{box-shadow:0 0 30px rgba(0,229,200,0.4);transform:translateY(-2px);}
+.btn.ghost{background:transparent;border-color:var(--border);}
+.btn.ghost:hover{background:var(--glass);border-color:var(--border2);}
+.btn.sm{padding:.38rem .75rem;font-size:.78rem;}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none!important;}
+.inp{width:100%;padding:.75rem 1rem;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:.9rem;color:var(--text);outline:none;transition:all .2s;font-family:inherit;}
+.inp:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,200,0.12);}
+.inp::placeholder{color:var(--text3);}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;gap:.5rem;flex-wrap:wrap;}
+.top-bar h2{font-size:1.1rem;font-weight:700;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.25rem;}
+.stat-box{padding:.75rem .5rem;text-align:center;}
+.stat-box .v{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--cyan),#00bfa5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-box .l{font-size:.68rem;color:var(--text3);margin-top:.15rem;text-transform:uppercase;letter-spacing:.6px;}
+.xp-wrap{padding:.85rem 1.1rem;margin-bottom:1.1rem;}
+.xp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;}
+.xp-lvl{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;font-size:.75rem;font-weight:800;padding:.25rem .65rem;border-radius:20px;}
+.xp-lbl{font-size:.78rem;color:var(--text2);}
+.xp-track{background:rgba(255,255,255,0.06);border-radius:20px;height:8px;overflow:hidden;}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--cyan),#00bfa5,var(--cyan));background-size:200% 100%;border-radius:20px;transition:width .6s cubic-bezier(.34,1.56,.64,1);animation:shimmer 2s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.streak-box{padding:.75rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem;}
+.streak-fire{font-size:1.6rem;animation:fw 1.5s ease-in-out infinite;}
+@keyframes fw{0%,100%{transform:scale(1) rotate(-3deg);}50%{transform:scale(1.1) rotate(3deg);}}
+.streak-info{flex:1;}
+.streak-info .sv{font-size:1.2rem;font-weight:800;color:var(--orange);}
+.streak-info .sl{font-size:.73rem;color:var(--text3);}
+.streak-cal{display:flex;gap:.3rem;}
+.streak-day{width:22px;height:22px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--text3);}
+.streak-day.done{background:rgba(249,115,22,0.25);border-color:var(--orange);color:var(--orange);}
+.streak-day.today{border-color:var(--cyan);}
+.goal-sec{padding:.85rem 1.1rem;margin-bottom:1.1rem;display:flex;align-items:center;gap:1rem;}
+.goal-ring{position:relative;width:64px;height:64px;flex-shrink:0;}
+.goal-ring svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:rgba(255,255,255,0.06);stroke-width:6;}
+.ring-fill{fill:none;stroke:url(#rg);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.34,1.56,.64,1);}
+.ring-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;color:var(--cyan);}
+.goal-info h3{font-size:.88rem;font-weight:700;margin-bottom:.2rem;}
+.goal-info p{font-size:.73rem;color:var(--text3);}
+.today-box{padding:.85rem 1.1rem;margin-bottom:1.1rem;}
+.today-box h3{font-size:.85rem;font-weight:700;margin-bottom:.6rem;}
+.today-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.6rem;}
+.today-item{padding:.6rem;text-align:center;border-radius:var(--r-sm);}
+.today-item .tv{font-size:1.25rem;font-weight:800;color:var(--cyan);}
+.today-item .tl{font-size:.68rem;color:var(--text3);margin-top:.1rem;}
+.acc-wrap .al{display:flex;justify-content:space-between;font-size:.73rem;color:var(--text3);margin-bottom:.3rem;}
+.acc-bg{background:rgba(255,255,255,0.05);border-radius:20px;height:6px;overflow:hidden;}
+.acc-fill{background:linear-gradient(90deg,var(--cyan),var(--cyan2));height:100%;transition:width .5s;}
+.diff-ind{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;margin-bottom:1.1rem;cursor:pointer;transition:all .2s;}
+.diff-ind:hover{border-color:var(--border2);}
+.diff-ind .dl{flex:1;font-size:.88rem;font-weight:600;}
+.diff-ind .dc{font-size:.73rem;color:var(--text3);}
+.pfad-title{font-size:.82rem;font-weight:700;margin-bottom:.75rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;}
+.pfad-row{padding:.9rem 1rem;display:flex;align-items:center;gap:.8rem;cursor:pointer;margin-bottom:.5rem;transition:all .25s;position:relative;overflow:hidden;}
+.pfad-row:hover{border-color:var(--border2);transform:translateX(4px);}
+.pfad-row.locked{opacity:.4;cursor:not-allowed;}
+.pfad-row.locked:hover{transform:none;border-color:var(--border);}
+.pfad-icon{font-size:1.4rem;min-width:1.75rem;text-align:center;}
+.pfad-info{flex:1;}
+.pfad-info h3{font-size:.88rem;font-weight:700;margin-bottom:.2rem;}
+.pfad-info p{font-size:.72rem;color:var(--text3);}
+.prog-bar{background:rgba(255,255,255,0.05);height:3px;border-radius:20px;overflow:hidden;margin-top:.35rem;}
+.prog-fill{background:linear-gradient(90deg,var(--cyan),var(--cyan2));height:100%;border-radius:20px;transition:width .5s;}
+.prog-lbl{font-size:.63rem;color:var(--cyan);margin-top:.2rem;}
+.pfad-arr{width:28px;height:28px;border-radius:50%;background:var(--glass2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;color:var(--text3);}
+.learn-card{padding:2rem 1.5rem;text-align:center;margin-bottom:1.25rem;min-height:220px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;transition:transform .3s;}
+.card-badge{display:inline-block;background:linear-gradient(135deg,rgba(0,229,200,0.15),rgba(0,191,165,0.08));border:1px solid rgba(0,229,200,0.2);font-size:.68rem;padding:.22rem .6rem;border-radius:20px;margin-bottom:.7rem;color:var(--cyan);font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.card-main{font-size:3.5rem;font-weight:800;color:var(--text);margin-bottom:.4rem;text-shadow:0 0 40px rgba(0,229,200,0.2);}
+@media(max-width:600px){.card-main{font-size:2.8rem;}}
+.card-sub{font-size:.85rem;color:var(--text2);margin-bottom:.75rem;}
+.card-trans{font-size:1.4rem;font-weight:700;color:var(--cyan);margin-bottom:.35rem;}
+.card-example{font-size:.82rem;color:var(--text3);font-style:italic;padding-top:.7rem;border-top:1px solid var(--border);margin-top:.7rem;}
+.card-extra{font-size:.73rem;color:var(--text3);margin-top:.3rem;}
+.card-mn{margin-top:.65rem;padding:.6rem .8rem;background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(124,58,237,0.05));border:1px solid rgba(124,58,237,0.25);border-radius:var(--r-sm);font-size:.78rem;color:#c4b5fd;text-align:left;}
+.learn-nav{display:flex;gap:.65rem;justify-content:center;}
+.mode-tabs{display:flex;gap:.4rem;margin-bottom:.85rem;}
+.mode-tab{flex:1;padding:.5rem;background:var(--glass);border:1px solid var(--border);border-radius:var(--r-sm);font-size:.75rem;font-weight:600;cursor:pointer;text-align:center;color:var(--text3);transition:all .2s;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:.2rem;}
+.mode-tab.active{background:linear-gradient(135deg,rgba(0,229,200,0.2),rgba(0,191,165,0.1));border-color:var(--cyan);color:var(--cyan);}
+.mode-info{background:var(--glass);border:1px solid var(--border);border-radius:var(--r-sm);padding:.5rem .85rem;margin-bottom:.75rem;font-size:.75rem;color:var(--text3);}
+.mode-info strong{color:var(--text);}
+.quiz-q{font-size:2.8rem;font-weight:800;text-align:center;margin-bottom:.35rem;}
+@media(max-width:600px){.quiz-q{font-size:2.2rem;}}
+.quiz-prompt{font-size:.85rem;color:var(--text3);text-align:center;margin-bottom:.85rem;}
+.quiz-num{font-size:.73rem;color:var(--text3);text-align:center;margin-bottom:.6rem;}
+.dots{text-align:center;margin-bottom:.45rem;}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border);margin:0 3px;transition:all .3s;}
+.dot.used{background:var(--red);border-color:var(--red);}
+.dot.ok{background:var(--green);border-color:var(--green);}
+.sugg-lbl{font-size:.73rem;color:var(--text3);text-align:center;margin-bottom:.4rem;}
+.suggs{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;max-width:480px;margin:0 auto .65rem;}
+.sug{padding:.55rem .75rem;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:.83rem;cursor:pointer;text-align:center;color:var(--text2);transition:all .2s;font-family:inherit;}
+.sug:hover{border-color:var(--border2);color:var(--text);background:var(--glass3);}
+.sug:active{transform:scale(.97);}
+.sug.sel{border-color:var(--cyan);background:rgba(0,229,200,0.08);color:var(--cyan);}
+.qi{width:100%;max-width:480px;display:block;margin:0 auto .65rem;padding:.82rem 1.1rem;font-size:1.1rem;text-align:center;border:1.5px solid var(--border);border-radius:var(--r-sm);background:var(--glass2);color:var(--text);outline:none;transition:all .25s;font-family:inherit;}
+.qi::placeholder{color:var(--text3);}
+.qi:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,229,200,0.1);}
+.qi.ok{border-color:var(--green)!important;background:var(--green2)!important;color:var(--green)!important;animation:pg .4s ease;}
+.qi.bad{border-color:var(--red)!important;background:var(--red2)!important;color:var(--red)!important;animation:sh .4s ease;}
+.qi.retry{border-color:var(--orange)!important;background:var(--orange2)!important;color:var(--orange)!important;}
+@keyframes pg{0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+@keyframes sh{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-7px);}40%,80%{transform:translateX(7px);}}
+.flash{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:0;transition:opacity .15s;}
+.flash.green{background:rgba(34,197,94,0.08);}
+.flash.red{background:rgba(239,68,68,0.08);}
+.flash.show{opacity:1;}
+.fb{padding:.68rem .88rem;border-radius:var(--r-sm);font-size:.86rem;font-weight:600;display:none;border:1px solid;max-width:480px;margin:.5rem auto 0;}
+.fb.ok{background:var(--green2);color:var(--green);border-color:rgba(34,197,94,0.3);display:block;}
+.fb.bad{background:var(--red2);color:var(--red);border-color:rgba(239,68,68,0.3);display:block;}
+.fb.warn{background:var(--orange2);color:var(--orange);border-color:rgba(249,115,22,0.3);display:block;}
+.hint-box,.sol-box{background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);padding:.68rem .88rem;margin:.5rem auto;display:none;font-size:.83rem;max-width:480px;color:var(--text2);}
+.qbtns{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;max-width:480px;margin:.65rem auto 0;}
+.qbtns button{padding:.58rem;border:1px solid var(--border);border-radius:var(--r-sm);font-size:.83rem;font-weight:600;cursor:pointer;background:var(--glass2);color:var(--text2);transition:all .2s;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:.35rem;line-height:1;}
+.qbtns button:hover{background:var(--glass3);border-color:var(--border2);color:var(--text);}
+.qbtns button:last-child{background:linear-gradient(135deg,var(--cyan),var(--cyan2));border-color:var(--cyan);color:#000;font-weight:700;}
+.qbtns button:last-child:hover{box-shadow:0 0 20px rgba(0,229,200,0.3);}
+.qbtns button:disabled{opacity:.3;cursor:not-allowed;}
+.kyr-lbl{font-size:.72rem;color:var(--text3);text-align:center;margin-bottom:.32rem;}
+.kyr{display:flex;flex-wrap:wrap;gap:.22rem;max-width:480px;margin:0 auto .5rem;justify-content:center;}
+.kkey{background:var(--glass2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:.3rem .45rem;font-size:.83rem;cursor:pointer;min-width:1.6rem;text-align:center;transition:all .15s;font-family:inherit;}
+.kkey:hover{background:rgba(0,229,200,0.1);border-color:rgba(0,229,200,0.3);color:var(--cyan);}
+.kkey:active{transform:scale(.9);}
+.kkey.sp{font-size:.7rem;padding:.3rem .55rem;}
+.listen-box{padding:1.75rem;text-align:center;margin-bottom:1.25rem;}
+.play-btn{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;border:none;border-radius:var(--r-sm);padding:.82rem 2.2rem;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .25s;font-family:inherit;box-shadow:0 0 24px rgba(0,229,200,0.25);}
+.play-btn:hover{box-shadow:0 0 36px rgba(0,229,200,0.4);transform:translateY(-2px);}
+.play-btn.playing{background:linear-gradient(135deg,var(--green),#16a34a);animation:pp 1s infinite;}
+@keyframes pp{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+.mic-btn{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(124,58,237,0.1));border:1px solid rgba(124,58,237,0.4);color:#c4b5fd;border-radius:var(--r-sm);padding:.55rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .25s;font-family:inherit;margin-top:.4rem;}
+.mic-btn.listening{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:var(--red);animation:mpp .8s infinite;}
+@keyframes mpp{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.3);}50%{box-shadow:0 0 0 8px rgba(239,68,68,0);}}
+.mic-result{margin-top:.45rem;padding:.5rem .72rem;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:var(--r-sm);font-size:.8rem;color:#c4b5fd;display:none;}
+.dlg-bubble{padding:.6rem .88rem;border-radius:var(--r-sm);font-size:.86rem;margin-bottom:.42rem;background:linear-gradient(135deg,rgba(0,229,200,0.1),rgba(0,191,165,0.05));color:#67e8f9;border:1px solid rgba(0,229,200,0.2);}
+.dlg-prompt{font-size:.75rem;color:var(--text3);margin:.32rem 0;}
+.result-box{text-align:center;padding:1.5rem 0;}
+.r-emoji{font-size:3rem;margin-bottom:.5rem;animation:bn .6s ease;}
+@keyframes bn{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}
+.r-pts{font-size:3.5rem;font-weight:900;margin:.25rem 0;background:linear-gradient(135deg,var(--cyan),#00bfa5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.r-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:1rem 0;}
+.rs{padding:.72rem;text-align:center;}
+.rs .rv{font-size:1.4rem;font-weight:800;}
+.rs .rl{font-size:.7rem;color:var(--text3);margin-top:.12rem;}
+.xp-gained{display:inline-block;background:linear-gradient(135deg,rgba(0,229,200,0.15),rgba(0,191,165,0.08));border:1px solid rgba(0,229,200,0.3);color:var(--cyan);font-size:.88rem;font-weight:700;padding:.38rem .9rem;border-radius:20px;margin:.5rem 0;animation:pi .4s ease;}
+@keyframes pi{0%{transform:scale(0.5);opacity:0;}100%{transform:scale(1);opacity:1;}}
+.confetti-p{position:fixed;pointer-events:none;z-index:9999;animation:cf 1s ease forwards;}
+@keyframes cf{0%{transform:translateY(-10px) rotate(0);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+.login-wrap{max-width:420px;margin:0 auto;padding:2rem var(--pad);}
+.login-logo{text-align:center;margin-bottom:2rem;}
+.login-logo h1{font-size:1.5rem;font-weight:800;margin-bottom:.25rem;background:linear-gradient(135deg,var(--cyan),#00bfa5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.login-logo p{font-size:.86rem;color:var(--text3);}
+.field{margin-bottom:.82rem;}
+.field label{display:block;font-size:.72rem;font-weight:700;color:var(--text3);margin-bottom:.32rem;text-transform:uppercase;letter-spacing:.5px;}
+.diff-card{padding:1rem 1.2rem;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:.82rem;margin-bottom:.6rem;}
+.diff-card:hover{border-color:rgba(0,229,200,0.3);transform:translateX(3px);}
+.diff-card.sel{border-color:var(--cyan);background:linear-gradient(135deg,rgba(0,229,200,0.08),rgba(0,191,165,0.03));}
+.diff-card .di{font-size:1.9rem;min-width:2.2rem;text-align:center;}
+.diff-card .dt{flex:1;}
+.diff-card .dt h3{font-size:.88rem;font-weight:700;margin-bottom:.18rem;}
+.diff-card .dt p{font-size:.73rem;color:var(--text3);}
+.badge{font-size:.7rem;font-weight:700;padding:.22rem .55rem;border-radius:20px;white-space:nowrap;}
+.badge.green{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3);}
+.badge.blue{background:rgba(0,229,200,.12);color:var(--cyan);border:1px solid rgba(0,229,200,.3);}
+.badge.orange{background:var(--orange2);color:var(--orange);border:1px solid rgba(249,115,22,.3);}
+.badge.red{background:var(--red2);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.story-text{font-size:.88rem;line-height:1.8;color:var(--text2);}
+.story-text .rw{color:var(--text);font-weight:600;cursor:pointer;border-bottom:1px dashed rgba(0,229,200,0.4);transition:all .2s;}
+.story-text .rw:hover{color:var(--cyan);}
+.s-tooltip{position:fixed;background:rgba(0,229,200,0.9);color:#000;font-size:.78rem;font-weight:700;padding:.28rem .55rem;border-radius:6px;pointer-events:none;z-index:999;display:none;transform:translateX(-50%);}
+.ctx-s{padding:.48rem .72rem;margin-bottom:.32rem;background:rgba(0,229,200,0.04);border:1px solid rgba(0,229,200,0.1);border-radius:var(--r-sm);font-size:.8rem;}
+.ctx-ru{color:var(--text);font-weight:600;margin-bottom:.12rem;}
+.ctx-de{color:var(--text3);font-style:italic;}
+
+
+.ic-btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;vertical-align:middle;}
+.ic{display:inline-flex;align-items:center;justify-content:center;width:1em;height:1em;flex-shrink:0;position:relative;top:0;}
+.ic svg{display:block;width:100%;height:100%;}
+
+
+.err-msg{display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);border-radius:var(--r-sm);padding:.55rem .8rem;font-size:.82rem;color:#f87171;margin-top:.5rem;text-align:center;}
+.ok-msg{display:none;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);border-radius:var(--r-sm);padding:.55rem .8rem;font-size:.82rem;color:#4ade80;margin-top:.5rem;text-align:center;}
+.inline-err{display:none;font-size:.75rem;color:#f87171;margin-top:.25rem;padding-left:.2rem;}
+
+</style>
+</head>
+<body>
+<div class="flash" id="flash"></div>
+<div class="s-tooltip" id="tooltip"></div>
+<svg width="0" height="0" style="position:absolute">
+<defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#00e5c8"/><stop offset="100%" style="stop-color:#00bfa5"/></linearGradient></defs>
+</svg>
+<div class="app">
+
+<!-- LOGIN -->
+<div id="scLogin" class="sc active">
+<div class="login-wrap">
+<div class="login-logo">
+<div style="font-size:3rem;margin-bottom:.5rem;">&#127479;&#127482;</div>
+<h1>Russisch Lernen</h1>
+<p>Dein smarter Lernbegleiter</p>
+</div>
+<div class="field"><label>Benutzername</label><input class="inp" id="uname" type="text" name="username" placeholder="Dein Benutzername" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false"></div>
+<div class="field"><label>Passwort</label><input class="inp" id="pw" type="password" name="password" placeholder="Dein Passwort" autocomplete="current-password"></div>
+<button class="btn primary" style="width:100%;margin-bottom:.5rem;padding:.82rem;" onclick="login()">Anmelden</button>
+<button class="btn ghost" style="width:100%;padding:.82rem;" onclick="register()">Neues Konto erstellen</button>
+<div class="err-msg" id="loginErr"></div>
+<div class="ok-msg" id="loginOk"></div>
+</div>
+</div>
+
+<!-- SCHWIERIGKEIT -->
+<div id="scDiff" class="sc">
+<div style="text-align:center;margin-bottom:1.4rem;padding-top:.5rem;">
+<div style="font-size:2rem;margin-bottom:.35rem;">&#127919;</div>
+<h1 style="font-size:1.35rem;font-weight:800;margin-bottom:.22rem;">Level w&#228;hlen</h1>
+<p style="font-size:.83rem;color:var(--text3);">W&#228;hle das passende Level f&#252;r dich</p>
+</div>
+<div id="diffCards"></div>
+<button class="btn primary" style="width:100%;margin-top:.72rem;padding:.82rem;" onclick="confirmDiff()">Best&#228;tigen &#10003;</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="scDash" class="sc">
+<div class="top-bar">
+<div>
+<div style="font-size:.72rem;color:var(--text3);margin-bottom:.08rem;">Willkommen zur&#252;ck</div>
+<h2>&#128075; <span id="dName"></span></h2>
+</div>
+<div style="display:flex;gap:.4rem;">
+<button class="btn sm ghost" onclick="changeDiff()">&#9881; Level</button>
+<button class="btn sm ghost" onclick="logout()">Abmelden</button>
+</div>
+</div>
+<div class="glass xp-wrap">
+<div class="xp-top"><div class="xp-lvl">LEVEL <span id="dLvl">1</span></div><div class="xp-lbl"><span id="xpCur">0</span> / <span id="xpNext">100</span> XP</div></div>
+<div class="xp-track"><div class="xp-fill" id="xpBar" style="width:0%"></div></div>
+</div>
+<div class="stats-row">
+<div class="stat-box glass"><div class="v" id="dPts">0</div><div class="l">Punkte</div></div>
+<div class="stat-box glass"><div class="v" id="dStreak">0</div><div class="l">&#128293; Streak</div></div>
+<div class="stat-box glass"><div class="v" id="dRep">0</div><div class="l">Wiederholen</div></div>
+<div class="stat-box glass"><div class="v" id="dRetry">0</div><div class="l">&#128260; Fehler</div></div>
+</div>
+<div class="glass streak-box">
+<div class="streak-fire">&#128293;</div>
+<div class="streak-info"><div class="sv"><span id="streakNum">0</span> Tage</div><div class="sl">T&#228;glich lernen f&#252;r Streak!</div></div>
+<div class="streak-cal" id="streakCal"></div>
+</div>
+<div class="glass goal-sec">
+<div class="goal-ring">
+<svg width="64" height="64" viewBox="0 0 64 64"><circle class="ring-bg" cx="32" cy="32" r="26"/><circle class="ring-fill" id="goalRing" cx="32" cy="32" r="26" stroke-dasharray="163" stroke-dashoffset="163"/></svg>
+<div class="ring-text" id="goalPct">0%</div>
+</div>
+<div class="goal-info">
+<h3>Tagesziel: <span id="goalDone">0</span> / <span id="goalTarget">10</span> Karten</h3>
+<p id="goalMsg">Los geht's! Starte deine erste Runde!</p>
+</div>
+</div>
+<div class="glass today-box">
+<h3>Heute gelernt</h3>
+<div class="today-grid">
+<div class="today-item glass2"><div class="tv" id="tCards">0</div><div class="tl">Karten</div></div>
+<div class="today-item glass2"><div class="tv" id="tWords">0</div><div class="tl">W&#246;rter</div></div>
+<div class="today-item glass2"><div class="tv" id="tPts">0</div><div class="tl">Punkte</div></div>
+</div>
+<div class="acc-wrap">
+<div class="al"><span>Genauigkeit heute</span><span id="tAcc">0%</span></div>
+<div class="acc-bg"><div class="acc-fill" id="accBar" style="width:0%"></div></div>
+</div>
+</div>
+<div class="glass diff-ind" onclick="changeDiff()">
+<span style="font-size:1.2rem;" id="diffE">A2</span>
+<span class="dl" id="diffL">Standard (A2)</span>
+<span class="dc" style="display:inline-flex;align-items:center;gap:.25rem;">&#196;ndern <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></span>
+</div>
+<div class="pfad-title">Dein Lernpfad</div>
+<div id="pfad"></div>
+</div>
+
+<!-- LERNKARTEN -->
+<div id="scLearn" class="sc">
+<div style="margin-bottom:.72rem;display:flex;gap:.4rem;">
+<button class="btn sm primary" onclick="goHome()">&#8962; Start</button>
+</div>
+<div class="top-bar">
+<h2 id="lTitle">Alphabet</h2>
+<span id="lProg" style="font-size:.83rem;color:var(--text3);">1 von 5</span>
+</div>
+<div class="glass-cyan learn-card" id="learnCard">
+<div class="card-badge" id="cBadge">BUCHSTABE</div>
+<div class="card-main" id="cMain">&#1040;</div>
+<div class="card-sub" id="cSub">Aussprache: a</div>
+<div class="card-trans" id="cTrans">= a</div>
+<div class="card-example" id="cEx">&#128204; Anna &#8594; Anna</div>
+<div class="card-extra" id="cExtra"></div>
+<div class="card-mn" id="cMn" style="display:none;"></div>
+<div id="ctxSents" style="display:none;margin-top:.65rem;"></div>
+<div style="display:flex;gap:.5rem;justify-content:center;margin-top:.82rem;flex-wrap:wrap;">
+<button class="btn sm" onclick="spk(cb[ci].m)">&#128266; Anh&#246;ren</button>
+<button class="mic-btn" id="micLBtn" onclick="startMic('learn')">&#127908; Nachsprechen</button>
+</div>
+<div class="mic-result" id="micLRes"></div>
+</div>
+<div class="learn-nav">
+<button class="btn ghost ic-btn" id="prevBtn" onclick="prevCard()"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 18 5 12 11 6"/></svg></span> Zur&#252;ck</button>
+<button class="btn primary ic-btn" id="nextBtn" onclick="nextCard()">Weiter <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+</div>
+</div>
+
+<!-- QUIZ -->
+<div id="scQuiz" class="sc">
+<div style="margin-bottom:.72rem;"><button class="btn sm primary" onclick="goHome()">&#8962; Start</button></div>
+<div class="top-bar">
+<h2 id="qTitle">Quiz</h2>
+<span style="font-weight:800;font-size:.88rem;color:var(--cyan);">+<span id="qPts">0</span> XP</span>
+</div>
+<div class="mode-tabs" id="modeTabs">
+<button class="mode-tab active ic-btn" id="tab-ru-de" onclick="setMode('ru-de')">RU <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span> DE</button>
+<button class="mode-tab ic-btn" id="tab-de-ru" onclick="setMode('de-ru')">DE <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span> RU</button>
+
+</div>
+
+<div id="stdQuiz">
+<div class="quiz-num" id="qNum">Frage 1/5</div>
+<div class="dots" id="dotsEl"></div>
+<div class="quiz-q" id="qQ">&#1040;</div>
+<div class="quiz-prompt" id="qPrompt">Was ist die Aussprache?</div>
+<div style="text-align:center;margin-bottom:.6rem;display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;">
+<button class="btn sm" onclick="spk(cb[qi].m)">&#128266; Aussprache</button>
+<button class="mic-btn" id="micQBtn" onclick="startMic('quiz')" style="padding:.35rem .75rem;font-size:.75rem;">&#127908; Sprechen</button>
+</div>
+<div id="suggWrap"><div class="sugg-lbl">Vorschl&#228;ge (oder selbst eintippen):</div><div class="suggs" id="suggs"></div></div>
+<div class="kyr-lbl" id="kyrLbl">Kyrillische Tastatur:</div>
+<div class="kyr" id="kyr"></div>
+<input class="qi" id="qIn" type="text" placeholder="Deine Antwort...">
+<div class="mic-result" id="micQRes"></div>
+<div class="hint-box" id="hintBox"></div>
+<div class="sol-box" id="solBox"></div>
+<div class="fb" id="fb"></div>
+<div class="qbtns">
+<button id="bHint" onclick="showHint()">&#128161; Hilfe</button>
+<button id="bSol" onclick="showSol()">&#10003; L&#246;sung</button>
+<button onclick="skipQ()">Weiter <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+<button id="bCheck" onclick="checkAns()">Pr&#252;fen &#10003;</button>
+</div>
+</div>
+<div id="listenQuiz" style="display:none;">
+<div class="quiz-num" id="lqNum">Frage 1/5</div>
+<div class="dots" id="ldotsEl"></div>
+<div class="glass-cyan listen-box">
+<div style="font-size:3rem;margin-bottom:.6rem;">&#127911;</div>
+<div style="font-weight:700;margin-bottom:.28rem;">Was h&#246;rst du?</div>
+<div style="font-size:.78rem;color:var(--text3);margin-bottom:1rem;">Dr&#252;cke Play und tippe was du h&#246;rst</div>
+<button class="play-btn" id="playBtn" onclick="playAudio()">&#9654; Abspielen</button>
+</div>
+<div class="sugg-lbl">Vorschl&#228;ge:</div>
+<div class="suggs" id="lSuggs"></div>
+<div class="kyr-lbl">Kyrillische Tastatur:</div>
+<div class="kyr" id="lKyr"></div>
+<input class="qi" id="lIn" type="text" placeholder="Was hast du geh&#246;rt?">
+<div class="hint-box" id="lHint"></div>
+<div class="sol-box" id="lSol"></div>
+<div class="fb" id="lFb"></div>
+<div class="qbtns">
+<button onclick="showLHint()">&#128161; Hilfe</button>
+<button onclick="showLSol()">&#10003; L&#246;sung</button>
+<button onclick="skipLQ()">Weiter <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+<button id="lCheck" onclick="checkListen()">Pr&#252;fen &#10003;</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- FEHLER-WIEDERHOLUNG -->
+<div id="scRetry" class="sc">
+<div style="margin-bottom:.72rem;"><button class="btn sm primary" onclick="goHome()">&#8962; Start</button></div>
+<div class="top-bar">
+<h2>&#128260; Fehler wiederholen</h2>
+<span style="font-size:.83rem;color:var(--text3);"><span id="retryNum">0</span> Karten</span>
+</div>
+
+<div class="quiz-num" id="retryQNum">Frage 1/5</div>
+<div class="dots" id="retryDots"></div>
+<div class="quiz-q" id="retryQ">&#1040;</div>
+<div class="quiz-prompt" id="retryPrompt">Was ist die Aussprache?</div>
+<div style="text-align:center;margin-bottom:.6rem;"><button class="btn sm" onclick="spk(retryCb[retryQi].m)">&#128266; Aussprache</button></div>
+<div class="suggs" id="retrySuggs"></div>
+<input class="qi" id="retryIn" type="text" placeholder="Deine Antwort...">
+<div class="hint-box" id="retryHint"></div>
+<div class="sol-box" id="retrySol"></div>
+<div class="fb" id="retryFb"></div>
+<div class="qbtns">
+<button onclick="showRetryHint()">&#128161; Hilfe</button>
+<button onclick="showRetrySol()">&#10003; L&#246;sung</button>
+<button onclick="skipRetry()">Weiter <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+<button id="retryCheck" onclick="checkRetry()">Pr&#252;fen &#10003;</button>
+</div>
+</div>
+
+<!-- EIGENE VOKABELN -->
+<div id="scCustom" class="sc">
+<div style="margin-bottom:.72rem;display:flex;gap:.4rem;">
+<button class="btn sm primary" onclick="goHome()">&#8962; Start</button>
+</div>
+<div class="top-bar">
+<h2>&#11088; Eigene Vokabeln</h2>
+<span style="font-size:.82rem;color:var(--text3);"><span id="customCount">0</span> Karten</span>
+</div>
+<div class="glass" style="padding:1rem 1.1rem;margin-bottom:1rem;">
+<div style="font-size:.82rem;font-weight:700;margin-bottom:.65rem;color:var(--cyan);">Neue Vokabel hinzufügen</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;">
+<div><label style="font-size:.7rem;color:var(--text3);display:block;margin-bottom:.25rem;">Russisch</label><input class="inp" id="customRu" type="text" placeholder="Русский Бегрифф" autocorrect="off" autocapitalize="none"></div>
+<div><label style="font-size:.7rem;color:var(--text3);display:block;margin-bottom:.25rem;">Deutsch</label><input class="inp" id="customDe" type="text" placeholder="Deutsche Bedeutung"></div>
+</div>
+<div style="margin-bottom:.5rem;"><label style="font-size:.7rem;color:var(--text3);display:block;margin-bottom:.25rem;">Eselsbridge (optional)</label><input class="inp" id="customMn" type="text" placeholder="Merkhilfe..."></div>
+<button class="btn primary" style="width:100%;" onclick="addCustomCard()">+ Hinzufügen</button>
+</div>
+<div id="customList" style="margin-bottom:1rem;"></div>
+<div id="customEmpty" style="text-align:center;padding:2rem;color:var(--text3);font-size:.85rem;">
+Noch keine eigenen Vokabeln.<br>Füge deine ersten Karten hinzu!
+</div>
+<button class="btn primary" style="width:100%;" id="customStartBtn" onclick="startSec('custom')" style="display:none;">Quiz starten &#127919;</button>
+</div>
+
+<!-- MINI-GESCHICHTEN -->
+<div id="scStory" class="sc">
+<div style="margin-bottom:.72rem;"><button class="btn sm primary" onclick="goHome()">&#8962; Start</button></div>
+<div class="top-bar">
+<h2>&#128218; Mini-Geschichten</h2>
+<button class="btn sm ghost" onclick="nextStory()">N&#228;chste <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+</div>
+<div id="storyContent"></div>
+<div style="margin-top:1rem;padding:.82rem 1rem;background:rgba(0,229,200,0.05);border:1px solid rgba(0,229,200,0.1);border-radius:var(--r-sm);">
+<div style="font-size:.75rem;color:var(--cyan);font-weight:700;margin-bottom:.32rem;">&#128273; Vokabeln in dieser Geschichte</div>
+<div id="storyVocab" style="font-size:.8rem;color:var(--text3);line-height:1.8;"></div>
+</div>
+<button class="btn primary" style="width:100%;margin-top:1rem;" onclick="goHome()">Weiter lernen <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+</div>
+
+<!-- ERGEBNIS -->
+<div id="scResult" class="sc">
+<div style="margin-bottom:.72rem;"><button class="btn sm primary" onclick="goHome()">&#8962; Start</button></div>
+<div class="result-box">
+<div class="r-emoji" id="rEmoji">&#127881;</div>
+<div style="font-size:1.2rem;font-weight:800;margin-bottom:.22rem;" id="rTitle">Quiz abgeschlossen!</div>
+<div class="r-pts" id="rPts">+0</div>
+<div class="xp-gained" id="xpGained">+0 XP verdient</div>
+<div class="r-stats">
+<div class="rs glass"><div class="rv" id="rOk" style="color:var(--green);">0</div><div class="rl">&#10003; Richtig</div></div>
+<div class="rs glass"><div class="rv" id="rFail" style="color:var(--red);">0</div><div class="rl">&#10007; Falsch</div></div>
+<div class="rs glass"><div class="rv" id="rAcc">0%</div><div class="rl">Genauigkeit</div></div>
+</div>
+<div id="rInfo" style="font-size:.8rem;color:var(--text3);margin-bottom:.82rem;"></div>
+<button class="btn" id="retryBtn" style="width:100%;margin-bottom:.5rem;background:var(--orange2);border-color:rgba(249,115,22,0.4);color:var(--orange);display:none;" onclick="startRetryMode()">&#128260; Fehler wiederholen (<span id="retryCount">0</span>)</button>
+<button class="btn primary" style="width:100%;padding:.82rem;" onclick="goHome()">Weiter lernen <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+</div>
+</div>
+
+</div>
+<script>
+
+// ═══════════════════════════════════════════════════
+// KONFIGURATION
+// ═══════════════════════════════════════════════════
+const DC={
+  anfaenger:{e:'A1',l:'Anfänger (A1)',hints:true,sol:true,sugg:true,kb:true,att:3,srsM:1.5,pM:1,xpM:1,sec:['alphabet','vocabulary','numbers','colors','weekdays','custom'],bs:3,goal:5},
+  standard:{e:'A2',l:'Standard (A2)',hints:true,sol:true,sugg:true,kb:true,att:2,srsM:1,pM:1.2,xpM:1.2,sec:['alphabet','vocabulary','numbers','colors','weekdays','grammar','listening','custom'],bs:5,goal:10},
+  fort:{e:'B1',l:'Fortgeschritten (B1)',hints:false,sol:true,sugg:true,kb:true,att:2,srsM:.7,pM:1.5,xpM:1.5,sec:['alphabet','vocabulary','numbers','colors','weekdays','grammar','listening','speaking','sentences','custom'],bs:5,goal:15},
+  profi:{e:'B2',l:'Profi (B2+)',hints:false,sol:false,sugg:false,kb:true,att:1,srsM:.5,pM:2,xpM:2,sec:['alphabet','vocabulary','numbers','colors','weekdays','grammar','listening','speaking','sentences','reading','custom'],bs:7,goal:20}
+};
+const SECS=[
+  {id:'alphabet',icon:'&#1071;',title:'1. Kyrillisches Alphabet',desc:'Alle 33 Buchstaben lernen'},
+  {id:'vocabulary',icon:'&#128172;',title:'2. Grundvokabeln',desc:'Die wichtigsten W\xf6rter'},
+  {id:'numbers',icon:'&#128290;',title:'3. Zahlen',desc:'Zahlen 1\u201320 auf Russisch'},
+  {id:'colors',icon:'&#127912;',title:'4. Farben',desc:'Alle wichtigen Farben'},
+  {id:'weekdays',icon:'&#128197;',title:'5. Wochentage & Monate',desc:'Tage, Monate und Jahreszeiten'},
+  {id:'grammar',icon:'&#128209;',title:'6. Grammatik',desc:'F\xe4lle und Satzbau'},
+  {id:'listening',icon:'&#127911;',title:'7. H\xf6ren und Verstehen',desc:'Nur h\xf6ren, dann tippen'},
+  {id:'speaking',icon:'&#127908;',title:'8. Sprechen',desc:'Aussprache und Konversation'},
+  {id:'sentences',icon:'&#9999;&#65039;',title:'9. S\xe4tze schreiben',desc:'Eigene S\xe4tze formulieren'},
+  {id:'reading',icon:'&#128214;',title:'10. Texte analysieren',desc:'Russische Texte lesen'},
+  {id:'custom',icon:'&#11088;',title:'11. Eigene Vokabeln',desc:'Deine eigenen Karteikarten'}
+];
+function xpForLevel(l){return l*100;}
+function getLvlInfo(xp){let l=1,x=xp;while(x>=xpForLevel(l)){x-=xpForLevel(l);l++;}return{lvl:l,cur:x,need:xpForLevel(l)};}
+
+// ═══════════════════════════════════════════════════
+// INHALTE — Alphabet (33 Buchstaben + Mnemonics + Kontextsätze)
+// ═══════════════════════════════════════════════════
+const C={
+alphabet:[
+  {m:"\u0410",s:"a",t:"a",e:"Anna",x:"Vokal",mn:"Zelt-Form \u2014 klingt wie 'a' in Apfel",o:["a","o","e","u"],r:["\u0410","\u041e","\u0415","\u0423"],ctx:[{ru:"\u042d\u0442\u043e \u0410\u043d\u043d\u0430.",de:"Das ist Anna."}]},
+  {m:"\u0411",s:"b",t:"b",e:"Boris",x:"Konsonant",mn:"Wie eine '6' \u2014 klingt wie 'b' in Ball",o:["b","p","v","d"],r:["\u0411","\u041f","\u0412","\u0414"],ctx:[{ru:"\u0411\u043e\u0440\u0438\u0441 \u2014 \u043c\u043e\u0439 \u0434\u0440\u0443\u0433.",de:"Boris ist mein Freund."}]},
+  {m:"\u0412",s:"w",t:"w",e:"Wera",x:"Konsonant",mn:"Sieht wie 'B' \u2014 klingt wie 'w' in Wasser",o:["w","v","b","f"],r:["\u0412","\u0424","\u0411","\u041f"],ctx:[{ru:"\u0412\u043e\u0434\u0430 \u0445\u043e\u043b\u043e\u0434\u043d\u0430\u044f.",de:"Das Wasser ist kalt."}]},
+  {m:"\u0413",s:"g",t:"g",e:"Galina",x:"Konsonant",mn:"Wie ein Haken (\u0413) \u2014 klingt wie 'g' in gut",o:["g","k","h","d"],r:["\u0413","\u041a","\u0425","\u0414"],ctx:[{ru:"\u0413\u043e\u0440\u043e\u0434 \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",de:"Die Stadt ist gro\xdf."}]},
+  {m:"\u0414",s:"d",t:"d",e:"Dmitrij",x:"Konsonant",mn:"Haus mit Dach \u2014 klingt wie 'd' in Dach",o:["d","t","b","g"],r:["\u0414","\u0422","\u0411","\u0413"],ctx:[{ru:"\u0414\u043e\u043c \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",de:"Das Haus ist gro\xdf."}]},
+  {m:"\u0415",s:"je",t:"je",e:"Jelena",x:"Vokal",mn:"Wie 'E' \u2014 klingt wie 'je' am Wortanfang",o:["je","e","ja","jo"],r:["\u0415","\u042d","\u042f","\u0401"],ctx:[{ru:"\u0415\u043b\u0435\u043d\u0430 \u0443\u0447\u0438\u0442\u0435\u043b\u044c.",de:"Jelena ist Lehrerin."}]},
+  {m:"\u0401",s:"jo",t:"jo",e:"Jozh (Igel)",x:"Vokal \u2014 immer betont!",mn:"Zwei Punkte oben \u2014 klingt wie 'jo', IMMER betont!",o:["jo","je","ju","ja"],r:["\u0401","\u0415","\u042e","\u042f"],ctx:[{ru:"\u0401\u0436 \u0436\u0438\u0432\u0451\u0442 \u0432 \u043b\u0435\u0441\u0443.",de:"Der Igel lebt im Wald."}]},
+  {m:"\u0416",s:"sch (stimmhaft)",t:"sch",e:"Zhara (Hitze)",x:"Konsonant",mn:"K\xe4fer von oben \u2014 stimmhaftes Sch",o:["sch","sh","ch","zh"],r:["\u0416","\u0428","\u0429","\u0427"],ctx:[{ru:"\u0416\u0430\u0440\u043a\u043e \u043b\u0435\u0442\u043e\u043c.",de:"Im Sommer ist es hei\xdf."}]},
+  {m:"\u0417",s:"s (stimmhaft)",t:"s",e:"Soja",x:"Konsonant",mn:"Wie eine '3' \u2014 stimmhaftes S",o:["s","z","ts","sch"],r:["\u0417","\u0421","\u0426","\u0428"],ctx:[{ru:"\u0417\u0434\u0435\u0441\u044c \u043e\u0447\u0435\u043d\u044c \u0445\u043e\u043b\u043e\u0434\u043d\u043e.",de:"Hier ist es sehr kalt."}]},
+  {m:"\u0418",s:"i",t:"i",e:"Iwan",x:"Vokal",mn:"Wie 'N' mit Strich \u2014 klingt wie 'i' in Igel",o:["i","j","y","ie"],r:["\u0418","\u0419","\u042b","\u042d"],ctx:[{ru:"\u0418\u0432\u0430\u043d \u0438\u0434\u0451\u0442 \u0432 \u0448\u043a\u043e\u043b\u0443.",de:"Iwan geht zur Schule."}]},
+  {m:"\u0419",s:"j (kurz)",t:"j",e:"Yoga",x:"Halbvokal",mn:"Wie \u0418 mit Bogen \u2014 kurzes 'j' wie in ja",o:["j","i","y","je"],r:["\u0419","\u0418","\u042b","\u0415"],ctx:[{ru:"\u0419\u043e\u0433\u0430 \u043f\u043e\u043b\u0435\u0437\u043d\u0430.",de:"Yoga ist gesund."}]},
+  {m:"\u041a",s:"k",t:"k",e:"Katja",x:"Konsonant",mn:"Wie ein 'K' \u2014 klingt genau wie 'k' in Katze",o:["k","g","h","kh"],r:["\u041a","\u0413","\u0425","\u0427"],ctx:[{ru:"\u041a\u043e\u0448\u043a\u0430 \u0441\u043f\u0438\u0442.",de:"Die Katze schl\xe4ft."}]},
+  {m:"\u041b",s:"l",t:"l",e:"Lena",x:"Konsonant",mn:"Wie Lambda \u2014 klingt wie 'l' in Lampe",o:["l","r","n","m"],r:["\u041b","\u0420","\u041d","\u041c"],ctx:[{ru:"\u041b\u0435\u043d\u0430 \u0447\u0438\u0442\u0430\u0435\u0442 \u043a\u043d\u0438\u0433\u0443.",de:"Lena liest ein Buch."}]},
+  {m:"\u041c",s:"m",t:"m",e:"Moskau",x:"Konsonant",mn:"Wie 'M' \u2014 klingt wie 'm' in Mama",o:["m","n","b","w"],r:["\u041c","\u041d","\u0411","\u0412"],ctx:[{ru:"\u041c\u0430\u043c\u0430 \u0434\u043e\u043c\u0430.",de:"Mama ist zu Hause."}]},
+  {m:"\u041d",s:"n",t:"n",e:"Natascha",x:"Konsonant",mn:"Wie 'H' quer \u2014 klingt wie 'n' in Nacht",o:["n","m","h","ng"],r:["\u041d","\u041c","\u0425","\u0413"],ctx:[{ru:"\u041d\u0430\u0442\u0430\u0448\u0430 \u043f\u043e\u0451\u0442.",de:"Natascha singt."}]},
+  {m:"\u041e",s:"o",t:"o",e:"Oleg",x:"Vokal",mn:"Runder Kreis \u2014 klingt wie 'o' in Oma",o:["o","a","u","e"],r:["\u041e","\u0410","\u0423","\u042d"],ctx:[{ru:"\u041e\u043d \u0438\u0434\u0451\u0442 \u0434\u043e\u043c\u043e\u0439.",de:"Er geht nach Hause."}]},
+  {m:"\u041f",s:"p",t:"p",e:"Pawel",x:"Konsonant",mn:"Wie ein Tor (\u041f) \u2014 klingt wie 'p' in Papa",o:["p","b","f","t"],r:["\u041f","\u0411","\u0424","\u0422"],ctx:[{ru:"\u041f\u0430\u043f\u0430 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442.",de:"Papa arbeitet."}]},
+  {m:"\u0420",s:"r (gerollt!)",t:"r",e:"Russland",x:"Zungenspitzen-R!",mn:"Sieht aus wie 'P' \u2014 GEROLLTES Zungenspitzen-R!",o:["r","l","w","rr"],r:["\u0420","\u041b","\u0412","\u041d"],ctx:[{ru:"\u0420\u0435\u043a\u0430 \u0448\u0438\u0440\u043e\u043a\u0430\u044f.",de:"Der Fluss ist breit."}]},
+  {m:"\u0421",s:"ss",t:"ss",e:"Sascha",x:"Stimmlos",mn:"Wie ein 'C' \u2014 stimmloses SS wie in Wasser",o:["ss","sch","s","z"],r:["\u0421","\u0428","\u0417","\u0426"],ctx:[{ru:"\u0421\u0430\u0448\u0430 \u0435\u0441\u0442 \u0441\u0443\u043f.",de:"Sascha isst Suppe."}]},
+  {m:"\u0422",s:"t",t:"t",e:"Tanja",x:"Konsonant",mn:"Wie 'T' \u2014 klingt genau wie 't' in Tisch",o:["t","d","p","k"],r:["\u0422","\u0414","\u041f","\u041a"],ctx:[{ru:"\u0422\u0430\u043c \u0435\u0441\u0442\u044c \u043c\u0430\u0433\u0430\u0437\u0438\u043d.",de:"Dort ist ein Laden."}]},
+  {m:"\u0423",s:"u",t:"u",e:"Uljana",x:"Vokal",mn:"Wie 'Y' \u2014 klingt wie 'u' in Uhr",o:["u","o","i","ue"],r:["\u0423","\u041e","\u0418","\u042e"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u043a\u043e\u0448\u043a\u0430.",de:"Ich habe eine Katze."}]},
+  {m:"\u0424",s:"f",t:"f",e:"Fjodor",x:"Konsonant",mn:"Wie \u03a6 mit Bauch \u2014 klingt wie 'f' in Feuer",o:["f","v","p","b"],r:["\u0424","\u0412","\u041f","\u0411"],ctx:[{ru:"\u0424\u0438\u043b\u044c\u043c \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u044b\u0439.",de:"Der Film ist interessant."}]},
+  {m:"\u0425",s:"ch (wie Bach)",t:"ch",e:"Charkiw",x:"Wie deutsches ch",mn:"Wie 'X' \u2014 klingt wie 'ch' in Bach",o:["ch","h","k","g"],r:["\u0425","\u0413","\u041a","\u0427"],ctx:[{ru:"\u0425\u043b\u0435\u0431 \u0441\u0432\u0435\u0436\u0438\u0439.",de:"Das Brot ist frisch."}]},
+  {m:"\u0426",s:"ts",t:"ts",e:"Zirkus",x:"Wie ts in Pizza",mn:"Hat Schleppe rechts unten \u2014 klingt wie 'ts' in Pizza",o:["ts","s","sch","tsch"],r:["\u0426","\u0421","\u0428","\u0427"],ctx:[{ru:"\u0426\u0432\u0435\u0442\u044b \u043a\u0440\u0430\u0441\u0438\u0432\u044b\u0435.",de:"Die Blumen sind sch\xf6n."}]},
+  {m:"\u0427",s:"tsch",t:"tsch",e:"Tschaj (Tee)",x:"Wie tsch in Tsch\xfcss",mn:"Wie eine '4' (\u0427\u0435\u0442\u044b\u0440\u0435=4) \u2014 klingt wie 'tsch' in Tsch\xfcss",o:["tsch","sch","ts","ch"],r:["\u0427","\u0428","\u0426","\u0425"],ctx:[{ru:"\u0427\u0430\u0439 \u0433\u043e\u0440\u044f\u0447\u0438\u0439.",de:"Der Tee ist hei\xdf."}]},
+  {m:"\u0428",s:"sch (stimmlos)",t:"sch",e:"Scharf (Schal)",x:"Zunge weiter hinten",mn:"Krone oder Zinnen \u2014 klingt wie 'sch' in Schule",o:["sch","s","zh","ch"],r:["\u0428","\u0421","\u0416","\u0425"],ctx:[{ru:"\u0428\u043a\u043e\u043b\u0430 \u0440\u044f\u0434\u043e\u043c.",de:"Die Schule ist daneben."}]},
+  {m:"\u0429",s:"schtsch (weich)",t:"schtsch",e:"Schtschij (Suppe)",x:"Weiches Zischen",mn:"Wie \u0428 mit Schleppe \u2014 weiches schtsch, Zunge flach",o:["schtsch","sch","tsch","sh"],r:["\u0429","\u0428","\u0427","\u0416"],ctx:[{ru:"\u0429\u0438 \u2014 \u0440\u0443\u0441\u0441\u043a\u0438\u0439 \u0441\u0443\u043f.",de:"Schtschij ist eine russische Suppe."}]},
+  {m:"\u042a",s:"(Hartzeichen)",t:"(Hartzeichen)",e:"Objekt",x:"Trennzeichen \u2014 kein Laut",mn:"Das harte Zeichen \u2014 macht Pause zwischen Konsonant und Vokal",o:["(Hartzeichen)","a","e","h"],r:["\u042a","\u042c","\u042d","\u042b"],ctx:[{ru:"\u041e\u0431\u044a\u0435\u043a\u0442 \u043d\u0430 \u0441\u0442\u043e\u043b\u0435.",de:"Das Objekt liegt auf dem Tisch."}]},
+  {m:"\u042b",s:"verdunkeltes i",t:"y",e:"Ty (Du)",x:"Typisch russisch!",mn:"Wie \u0418 mit Strich links \u2014 i mit Zunge ganz hinten",o:["y","i","u","ue"],r:["\u042b","\u0418","\u0423","\u042d"],ctx:[{ru:"\u0422\u044b \u0433\u043e\u0432\u043e\u0440\u0438\u0448\u044c \u043f\u043e-\u0440\u0443\u0441\u0441\u043a\u0438.",de:"Du sprichst Russisch."}]},
+  {m:"\u042c",s:"(Weichheitszeichen)",t:"(Weichheitszeichen)",e:"Mat (Mutter)",x:"Erweicht vorherigen Buchstaben",mn:"Das weiche Zeichen \u2014 macht Konsonant davor weich, selbst kein Laut",o:["(Weichheitszeichen)","Vokal","Pause","Verdopplung"],r:["\u042c","\u042a","\u042d","\u042b"],ctx:[{ru:"\u041c\u0430\u0442\u044c \u0434\u043e\u043c\u0430.",de:"Mutter ist zu Hause."}]},
+  {m:"\u042d",s:"e (offen, ohne J)",t:"e",e:"Eto (Das ist)",x:"Offenes E",mn:"Wie 'E' verkehrt \u2014 offenes E ohne j davor",o:["e","je","a","ae"],r:["\u042d","\u0415","\u0410","\u042f"],ctx:[{ru:"\u042d\u0442\u043e \u043c\u043e\u044f \u043a\u043d\u0438\u0433\u0430.",de:"Das ist mein Buch."}]},
+  {m:"\u042e",s:"ju",t:"ju",e:"Julja (Julia)",x:"Vokal",mn:"Wie \u0418+\u041e zusammen \u2014 klingt wie 'ju' in Julia",o:["ju","u","jo","je"],r:["\u042e","\u0423","\u0401","\u0415"],ctx:[{ru:"\u042e\u043b\u044f \u0442\u0430\u043d\u0446\u0443\u0435\u0442.",de:"Julia tanzt."}]},
+  {m:"\u042f",s:"ja",t:"ja",e:"Jabloko (Apfel)",x:"Auch: Ich!",mn:"Gespiegeltes 'R' \u2014 klingt wie 'ja', bedeutet auch 'Ich'!",o:["ja","a","je","jo"],r:["\u042f","\u0410","\u0415","\u0401"],ctx:[{ru:"\u042f \u0443\u0447\u0443 \u0440\u0443\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u043a.",de:"Ich lerne Russisch."}]}
+],
+vocabulary:[
+  {m:"\u041f\u0440\u0438\u0432\u0435\u0442",s:"informell",t:"Hallo",e:"Privet!",x:"Informell",mn:"pri-WET \u2014 Betonung auf 2. Silbe",o:["Hallo","Tsch\xfcss","Danke","Bitte"],r:["\u041f\u0440\u0438\u0432\u0435\u0442","\u041f\u043e\u043a\u0430","\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430"],ctx:[{ru:"\u041f\u0440\u0438\u0432\u0435\u0442! \u041a\u0430\u043a \u0434\u0435\u043b\u0430?",de:"Hallo! Wie geht's?"}]},
+  {m:"\u0421\u043f\u0430\u0441\u0438\u0431\u043e",s:"Dankbarkeit",t:"Danke",e:"Spasibo!",x:"Universell",mn:"spa-SI-ba \u2014 O am Ende klingt wie A",o:["Danke","Bitte","Ja","Nein"],r:["\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430","\u0414\u0430","\u041d\u0435\u0442"],ctx:[{ru:"\u0421\u043f\u0430\u0441\u0438\u0431\u043e \u0437\u0430 \u043f\u043e\u043c\u043e\u0449\u044c!",de:"Danke f\xfcr die Hilfe!"}]},
+  {m:"\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430",s:"Bitte",t:"Bitte",e:"Pozhalujsta!",x:"Auch: Gern geschehen",mn:"po-ZHAL-sta \u2014 mittlere Silbe wird oft geschluckt",o:["Bitte","Danke","Hallo","Sorry"],r:["\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430","\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u0440\u0438\u0432\u0435\u0442","\u0418\u0437\u0432\u0438\u043d\u0438\u0442\u0435"],ctx:[{ru:"\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u043e\u043c\u043e\u0433\u0438\u0442\u0435 \u043c\u043d\u0435.",de:"Bitte helfen Sie mir."}]},
+  {m:"\u0414\u0430",s:"Zustimmung",t:"Ja",e:"Da!",x:"Sehr h\xe4ufig",mn:"Kurzes klares 'Da' \u2014 klingt fast wie da auf Deutsch!",o:["Ja","Nein","Vielleicht","OK"],r:["\u0414\u0430","\u041d\u0435\u0442","\u041c\u043e\u0436\u0435\u0442","\u0425\u043e\u0440\u043e\u0448\u043e"],ctx:[{ru:"\u0414\u0430, \u044f \u043f\u043e\u043d\u0438\u043c\u0430\u044e.",de:"Ja, ich verstehe."}]},
+  {m:"\u041d\u0435\u0442",s:"Ablehnung",t:"Nein",e:"Net!",x:"Sehr h\xe4ufig",mn:"'Njet' \u2014 klingt fast wie 'net' auf Englisch",o:["Nein","Ja","Gut","Schlecht"],r:["\u041d\u0435\u0442","\u0414\u0430","\u0425\u043e\u0440\u043e\u0448\u043e","\u041f\u043b\u043e\u0445\u043e"],ctx:[{ru:"\u041d\u0435\u0442, \u0441\u043f\u0430\u0441\u0438\u0431\u043e.",de:"Nein, danke."}]},
+  {m:"\u0425\u043e\u0440\u043e\u0448\u043e",s:"Positiv",t:"Gut / OK",e:"Wsjo choroscho!",x:"Sehr h\xe4ufig",mn:"ha-ra-SHO \u2014 Betonung auf letzter Silbe",o:["Gut / OK","Schlecht","Ja","Danke"],r:["\u0425\u043e\u0440\u043e\u0448\u043e","\u041f\u043b\u043e\u0445\u043e","\u0414\u0430","\u0421\u043f\u0430\u0441\u0438\u0431\u043e"],ctx:[{ru:"\u0412\u0441\u0451 \u0445\u043e\u0440\u043e\u0448\u043e!",de:"Alles gut!"}]},
+  {m:"\u041a\u0430\u043a \u0434\u0435\u043b\u0430?",s:"Befinden",t:"Wie geht's?",e:"Kak dela?",x:"Alltag",mn:"kak de-LA? \u2014 Stimme steigt auf LA (Fragesatz!)",o:["Wie geht's?","Was ist das?","Wo bist du?","Wer bist du?"],r:["\u041a\u0430\u043a \u0434\u0435\u043b\u0430?","\u0427\u0442\u043e \u044d\u0442\u043e?","\u0413\u0434\u0435 \u0442\u044b?","\u041a\u0442\u043e \u0442\u044b?"],ctx:[{ru:"\u041a\u0430\u043a \u0434\u0435\u043b\u0430, \u0410\u043d\u043d\u0430?",de:"Wie geht's, Anna?"}]},
+  {m:"\u041c\u0435\u043d\u044f \u0437\u043e\u0432\u0443\u0442",s:"Vorstellung",t:"Ich hei\xdfe",e:"Menja sowut Anna",x:"Vorstellung",mn:"W\xf6rtlich: 'Mich nennt man' \u2014 kein Verb sein n\xf6tig!",o:["Ich hei\xdfe","Ich bin","Ich habe","Ich gehe"],r:["\u041c\u0435\u043d\u044f \u0437\u043e\u0432\u0443\u0442","\u042f \u0435\u0441\u0442\u044c","\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c","\u042f \u0438\u0434\u0443"],ctx:[{ru:"\u041c\u0435\u043d\u044f \u0437\u043e\u0432\u0443\u0442 \u0410\u043d\u0434\u0440\u0435\u0439.",de:"Ich hei\xdfe Andrej."}]},
+  {m:"\u0414\u043e \u0441\u0432\u0438\u0434\u0430\u043d\u0438\u044f",s:"Verabschiedung formell",t:"Auf Wiedersehen",e:"Do swidanija!",x:"Formell",mn:"do svi-DA-ni-ja \u2014 'do' bedeutet 'bis': bis zum Wiedersehen",o:["Auf Wiedersehen","Hallo","Danke","Bitte"],r:["\u0414\u043e \u0441\u0432\u0438\u0434\u0430\u043d\u0438\u044f","\u041f\u0440\u0438\u0432\u0435\u0442","\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430"],ctx:[{ru:"\u0414\u043e \u0437\u0430\u0432\u0442\u0440\u0430!",de:"Bis morgen!"}]},
+  {m:"\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e",s:"Verst\xe4ndnisproblem",t:"Ich verstehe nicht",e:"Ja ne ponimaju",x:"Sehr wichtig!",mn:"ja ne po-ni-MA-ju \u2014 lerne diesen Satz als erstes!",o:["Ich verstehe nicht","Ich wei\xdf nicht","Ich kann nicht","Ich will nicht"],r:["\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e","\u042f \u043d\u0435 \u0437\u043d\u0430\u044e","\u042f \u043d\u0435 \u043c\u043e\u0433\u0443","\u042f \u043d\u0435 \u0445\u043e\u0447\u0443"],ctx:[{ru:"\u041f\u0440\u043e\u0441\u0442\u0438\u0442\u0435, \u044f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e.",de:"Entschuldigung, ich verstehe nicht."}]}
+,
+  // A1 - Grundlegendes
+  {m:"\u041f\u043e\u043a\u0430",s:"informell",t:"Tsch\xfcss",e:"Poka!",x:"Informell",mn:"PO-ka \u2014 klingt wie 'Poker' ohne r",o:["Tsch\xfcss","Hallo","Danke","Bitte"],r:["\u041f\u043e\u043a\u0430","\u041f\u0440\u0438\u0432\u0435\u0442","\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430"],ctx:[{ru:"\u041f\u043e\u043a\u0430, \u0410\u043d\u0434\u0440\u0435\u0439!",de:"Tsch\xfcss, Andrej!"}]},
+  {m:"\u0418\u0437\u0432\u0438\u043d\u0438\u0442\u0435",s:"Entschuldigung (formell)",t:"Entschuldigung",e:"Izvinite!",x:"Formell",mn:"iz-vi-NI-tje \u2014 merke: 'Ex-Wini-tje'",o:["Entschuldigung","Danke","Bitte","Hallo"],r:["\u0418\u0437\u0432\u0438\u043d\u0438\u0442\u0435","\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430","\u041f\u0440\u0438\u0432\u0435\u0442"],ctx:[{ru:"\u0418\u0437\u0432\u0438\u043d\u0438\u0442\u0435, \u0433\u0434\u0435 \u0432\u043e\u043a\u0437\u0430\u043b?",de:"Entschuldigung, wo ist der Bahnhof?"}]},
+  {m:"\u0427\u0442\u043e \u044d\u0442\u043e?",s:"Was ist das?",t:"Was ist das?",e:"Chto eto?",x:"Sehr h\xe4ufig",mn:"SCHTO E-to? \u2014 \u0427 vor T klingt wie 'SCH'!",o:["Was ist das?","Wer ist das?","Wo ist das?","Wie hei\xdft das?"],r:["\u0427\u0442\u043e \u044d\u0442\u043e?","\u041a\u0442\u043e \u044d\u0442\u043e?","\u0413\u0434\u0435 \u044d\u0442\u043e?","\u041a\u0430\u043a \u0435\u0433\u043e \u0437\u043e\u0432\u0443\u0442?"],ctx:[{ru:"\u0427\u0442\u043e \u044d\u0442\u043e? \u042d\u0442\u043e \u043a\u043d\u0438\u0433\u0430.",de:"Was ist das? Das ist ein Buch."}]},
+  {m:"\u0413\u0434\u0435?",s:"Wo?",t:"Wo?",e:"Gde?",x:"Orts-Frage",mn:"GDE? \u2014 kurz und klar, wie 'kde' auf Tschechisch",o:["Wo?","Wann?","Wie?","Warum?"],r:["\u0413\u0434\u0435?","\u041a\u043e\u0433\u0434\u0430?","\u041a\u0430\u043a?","\u041f\u043e\u0447\u0435\u043c\u0443?"],ctx:[{ru:"\u0413\u0434\u0435 \u0442\u044b \u0436\u0438\u0432\u0451\u0448\u044c?",de:"Wo wohnst du?"}]},
+  {m:"\u041a\u0442\u043e?",s:"Wer?",t:"Wer?",e:"Kto?",x:"Personen-Frage",mn:"KTO? \u2014 sehr kurz, klingt wie 'kto'",o:["Wer?","Was?","Wo?","Wie?"],r:["\u041a\u0442\u043e?","\u0427\u0442\u043e?","\u0413\u0434\u0435?","\u041a\u0430\u043a?"],ctx:[{ru:"\u041a\u0442\u043e \u044d\u0442\u043e?",de:"Wer ist das?"}]},
+  {m:"\u044f",s:"1. Person Singular",t:"ich",e:"\u042f \u0443\u0447\u0443.",x:"Pronomen",mn:"JA \u2014 wie 'ja' auf Deutsch! \u042f = ich",o:["ich","du","er","wir"],r:["\u044f","\u0442\u044b","\u043e\u043d","\u043c\u044b"],ctx:[{ru:"\u042f \u0443\u0447\u0443 \u0440\u0443\u0441\u0441\u043a\u0438\u0439.",de:"Ich lerne Russisch."}]},
+  {m:"\u0442\u044b",s:"2. Person Singular (informell)",t:"du",e:"\u0422\u044b \u0445\u043e\u0440\u043e\u0448\u043e \u0433\u043e\u0432\u043e\u0440\u0438\u0448\u044c!",x:"Informell",mn:"TY \u2014 klingt wie 't\xfc' \u2014 du!",o:["du","ich","er","sie"],r:["\u0442\u044b","\u044f","\u043e\u043d","\u043e\u043d\u0430"],ctx:[{ru:"\u0422\u044b \u043f\u043e\u043d\u0438\u043c\u0430\u0435\u0448\u044c?",de:"Verstehst du?"}]},
+  {m:"\u043e\u043d / \u043e\u043d\u0430",s:"er / sie",t:"er / sie",e:"\u041e\u043d \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442.",x:"3. Person",mn:"ON = er, ONA = sie \u2014 Geschlecht beachten!",o:["er / sie","ich / ich","du / du","wir / wir"],r:["\u043e\u043d / \u043e\u043d\u0430","\u044f / \u044f","\u0442\u044b / \u0442\u044b","\u043c\u044b / \u043c\u044b"],ctx:[{ru:"\u041e\u043d \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442. \u041e\u043d\u0430 \u043f\u043e\u0451\u0442.",de:"Er arbeitet. Sie singt."}]},
+  {m:"\u043c\u044b / \u0432\u044b",s:"wir / Sie/ihr",t:"wir / Sie",e:"\u041c\u044b \u0443\u0447\u0438\u043c\u0441\u044f.",x:"Plural + H\xf6flichkeit",mn:"MY = wir, VY = Sie (formell) / ihr \u2014 wie im Deutschen!",o:["wir / Sie","ich / du","er / sie","sie (Plural)"],r:["\u043c\u044b / \u0432\u044b","\u044f / \u0442\u044b","\u043e\u043d / \u043e\u043d\u0430","\u043e\u043d\u0438"],ctx:[{ru:"\u041c\u044b \u0438\u0434\u0451\u043c \u0432 \u043a\u0438\u043d\u043e.",de:"Wir gehen ins Kino."}]},
+  // A2 - Erweiterung
+  {m:"\u0434\u043e\u043c",s:"Haus / Gebude",t:"Haus",e:"\u0414\u043e\u043c \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",x:"Nomen (m.)",mn:"DOM \u2014 klingt wie 'Dom' im Dom-ino!",o:["Haus","Auto","Schule","Stadt"],r:["\u0434\u043e\u043c","\u043c\u0430\u0448\u0438\u043d\u0430","\u0448\u043a\u043e\u043b\u0430","\u0433\u043e\u0440\u043e\u0434"],ctx:[{ru:"\u041c\u043e\u0439 \u0434\u043e\u043c \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",de:"Mein Haus ist gro\xdf."}]},
+  {m:"\u0448\u043a\u043e\u043b\u0430",s:"Schule",t:"Schule",e:"\u0428\u043a\u043e\u043b\u0430 \u0440\u044f\u0434\u043e\u043c.",x:"Nomen (f.)",mn:"SCHKO-la \u2014 klingt \xe4hnlich wie 'Schule'!",o:["Schule","Haus","B\xfcro","Kino"],r:["\u0448\u043a\u043e\u043b\u0430","\u0434\u043e\u043c","\u0440\u0430\u0431\u043e\u0442\u0430","\u043a\u0438\u043d\u043e"],ctx:[{ru:"\u042f \u0438\u0434\u0443 \u0432 \u0448\u043a\u043e\u043b\u0443.",de:"Ich gehe zur Schule."}]},
+  {m:"\u0440\u0430\u0431\u043e\u0442\u0430",s:"Arbeit",t:"Arbeit / Job",e:"\u0420\u0430\u0431\u043e\u0442\u0430 \u0445\u043e\u0440\u043e\u0448\u0430\u044f.",x:"Nomen (f.)",mn:"ra-BO-ta \u2014 Robot kommt von Robota (Arbeit)!",o:["Arbeit / Job","Schule","Zuhause","Urlaub"],r:["\u0440\u0430\u0431\u043e\u0442\u0430","\u0448\u043a\u043e\u043b\u0430","\u0434\u043e\u043c","\u043e\u0442\u043f\u0443\u0441\u043a"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u0445\u043e\u0440\u043e\u0448\u0430\u044f \u0440\u0430\u0431\u043e\u0442\u0430.",de:"Ich habe eine gute Arbeit."}]},
+  {m:"\u0432\u043e\u0434\u0430",s:"Wasser",t:"Wasser",e:"\u0425\u043e\u043b\u043e\u0434\u043d\u0430\u044f \u0432\u043e\u0434\u0430.",x:"Nomen (f.)",mn:"VO-da \u2014 klingt wie 'Woda' \u2014 Vodka kommt auch daher!",o:["Wasser","Tee","Kaffee","Saft"],r:["\u0432\u043e\u0434\u0430","\u0447\u0430\u0439","\u043a\u043e\u0444\u0435","\u0441\u043e\u043a"],ctx:[{ru:"\u041c\u043e\u0436\u043d\u043e \u0432\u043e\u0434\u044b, \u043f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430?",de:"Kann ich etwas Wasser haben, bitte?"}]},
+  {m:"\u0435\u0434\u0430",s:"Essen / Speise",t:"Essen",e:"\u0415\u0434\u0430 \u0432\u043a\u0443\u0441\u043d\u0430\u044f.",x:"Nomen (f.)",mn:"JE-da \u2014 klingt wie 'Jeda' \u2014 Essen auf Russisch",o:["Essen","Trinken","Wasser","Brot"],r:["\u0435\u0434\u0430","\u043d\u0430\u043f\u0438\u0442\u043e\u043a","\u0432\u043e\u0434\u0430","\u0445\u043b\u0435\u0431"],ctx:[{ru:"\u0415\u0434\u0430 \u043e\u0447\u0435\u043d\u044c \u0432\u043a\u0443\u0441\u043d\u0430\u044f!",de:"Das Essen ist sehr lecker!"}]},
+  {m:"\u0445\u043b\u0435\u0431",s:"Brot",t:"Brot",e:"\u0421\u0432\u0435\u0436\u0438\u0439 \u0445\u043b\u0435\u0431.",x:"Nomen (m.)",mn:"CHLEB \u2014 wie Hleb im Slawischen (panslavisch!)",o:["Brot","Milch","Butter","K\xe4se"],r:["\u0445\u043b\u0435\u0431","\u043c\u043e\u043b\u043e\u043a\u043e","\u043c\u0430\u0441\u043b\u043e","\u0441\u044b\u0440"],ctx:[{ru:"\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u0434\u0430\u0439\u0442\u0435 \u0445\u043b\u0435\u0431.",de:"Geben Sie bitte das Brot."}]},
+  {m:"\u043a\u043d\u0438\u0433\u0430",s:"Buch",t:"Buch",e:"\u0418\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u0430\u044f \u043a\u043d\u0438\u0433\u0430.",x:"Nomen (f.)",mn:"KNI-ga \u2014 wie 'Kniga' \u2014 Bibliothek = Biblioteka",o:["Buch","Heft","Zeitung","Brief"],r:["\u043a\u043d\u0438\u0433\u0430","\u0442\u0435\u0442\u0440\u0430\u0434\u044c","\u0433\u0430\u0437\u0435\u0442\u0430","\u043f\u0438\u0441\u044c\u043c\u043e"],ctx:[{ru:"\u042f \u0447\u0438\u0442\u0430\u044e \u043a\u043d\u0438\u0433\u0443.",de:"Ich lese ein Buch."}]},
+  {m:"\u0434\u0440\u0443\u0433",s:"Freund",t:"Freund",e:"\u041c\u043e\u0439 \u0434\u0440\u0443\u0433.",x:"Nomen (m.)",mn:"DRUG \u2014 klingt wie 'Drug' = der Freund (Drogen teilen? Nein, das ist anders!)",o:["Freund","Feind","Kollege","Nachbar"],r:["\u0434\u0440\u0443\u0433","\u0432\u0440\u0430\u0433","\u043a\u043e\u043b\u043b\u0435\u0433\u0430","\u0441\u043e\u0441\u0435\u0434"],ctx:[{ru:"\u041e\u043d \u043c\u043e\u0439 \u043b\u0443\u0447\u0448\u0438\u0439 \u0434\u0440\u0443\u0433.",de:"Er ist mein bester Freund."}]},
+  {m:"\u0441\u0435\u043c\u044c\u044f",s:"Familie",t:"Familie",e:"\u041c\u043e\u044f \u0441\u0435\u043c\u044c\u044f.",x:"Nomen (f.)",mn:"SEM-ja \u2014 7 (sem = sieben) Personen in einer Familie!",o:["Familie","Freund","Kollege","Nachbar"],r:["\u0441\u0435\u043c\u044c\u044f","\u0434\u0440\u0443\u0433","\u043a\u043e\u043b\u043b\u0435\u0433\u0430","\u0441\u043e\u0441\u0435\u0434"],ctx:[{ru:"\u041c\u043e\u044f \u0441\u0435\u043c\u044c\u044f \u0431\u043e\u043b\u044c\u0448\u0430\u044f.",de:"Meine Familie ist gro\xdf."}]},
+  {m:"\u043c\u0430\u043c\u0430 / \u043f\u0430\u043f\u0430",s:"Mama / Papa",t:"Mama / Papa",e:"\u041c\u0430\u043c\u0430 \u0438 \u043f\u0430\u043f\u0430.",x:"Familie",mn:"MA-ma / PA-pa \u2014 identisch mit Deutsch!",o:["Mama / Papa","Bruder / Schwester","Opa / Oma","Onkel / Tante"],r:["\u043c\u0430\u043c\u0430 / \u043f\u0430\u043f\u0430","\u0431\u0440\u0430\u0442 / \u0441\u0435\u0441\u0442\u0440\u0430","\u0434\u0435\u0434\u0443\u0448\u043a\u0430 / \u0431\u0430\u0431\u0443\u0448\u043a\u0430","\u0434\u044f\u0434\u044f / \u0442\u0451\u0442\u044f"],ctx:[{ru:"\u041c\u0430\u043c\u0430 \u0434\u043e\u043c\u0430, \u043f\u0430\u043f\u0430 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442.",de:"Mama ist zu Hause, Papa arbeitet."}]},
+  {m:"\u0431\u0440\u0430\u0442 / \u0441\u0435\u0441\u0442\u0440\u0430",s:"Bruder / Schwester",t:"Bruder / Schwester",e:"\u0411\u0440\u0430\u0442 \u0438 \u0441\u0435\u0441\u0442\u0440\u0430.",x:"Geschwister",mn:"BRAT / SJESTRA \u2014 brat klingt wie 'Brat'wurst!",o:["Bruder / Schwester","Mama / Papa","Opa / Oma","Cousin"],r:["\u0431\u0440\u0430\u0442 / \u0441\u0435\u0441\u0442\u0440\u0430","\u043c\u0430\u043c\u0430 / \u043f\u0430\u043f\u0430","\u0434\u0435\u0434\u0443\u0448\u043a\u0430 / \u0431\u0430\u0431\u0443\u0448\u043a\u0430","\u0434\u044f\u0434\u044f / \u0442\u0451\u0442\u044f"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u0431\u0440\u0430\u0442 \u0438 \u0441\u0435\u0441\u0442\u0440\u0430.",de:"Ich habe einen Bruder und eine Schwester."}]},
+  {m:"\u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c",s:"arbeiten",t:"arbeiten",e:"\u042f \u0440\u0430\u0431\u043e\u0442\u0430\u044e.",x:"Verb",mn:"ra-bo-TAT' \u2014 gleicher Stamm wie 'Robot'!",o:["arbeiten","lernen","essen","schlafen"],r:["\u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c","\u0443\u0447\u0438\u0442\u044c\u0441\u044f","\u0435\u0441\u0442\u044c","\u0441\u043f\u0430\u0442\u044c"],ctx:[{ru:"\u042f \u0440\u0430\u0431\u043e\u0442\u0430\u044e \u0432 \u041c\u043e\u0441\u043a\u0432\u0435.",de:"Ich arbeite in Moskau."}]},
+  {m:"\u0443\u0447\u0438\u0442\u044c\u0441\u044f",s:"lernen / studieren",t:"lernen / studieren",e:"\u042f \u0443\u0447\u0443\u0441\u044c \u043a\u0430\u0436\u0434\u044b\u0439 \u0434\u0435\u043d\u044c.",x:"Verb (reflexiv)",mn:"u-TSCHIT-sja \u2014 -sja macht es reflexiv: sich selbst lehren",o:["lernen / studieren","arbeiten","spielen","schlafen"],r:["\u0443\u0447\u0438\u0442\u044c\u0441\u044f","\u0440\u0430\u0431\u043e\u0442\u0430\u0442\u044c","\u0438\u0433\u0440\u0430\u0442\u044c","\u0441\u043f\u0430\u0442\u044c"],ctx:[{ru:"\u042f \u0443\u0447\u0443\u0441\u044c \u0440\u0443\u0441\u0441\u043a\u043e\u043c\u0443.",de:"Ich lerne Russisch."}]},
+  {m:"\u0433\u043e\u0432\u043e\u0440\u0438\u0442\u044c",s:"sprechen / sagen",t:"sprechen",e:"\u042f \u0433\u043e\u0432\u043e\u0440\u044e \u043f\u043e-\u0440\u0443\u0441\u0441\u043a\u0438.",x:"Verb",mn:"go-vo-RIT' \u2014 gov\xf6r-it = er/sie spricht",o:["sprechen","sagen","rufen","fl\xfcstern"],r:["\u0433\u043e\u0432\u043e\u0440\u0438\u0442\u044c","\u0441\u043a\u0430\u0437\u0430\u0442\u044c","\u043a\u0440\u0438\u0447\u0430\u0442\u044c","\u0448\u0435\u043f\u0442\u0430\u0442\u044c"],ctx:[{ru:"\u0422\u044b \u0433\u043e\u0432\u043e\u0440\u0438\u0448\u044c \u043f\u043e-\u0440\u0443\u0441\u0441\u043a\u0438?",de:"Sprichst du Russisch?"}]},
+  {m:"\u043f\u043e\u043d\u0438\u043c\u0430\u0442\u044c",s:"verstehen",t:"verstehen",e:"\u042f \u043f\u043e\u043d\u0438\u043c\u0430\u044e.",x:"Verb",mn:"po-ni-MAT' \u2014 Betonung auf MAT' (klingt wie: 'Po-ni-MATH')",o:["verstehen","wissen","sehen","h\xf6ren"],r:["\u043f\u043e\u043d\u0438\u043c\u0430\u0442\u044c","\u0437\u043d\u0430\u0442\u044c","\u0432\u0438\u0434\u0435\u0442\u044c","\u0441\u043b\u044b\u0448\u0430\u0442\u044c"],ctx:[{ru:"\u042f \u043f\u043e\u043d\u0438\u043c\u0430\u044e \u0432\u0441\u0451.",de:"Ich verstehe alles."}]},
+  {m:"\u0445\u043e\u0442\u0435\u0442\u044c",s:"wollen / m\xf6chten",t:"wollen",e:"\u042f \u0445\u043e\u0447\u0443 \u0435\u0441\u0442\u044c.",x:"Verb",mn:"cho-TET' \u2014 \u044f \u0445\u043e\u0447\u0443 = ich will (unregelm.!)",o:["wollen","k\xf6nnen","m\xfcssen","d\xfcrfen"],r:["\u0445\u043e\u0442\u0435\u0442\u044c","\u043c\u043e\u0447\u044c","\u0434\u043e\u043b\u0436\u0435\u043d","\u043c\u043e\u0436\u043d\u043e"],ctx:[{ru:"\u042f \u0445\u043e\u0447\u0443 \u043f\u0438\u0446\u0446\u0443!",de:"Ich will Pizza!"}]},
+  // B1 - Fortgeschritten
+  {m:"\u043c\u043e\u0447\u044c",s:"k\xf6nnen",t:"k\xf6nnen",e:"\u042f \u043c\u043e\u0433\u0443 \u043f\u043e\u043c\u043e\u0447\u044c.",x:"Modalverb",mn:"MOTSCH' \u2014 \u044f \u043c\u043e\u0433\u0443 = ich kann (unregelm.!)",o:["k\xf6nnen","wollen","m\xfcssen","wissen"],r:["\u043c\u043e\u0447\u044c","\u0445\u043e\u0442\u0435\u0442\u044c","\u0434\u043e\u043b\u0436\u0435\u043d","\u0437\u043d\u0430\u0442\u044c"],ctx:[{ru:"\u042f \u043c\u043e\u0433\u0443 \u043f\u043e\u043c\u043e\u0447\u044c \u0442\u0435\u0431\u0435.",de:"Ich kann dir helfen."}]},
+  {m:"\u0437\u043d\u0430\u0442\u044c",s:"wissen / kennen",t:"wissen / kennen",e:"\u042f \u0437\u043d\u0430\u044e \u044d\u0442\u043e.",x:"Verb",mn:"SNAT' \u2014 \u044f \u0437\u043d\u0430\u044e = ich wei\xdf (ohne -et!)",o:["wissen / kennen","sehen","h\xf6ren","denken"],r:["\u0437\u043d\u0430\u0442\u044c","\u0432\u0438\u0434\u0435\u0442\u044c","\u0441\u043b\u044b\u0448\u0430\u0442\u044c","\u0434\u0443\u043c\u0430\u0442\u044c"],ctx:[{ru:"\u042f \u0437\u043d\u0430\u044e \u044d\u0442\u043e\u0433\u043e \u0447\u0435\u043b\u043e\u0432\u0435\u043a\u0430.",de:"Ich kenne diesen Mann."}]},
+  {m:"\u0432\u0440\u0435\u043c\u044f",s:"Zeit",t:"Zeit",e:"\u0412\u0440\u0435\u043c\u044f \u0438\u0434\u0451\u0442.",x:"Nomen (n.)",mn:"WRE-mja \u2014 unregelm. Nomen! Pl.: \u0432\u0440\u0435\u043c\u0435\u043d\u0430",o:["Zeit","Tag","Woche","Monat"],r:["\u0432\u0440\u0435\u043c\u044f","\u0434\u0435\u043d\u044c","\u043d\u0435\u0434\u0435\u043b\u044f","\u043c\u0435\u0441\u044f\u0446"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u043d\u0435\u0442 \u0432\u0440\u0435\u043c\u0435\u043d\u0438.",de:"Ich habe keine Zeit."}]},
+  {m:"\u0434\u0435\u043d\u044c\u0433\u0438",s:"Geld",t:"Geld",e:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u0434\u0435\u043d\u044c\u0433\u0438.",x:"Nomen (Plural!)",mn:"DJEN-gi \u2014 immer Plural im Russischen! (wie 'Finanzen')",o:["Geld","Zeit","Arbeit","Freude"],r:["\u0434\u0435\u043d\u044c\u0433\u0438","\u0432\u0440\u0435\u043c\u044f","\u0440\u0430\u0431\u043e\u0442\u0430","\u0440\u0430\u0434\u043e\u0441\u0442\u044c"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u043d\u0435\u0442 \u0434\u0435\u043d\u0435\u0433.",de:"Ich habe kein Geld."}]},
+  {m:"\u043c\u0435\u0441\u0442\u043e",s:"Platz / Ort / Stelle",t:"Ort / Platz",e:"\u0425\u043e\u0440\u043e\u0448\u0435\u0435 \u043c\u0435\u0441\u0442\u043e.",x:"Nomen (n.)",mn:"MJE-sto \u2014 klingt wie 'Mesto' \u2014 Ort, Platz, Stelle",o:["Ort / Platz","Zeit","Land","Stadt"],r:["\u043c\u0435\u0441\u0442\u043e","\u0432\u0440\u0435\u043c\u044f","\u0441\u0442\u0440\u0430\u043d\u0430","\u0433\u043e\u0440\u043e\u0434"],ctx:[{ru:"\u042d\u0442\u043e \u043a\u0440\u0430\u0441\u0438\u0432\u043e\u0435 \u043c\u0435\u0441\u0442\u043e.",de:"Das ist ein sch\xf6ner Ort."}]},
+  {m:"\u043b\u044e\u0431\u0438\u0442\u044c",s:"lieben / m\xf6gen",t:"lieben",e:"\u042f \u043b\u044e\u0431\u043b\u044e \u0442\u0435\u0431\u044f.",x:"Verb",mn:"LJU-bit' \u2014 'Liubit' klingt wie 'Liebe-it'!",o:["lieben","m\xf6gen","hassen","kennen"],r:["\u043b\u044e\u0431\u0438\u0442\u044c","\u043d\u0440\u0430\u0432\u0438\u0442\u044c\u0441\u044f","\u043d\u0435\u043d\u0430\u0432\u0438\u0434\u0435\u0442\u044c","\u0437\u043d\u0430\u0442\u044c"],ctx:[{ru:"\u042f \u043b\u044e\u0431\u043b\u044e \u0442\u0435\u0431\u044f!",de:"Ich liebe dich!"}]},
+  {m:"\u0436\u0438\u0437\u043d\u044c",s:"Leben",t:"Leben",e:"\u0416\u0438\u0437\u043d\u044c \u043f\u0440\u0435\u043a\u0440\u0430\u0441\u043d\u0430.",x:"Nomen (f.)",mn:"ZHISN' \u2014 klingt wie 'Jisn' \u2014 das Leben, mit Weichzeichen!",o:["Leben","Tod","Welt","Zeit"],r:["\u0436\u0438\u0437\u043d\u044c","\u0441\u043c\u0435\u0440\u0442\u044c","\u043c\u0438\u0440","\u0432\u0440\u0435\u043c\u044f"],ctx:[{ru:"\u0416\u0438\u0437\u043d\u044c \u043f\u0440\u0435\u043a\u0440\u0430\u0441\u043d\u0430!",de:"Das Leben ist sch\xf6n!"}]},
+  {m:"\u0441\u043b\u043e\u0432\u043e",s:"Wort",t:"Wort",e:"\u041d\u043e\u0432\u043e\u0435 \u0441\u043b\u043e\u0432\u043e.",x:"Nomen (n.)",mn:"SLO-vo \u2014 klingt wie 'Slowo' \u2014 slawisch (Slav kommt davon!)",o:["Wort","Satz","Sprache","Buch"],r:["\u0441\u043b\u043e\u0432\u043e","\u043f\u0440\u0435\u0434\u043b\u043e\u0436\u0435\u043d\u0438\u0435","\u044f\u0437\u044b\u043a","\u043a\u043d\u0438\u0433\u0430"],ctx:[{ru:"\u041a\u0430\u043a\u043e\u0435 \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u043e\u0435 \u0441\u043b\u043e\u0432\u043e!",de:"Was f\xfcr ein interessantes Wort!"}]},
+  // B2 - Profi
+  {m:"\u043d\u0430\u043f\u0440\u0438\u043c\u0435\u0440",s:"zum Beispiel",t:"zum Beispiel",e:"\u041d\u0430\u043f\u0440\u0438\u043c\u0435\u0440, \u043a\u043e\u0448\u043a\u0430.",x:"Konjunktion",mn:"na-pri-MER \u2014 klingt wie 'na Premier' \u2014 beispielsweise",o:["zum Beispiel","zum Gl\xfcck","trotzdem","deshalb"],r:["\u043d\u0430\u043f\u0440\u0438\u043c\u0435\u0440","\u043a \u0441\u0447\u0430\u0441\u0442\u044c\u044e","\u0442\u0435\u043c \u043d\u0435 \u043c\u0435\u043d\u0435\u0435","\u043f\u043e\u044d\u0442\u043e\u043c\u0443"],ctx:[{ru:"\u041d\u0430\u043f\u0440\u0438\u043c\u0435\u0440, \u044f \u043b\u044e\u0431\u043b\u044e \u043a\u043e\u0448\u0435\u043a.",de:"Zum Beispiel mag ich Katzen."}]},
+  {m:"\u0432\u043e\u043e\u0431\u0449\u0435",s:"\xfcberhaupt / im Allgemeinen",t:"\xfcberhaupt",e:"\u042d\u0442\u043e \u0432\u043e\u043e\u0431\u0449\u0435 \u043d\u0435 \u0432\u0430\u0436\u043d\u043e.",x:"Adverb",mn:"vo-OB-sche \u2014 komplexes Wort, typisch russisch",o:["\xfcberhaupt","trotzdem","deshalb","daher"],r:["\u0432\u043e\u043e\u0431\u0449\u0435","\u0442\u0435\u043c \u043d\u0435 \u043c\u0435\u043d\u0435\u0435","\u043f\u043e\u044d\u0442\u043e\u043c\u0443","\u0441\u043b\u0435\u0434\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u043d\u043e"],ctx:[{ru:"\u042d\u0442\u043e \u0432\u043e\u043e\u0431\u0449\u0435 \u043d\u0435 \u0432\u0430\u0436\u043d\u043e.",de:"Das ist \xfcberhaupt nicht wichtig."}]},
+  {m:"\u043e\u0431\u044a\u044f\u0441\u043d\u044f\u0442\u044c",s:"erkl\xe4ren",t:"erkl\xe4ren",e:"\u041e\u0431\u044a\u044f\u0441\u043d\u0438\u0442\u0435, \u043f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430.",x:"Verb",mn:"ob-jas-NJAT' \u2014 Betonung auf NJAT' (erkl\xe4ren, erl\xe4utern)",o:["erkl\xe4ren","sagen","zeigen","lehren"],r:["\u043e\u0431\u044a\u044f\u0441\u043d\u044f\u0442\u044c","\u0441\u043a\u0430\u0437\u0430\u0442\u044c","\u043f\u043e\u043a\u0430\u0437\u0430\u0442\u044c","\u0443\u0447\u0438\u0442\u044c"],ctx:[{ru:"\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043e\u0431\u044a\u044f\u0441\u043d\u0438\u0442\u0435 \u044d\u0442\u043e.",de:"Bitte erkl\xe4ren Sie das."}]},
+  {m:"\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c",s:"M\xf6glichkeit / Chance",t:"M\xf6glichkeit",e:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c.",x:"Nomen (f.)",mn:"vos-MOSH-nost' \u2014 langer Begriff, typisch f\xfcr h\xf6heres Niveau",o:["M\xf6glichkeit","Notwendigkeit","Erlaubnis","Verbot"],r:["\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c","\u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e\u0441\u0442\u044c","\u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u0438\u0435","\u0437\u0430\u043f\u0440\u0435\u0442"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c \u0443\u0447\u0438\u0442\u044c\u0441\u044f.",de:"Ich habe die M\xf6glichkeit zu lernen."}]}
+],
+grammar:[
+  {m:"\u0418\u043c\u0435\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439",s:"1. Fall \u2014 Nominativ",t:"Wer/Was? (Nominativ)",e:"Eto kot \u2014 Subjekt",x:"Subjekt",mn:"1. Fall = Wer/Was? Subjekt steht immer im Nominativ",o:["Wer/Was?","Wen/Was?","Wem?","Wessen?"],r:["\u0418\u043c\u0435\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0412\u0438\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0414\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0420\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439"],ctx:[{ru:"\u041a\u043e\u0448\u043a\u0430 \u0441\u043f\u0438\u0442. (\u041d\u043e\u043c.)",de:"Die Katze schl\xe4ft. (Nominativ)"}]},
+  {m:"\u0420\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439",s:"2. Fall \u2014 Genitiv",t:"Wessen? (Genitiv)",e:"Net kota \u2014 Verneinung",x:"Besitz & Verneinung",mn:"2. Fall = Wessen? Merke: nach NET immer Genitiv!",o:["Wessen?","Wer?","Wem?","Wen?"],r:["\u0420\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0418\u043c\u0435\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0414\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0412\u0438\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439"],ctx:[{ru:"\u041d\u0435\u0442 \u043a\u043e\u0448\u043a\u0438.",de:"Keine Katze da."}]},
+  {m:"\u0414\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0439",s:"3. Fall \u2014 Dativ",t:"Wem? (Dativ)",e:"Dat kotu",x:"Indirektes Objekt",mn:"3. Fall = Wem? Indirektes Objekt \u2014 wie im Deutschen",o:["Wem?","Wen?","Wessen?","Wer?"],r:["\u0414\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0420\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0418\u043c\u0435\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0412\u0438\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439"],ctx:[{ru:"\u042f \u0434\u0430\u044e \u043c\u0430\u043c\u0435 \u0446\u0432\u0435\u0442\u044b.",de:"Ich gebe Mama Blumen."}]},
+  {m:"\u0412\u0438\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439",s:"4. Fall \u2014 Akkusativ",t:"Wen/Was? (Akkusativ)",e:"Wizhu kota",x:"Direktes Objekt",mn:"4. Fall = Wen/Was? Direktes Objekt \u2014 wie im Deutschen",o:["Wen/Was?","Wer?","Wem?","Wessen?"],r:["\u0412\u0438\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0418\u043c\u0435\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0414\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0439","\u0420\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439"],ctx:[{ru:"\u042f \u0432\u0438\u0436\u0443 \u043a\u043e\u0448\u043a\u0443.",de:"Ich sehe die Katze."}]},
+  {m:"3 Roda",s:"3 Geschlechter",t:"m. / f. / n.",e:"kot(m.) koschka(f.) okno(n.)",x:"3 Geschlechter",mn:"Tipp: Konsonant=meist m., -a/-ja=f., -o/-e=n.",o:["m. / f. / n.","Nur 2","Kein Geschlecht","4 Geschlechter"],r:["3 \u0440\u043e\u0434\u0430","2 \u0440\u043e\u0434\u0430","\u041d\u0435\u0442 \u0440\u043e\u0434\u0430","4 \u0440\u043e\u0434\u0430"],ctx:[{ru:"\u043a\u043e\u0442 (\u043c.) \u2014 \u043a\u043e\u0448\u043a\u0430 (\u0436.) \u2014 \u043e\u043a\u043d\u043e (\u0441\u0440.)",de:"Kater (m.) \u2014 Katze (f.) \u2014 Fenster (n.)"}]}
+],
+listening:[
+  {m:"\u041f\u0440\u0438\u0432\u0435\u0442",s:"H\xf6r: Begr\xfc\xdfung",t:"\u041f\u0440\u0438\u0432\u0435\u0442",e:"pri-WJET",x:"Betonung Silbe 2",o:["\u041f\u0440\u0438\u0432\u0435\u0442","\u041f\u043e\u043a\u0430","\u0414\u0430","\u041d\u0435\u0442"],r:["\u041f\u0440\u0438\u0432\u0435\u0442","\u041f\u043e\u043a\u0430","\u0414\u0430","\u041d\u0435\u0442"]},
+  {m:"\u0421\u043f\u0430\u0441\u0438\u0431\u043e",s:"H\xf6r: Danke",t:"\u0421\u043f\u0430\u0441\u0438\u0431\u043e",e:"spa-SI-ba",x:"O klingt wie A",o:["\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430","\u0414\u0430","\u041d\u0435\u0442"],r:["\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430","\u0414\u0430","\u041d\u0435\u0442"]},
+  {m:"\u041c\u043e\u0441\u043a\u0432\u0430",s:"H\xf6r: Stadtname",t:"\u041c\u043e\u0441\u043a\u0432\u0430",e:"mas-KWA",x:"O unbetont = A",o:["\u041c\u043e\u0441\u043a\u0432\u0430","\u0420\u043e\u0441\u0441\u0438\u044f","\u0411\u0435\u0440\u043b\u0438\u043d","\u041a\u0438\u0435\u0432"],r:["\u041c\u043e\u0441\u043a\u0432\u0430","\u0420\u043e\u0441\u0441\u0438\u044f","\u0411\u0435\u0440\u043b\u0438\u043d","\u041a\u0438\u0435\u0432"]},
+  {m:"\u041a\u0430\u043a \u0434\u0435\u043b\u0430?",s:"H\xf6r: Wie geht's?",t:"\u041a\u0430\u043a \u0434\u0435\u043b\u0430?",e:"kak de-LA?",x:"Stimme steigt",o:["\u041a\u0430\u043a \u0434\u0435\u043b\u0430?","\u0427\u0442\u043e \u044d\u0442\u043e?","\u0413\u0434\u0435 \u0442\u044b?","\u041a\u0442\u043e \u0442\u044b?"],r:["\u041a\u0430\u043a \u0434\u0435\u043b\u0430?","\u0427\u0442\u043e \u044d\u0442\u043e?","\u0413\u0434\u0435 \u0442\u044b?","\u041a\u0442\u043e \u0442\u044b?"]},
+  {m:"\u0414\u043e \u0441\u0432\u0438\u0434\u0430\u043d\u0438\u044f",s:"H\xf6r: Auf Wiedersehen",t:"\u0414\u043e \u0441\u0432\u0438\u0434\u0430\u043d\u0438\u044f",e:"da svi-DA-ni-ja",x:"Formell",o:["\u0414\u043e \u0441\u0432\u0438\u0434\u0430\u043d\u0438\u044f","\u041f\u0440\u0438\u0432\u0435\u0442","\u041f\u043e\u043a\u0430","\u0421\u043f\u0430\u0441\u0438\u0431\u043e"],r:["\u0414\u043e \u0441\u0432\u0438\u0434\u0430\u043d\u0438\u044f","\u041f\u0440\u0438\u0432\u0435\u0442","\u041f\u043e\u043a\u0430","\u0421\u043f\u0430\u0441\u0438\u0431\u043e"]},
+  {m:"\u0425\u043e\u0440\u043e\u0448\u043e",s:"H\xf6r: Gut",t:"\u0425\u043e\u0440\u043e\u0448\u043e",e:"ha-ra-SHO",x:"O unbetont = A",o:["\u0425\u043e\u0440\u043e\u0448\u043e","\u041f\u043b\u043e\u0445\u043e","\u0414\u0430","\u041d\u0435\u0442"],r:["\u0425\u043e\u0440\u043e\u0448\u043e","\u041f\u043b\u043e\u0445\u043e","\u0414\u0430","\u041d\u0435\u0442"]},
+  {m:"\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e",s:"H\xf6r: Ich verstehe nicht",t:"\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e",e:"ja nje pa-ni-MA-ju",x:"NE macht weich",o:["\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e","\u042f \u043d\u0435 \u0437\u043d\u0430\u044e","\u042f \u043d\u0435 \u043c\u043e\u0433\u0443","\u042f \u043d\u0435 \u0445\u043e\u0447\u0443"],r:["\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e","\u042f \u043d\u0435 \u0437\u043d\u0430\u044e","\u042f \u043d\u0435 \u043c\u043e\u0433\u0443","\u042f \u043d\u0435 \u0445\u043e\u0447\u0443"]}
+],
+speaking:[
+  {m:"\u0420",s:"Gerolltes Zungenspitzen-R",t:"Gerolltes Zungenspitzen-R",e:"Rossija, ryba",x:"\xdcbung: r-r-r",mn:"Tipp: Sage schnell 'drrr' und lass Zungenspitze vibrieren",o:["Gerolltes Zungenspitzen-R","Deutsches Z\xe4pfchen-R","Stummes R","Englisches R"],r:["\u0420 (Zungenspitze)","\u0420 (Z\xe4pfchen)","\u0420 (stumm)","\u0420 (englisch)"]},
+  {m:"\u042b",s:"Verdunkeltes I",t:"verdunkeltes i",e:"Ty, my, vy",x:"Zunge zur\xfcck",mn:"Sag 'i' aber schiebe die Zunge ganz nach hinten \u2014 klingt dumpfer",o:["verdunkeltes i","Langes I","Wie U","Wie \xd6"],r:["\u042b (verdunkelt)","\u0418 (klar)","\u0423","\u042d"]},
+  {m:"\u0416 / \u0428",s:"Russische Zischlaute",t:"\u0416=stimmhaftes Sch, \u0428=stimmloses Sch",e:"Zhara vs. Scharf",x:"Zunge weiter hinten",mn:"\u0416 = Sch mit Vibration, \u0428 = Sch ohne Vibration",o:["\u0416=stimmhaftes Sch, \u0428=stimmloses Sch","Beide stimmlos","Beide stimmhaft","Gleich"],r:["\u0416\u2260\u0428 (stimm.)","Beide glhh","Beide sth","Gleich"]},
+  {m:"Intonation?",s:"Fragesatz-Melodie",t:"Stimme steigt auf betonter Silbe",e:"Eto Iwan? \u2014 hoch bei WAN",x:"Anders als im Deutschen!",mn:"Im Russischen steigt Stimme auf betonter Silbe \u2014 nicht am Satzende!",o:["Stimme steigt auf betonter Silbe","Am Ende hoch","Gleichm\xe4\xdfig","Immer fallend"],r:["Anstieg Betonungssilbe","Immer am Ende","Gleichm\xe4\xdfig","Immer fallend"]}
+],
+sentences:[
+  {m:"\u042d\u0442\u043e \u043a\u043e\u0442.",s:"Einfachster Satz",t:"Das ist eine Katze.",e:"Eto kot.",x:"Kein Verb n\xf6tig!",mn:"Im Russischen gibt es kein 'ist' im Pr\xe4sens \u2014 Subjekt + Nomen reicht!",o:["Das ist eine Katze.","Ich bin eine Katze.","Du bist eine Katze.","Es gibt eine Katze."],r:["\u042d\u0442\u043e \u043a\u043e\u0442.","\u042f \u043a\u043e\u0442.","\u0422\u044b \u043a\u043e\u0442.","\u0415\u0441\u0442\u044c \u043a\u043e\u0442."],ctx:[{ru:"\u042d\u0442\u043e \u043c\u043e\u0439 \u0434\u0440\u0443\u0433.",de:"Das ist mein Freund."}]},
+  {m:"\u042f \u0438\u0434\u0443 \u0434\u043e\u043c\u043e\u0439.",s:"Pr\xe4sens",t:"Ich gehe nach Hause.",e:"Ja idu domoj.",x:"idu = 1.Sg.",mn:"\u0438\u0434\u0442\u0438 (gehen) = \u042f \u0438\u0434\u0443 / \u0422\u044b \u0438\u0434\u0451\u0448\u044c \u2014 sehr unregelm\xe4\xdfig!",o:["Ich gehe nach Hause.","Ich ging.","Ich werde gehen.","Ich bin gegangen."],r:["\u042f \u0438\u0434\u0443 \u0434\u043e\u043c\u043e\u0439.","\u042f \u0448\u0451\u043b \u0434\u043e\u043c\u043e\u0439.","\u042f \u043f\u043e\u0439\u0434\u0443 \u0434\u043e\u043c\u043e\u0439.","\u042f \u0445\u043e\u0434\u0438\u043b \u0434\u043e\u043c\u043e\u0439."],ctx:[{ru:"\u042f \u0438\u0434\u0443 \u0432 \u0448\u043a\u043e\u043b\u0443.",de:"Ich gehe zur Schule."}]},
+  {m:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u043a\u043d\u0438\u0433\u0430.",s:"Besitz",t:"Ich habe ein Buch.",e:"U menja jest kniga.",x:"Bei mir ist",mn:"'\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c' = w\xf6rtlich 'Bei mir ist' \u2014 kein 'haben' im Russischen!",o:["Ich habe ein Buch.","Ich brauche ein Buch.","Ich will ein Buch.","Ich sehe ein Buch."],r:["\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u043a\u043d\u0438\u0433\u0430.","\u041c\u043d\u0435 \u043d\u0443\u0436\u043d\u0430 \u043a\u043d\u0438\u0433\u0430.","\u042f \u0445\u043e\u0447\u0443 \u043a\u043d\u0438\u0433\u0443.","\u042f \u0432\u0438\u0436\u0443 \u043a\u043d\u0438\u0433\u0443."],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u0441\u043e\u0431\u0430\u043a\u0430.",de:"Ich habe einen Hund."}]},
+  {m:"\u042f \u0445\u043e\u0447\u0443 \u043f\u0438\u0442\u044c.",s:"Wunsch + Infinitiv",t:"Ich m\xf6chte trinken.",e:"Ja chotschu pit.",x:"\u0445\u043e\u0447\u0443 + Infinitiv",mn:"\u0445\u043e\u0447\u0443 + Infinitiv = ich m\xf6chte + Verb \u2014 wie im Deutschen!",o:["Ich m\xf6chte trinken.","Ich kann trinken.","Ich muss trinken.","Ich darf trinken."],r:["\u042f \u0445\u043e\u0447\u0443 \u043f\u0438\u0442\u044c.","\u042f \u043c\u043e\u0433\u0443 \u043f\u0438\u0442\u044c.","\u042f \u0434\u043e\u043b\u0436\u0435\u043d \u043f\u0438\u0442\u044c.","\u041c\u043d\u0435 \u043c\u043e\u0436\u043d\u043e \u043f\u0438\u0442\u044c."],ctx:[{ru:"\u042f \u0445\u043e\u0447\u0443 \u0435\u0441\u0442\u044c \u043f\u0438\u0446\u0446\u0443.",de:"Ich m\xf6chte Pizza essen."}]},
+  {m:"\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e.",s:"Verneinung",t:"Ich verstehe nicht.",e:"Ja ne ponimaju.",x:"\u043d\u0435 + Verb",mn:"\u043d\u0435 kommt direkt vor das Verb \u2014 einfacher als im Deutschen!",o:["Ich verstehe nicht.","Ich wei\xdf nicht.","Ich kann nicht.","Ich will nicht."],r:["\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e.","\u042f \u043d\u0435 \u0437\u043d\u0430\u044e.","\u042f \u043d\u0435 \u043c\u043e\u0433\u0443.","\u042f \u043d\u0435 \u0445\u043e\u0447\u0443."],ctx:[{ru:"\u042f \u043d\u0435 \u0437\u043d\u0430\u044e \u044d\u0442\u043e\u0433\u043e \u0441\u043b\u043e\u0432\u0430.",de:"Ich kenne dieses Wort nicht."}]}
+  ,{m:'Можно мне помочь?',s:'Bitte um Hilfe',t:'Kann ich Ihnen helfen?',e:'Moschno mnje pomosch?',x:'можно + Infinitiv',mn:'MOSCHno + Infinitiv = darf/kann man',o:['Kann ich Ihnen helfen?','Ich will helfen.','Danke für die Hilfe.','Ich brauche Hilfe.'],r:['Можно мне помочь?','Я хочу помочь.','Спасибо за помощь.','Мне нужна помощь.'],ctx:[{ru:'Можно мне воды?',de:'Kann ich etwas Wasser haben?'}]}
+  ,{m:'Я из Германии.',s:'Herkunft',t:'Ich komme aus Deutschland.',e:'Ja is Germanii.',x:'из + Genitiv',mn:'из + Genitiv = aus (Genitiv: Германии)',o:['Ich komme aus Deutschland.','Ich wohne in Deutschland.','Ich fahre nach Deutschland.','Ich kenne Deutschland.'],r:['Я из Германии.','Я живу в Германии.','Я еду в Германию.','Я знаю Германию.'],ctx:[{ru:'Я из Германии, а ты?',de:'Ich komme aus Deutschland, und du?'}]}
+  ,{m:'Мне нравится.',s:'etwas gefällt mir',t:'Es gefällt mir.',e:'Mnje nrawitsja!',x:'мне + нравится',mn:'Wörtlich: Mir gefällt es (мне = mir, Dativ!)',o:['Es gefällt mir.','Ich mag es.','Ich will es.','Ich habe es.'],r:['Мне нравится.','Я люблю это.','Я хочу это.','У меня есть это.'],ctx:[{ru:'Мне нравится русский язык.',de:'Mir gefällt die russische Sprache.'}]}
+
+],
+reading:[
+  {m:"A \u2014 Anna",s:"Buchstabe erkennen",t:"A wie in Anna",e:"A-N-N-A \u2192 Anna",x:"Erkenne A",o:["A wie in Anna","B wie in Boris","W wie in Wera","G wie in Galina"],r:["\u0410 \u2014 \u0410\u043d\u043d\u0430","\u0411 \u2014 \u0411\u043e\u0440\u0438\u0441","\u0412 \u2014 \u0412\u0435\u0440\u0430","\u0413 \u2014 \u0413\u0430\u043b\u0438\u043d\u0430"]},
+  {m:"Privet!",s:"Einfacher Satz",t:"Privet! = Hallo!",e:"Privet, Anna!",x:"Erkenne Privet",o:["Privet! = Hallo!","Poka! = Tsch\xfcss!","Spasibo! = Danke!","Net! = Nein!"],r:["\u041f\u0440\u0438\u0432\u0435\u0442! (Hallo!)","\u041f\u043e\u043a\u0430! (Tsch\xfcss!)","\u0421\u043f\u0430\u0441\u0438\u0431\u043e! (Danke!)","\u041d\u0435\u0442! (Nein!)"]},
+  {m:"Ja zhivu w Moskwe.",s:"Wohnort lesen",t:"Ich wohne in Moskau.",e:"Ja zhivu w Moskwe.",x:"zhivu = ich wohne",o:["Ich wohne in Moskau.","Ich besuche Moskau.","Ich komme aus Moskau.","Ich liebe Moskau."],r:["\u042f \u0436\u0438\u0432\u0443 \u0432 \u041c\u043e\u0441\u043a\u0432\u0435.","\u042f \u043f\u043e\u0441\u0435\u0449\u0430\u044e \u041c\u043e\u0441\u043a\u0432\u0443.","\u042f \u0438\u0437 \u041c\u043e\u0441\u043a\u0432\u044b.","\u042f \u043b\u044e\u0431\u043b\u044e \u041c\u043e\u0441\u043a\u0432\u0443."]}
+],
+numbers:[
+  {m:"один",s:"1",t:"eins",e:"1 = один",x:"Maskulin",mn:"Klingt wie 'o-DIN' — ein DIN-A4-Blatt",o:["eins","zwei","drei","vier"],r:["один","два","три","четыре"]},
+  {m:"два",s:"2",t:"zwei",e:"2 = два",x:"Maskulin/Neutrum",mn:"Klingt wie 'dva' — merke: DVD = 2 D's",o:["zwei","eins","drei","vier"],r:["два","один","три","четыре"]},
+  {m:"три",s:"3",t:"drei",e:"3 = три",x:"Alle Geschlechter",mn:"Klingt wie 'tri' — Triathlon = 3 Disziplinen!",o:["drei","zwei","vier","fünf"],r:["три","два","четыре","пять"]},
+  {m:"четыре",s:"4",t:"vier",e:"4 = четыре",x:"Alle Geschlechter",mn:"tsche-TY-re — 4 Silben für die Zahl 4!",o:["vier","drei","fünf","sechs"],r:["четыре","три","пять","шесть"]},
+  {m:"пять",s:"5",t:"fünf",e:"5 = пять",x:"Mit Weichheitszeichen",mn:"pjat' — das weiche Zeichen am Ende!",o:["fünf","vier","sechs","sieben"],r:["пять","четыре","шесть","семь"]},
+  {m:"шесть",s:"6",t:"sechs",e:"6 = шесть",x:"Mit Weichheitszeichen",mn:"schest' — SCHESTalt = 6 Seiten",o:["sechs","fünf","sieben","acht"],r:["шесть","пять","семь","восемь"]},
+  {m:"семь",s:"7",t:"sieben",e:"7 = семь",x:"Mit Weichheitszeichen",mn:"sem' — SEMester = 7 Monate!",o:["sieben","sechs","acht","neun"],r:["семь","шесть","восемь","девять"]},
+  {m:"восемь",s:"8",t:"acht",e:"8 = восемь",x:"Mit Weichheitszeichen",mn:"vo-SEM' — klingt wie 'Wosem'",o:["acht","sieben","neun","zehn"],r:["восемь","семь","девять","десять"]},
+  {m:"девять",s:"9",t:"neun",e:"9 = девять",x:"Mit Weichheitszeichen",mn:"de-WJAT' — klingt wie 'Dewjat'",o:["neun","acht","zehn","elf"],r:["девять","восемь","десять","одиннадцать"]},
+  {m:"десять",s:"10",t:"zehn",e:"10 = десять",x:"Mit Weichheitszeichen",mn:"DE-sjat' — Dezimal hat auch 10 als Basis!",o:["zehn","neun","elf","zwölf"],r:["десять","девять","одиннадцать","двенадцать"]},
+  {m:"одиннадцать",s:"11",t:"elf",e:"11 = одиннадцать",x:"Eins + zehn",mn:"odin-NAD-zat' = eins-auf-zehn (11 = 1 auf 10)",o:["elf","zehn","zwölf","dreizehn"],r:["одиннадцать","десять","двенадцать","тринадцать"]},
+  {m:"двенадцать",s:"12",t:"zwölf",e:"12 = двенадцать",x:"Zwei + zehn",mn:"dvje-NAD-zat' = zwei-auf-zehn",o:["zwölf","elf","dreizehn","vierzehn"],r:["двенадцать","одиннадцать","тринадцать","четырнадцать"]},
+  {m:"двадцать",s:"20",t:"zwanzig",e:"20 = двадцать",x:"Zwei Zehner",mn:"dva-DZAT' = zwei-zehn (20 = 2 x 10)",o:["zwanzig","zehn","dreißig","vierzig"],r:["двадцать","десять","тридцать","сорок"]},
+  {m:"сто",s:"100",t:"hundert",e:"100 = сто",x:"Basis für Hunderter",mn:"STO — kurz und einfach, wie 'Sto'p!",o:["hundert","zwanzig","tausend","zehn"],r:["сто","двадцать","тысяча","десять"]},
+  {m:"сколько?",s:"Wie viel?",t:"Wie viel?",e:"Сколько стоит?",x:"Grundfrage für Zahlen",mn:"SKOL-ka — die wichtigste Frage beim Einkaufen!",o:["Wie viel?","Wie viele?","Wie oft?","Wie lange?"],r:["Сколько?","Сколько раз?","Как долго?","Как часто?"]}
+,
+  {m:"тридцать",s:"30",t:"dreißig",e:"30 = тридцать",x:"Drei Zehner",mn:"tri-DZAT' = drei-zehn (30 = 3 x 10)",o:["dreißig","zwanzig","vierzig","fünfzig"],r:["тридцать","двадцать","сорок","пятьдесят"]},
+  {m:"сорок",s:"40",t:"vierzig",e:"40 = сорок",x:"Ausnahme!",mn:"SO-rok — 40 ist eine Ausnahme! (nicht четыредесят)",o:["vierzig","dreißig","fünfzig","sechzig"],r:["сорок","тридцать","пятьдесят","шестьдесят"]},
+  {m:"пятьдесят",s:"50",t:"fünfzig",e:"50 = пятьдесят",x:"Fünf-zehn",mn:"pjat'-DE-sjat' = fünf-zehn (50 = 5 x 10)",o:["fünfzig","vierzig","sechzig","siebzig"],r:["пятьдесят","сорок","шестьдесят","семьдесят"]},
+  {m:"шестьдесят",s:"60",t:"sechzig",e:"60 = шестьдесят",x:"Sechs-zehn",mn:"schest'-DE-sjat' = sechs-zehn",o:["sechzig","fünfzig","siebzig","achtzig"],r:["шестьдесят","пятьдесят","семьдесят","восемьдесят"]},
+  {m:"семьдесят",s:"70",t:"siebzig",e:"70 = семьдесят",x:"Sieben-zehn",mn:"sem'-DE-sjat' = sieben-zehn",o:["siebzig","sechzig","achtzig","neunzig"],r:["семьдесят","шестьдесят","восемьдесят","девяносто"]},
+  {m:"восемьдесят",s:"80",t:"achtzig",e:"80 = восемьдесят",x:"Acht-zehn",mn:"vosem'-DE-sjat' = acht-zehn",o:["achtzig","siebzig","neunzig","hundert"],r:["восемьдесят","семьдесят","девяносто","сто"]},
+  {m:"девяносто",s:"90",t:"neunzig",e:"90 = девяносто",x:"Ausnahme!",mn:"de-wja-NO-sto — auch eine Ausnahme! (nicht neun-zehn)",o:["neunzig","achtzig","hundert","tausend"],r:["девяносто","восемьдесят","сто","тысяча"]},
+  {m:"тысяча",s:"1000",t:"tausend",e:"1000 = тысяча",x:"Tausend",mn:"TY-sja-tscha — klingt wie 'Tysjacha'",o:["tausend","hundert","Million","Milliarde"],r:["тысяча","сто","миллион","миллиард"]},
+  {m:"первый / первая",s:"erster / erste",t:"erster / erste",e:"первый день",x:"Ordinalzahl",mn:"PJER-wyj — 1. = pervyj (Adjektiv!)",o:["erster / erste","zweiter","dritter","vierter"],r:["первый","второй","третий","четвёртый"]},
+  {m:"второй / вторая",s:"zweiter / zweite",t:"zweiter / zweite",e:"второй этаж",x:"Ordinalzahl",mn:"VTO-roj — 2. = wtoroj (wie Dienstag = wtornik!)",o:["zweiter","erster","dritter","vierter"],r:["второй","первый","третий","четвёртый"]},
+  {m:"много",s:"viel / viele",t:"viel / viele",e:"Очень много.",x:"Mengenangabe",mn:"MNO-go — viel(e), fast wie englisch 'many'",o:["viel / viele","wenig","genug","zu viel"],r:["много","мало","достаточно","слишком много"]},
+  {m:"сколько времени?",s:"Wie spät ist es?",t:"Wie spät ist es?",e:"Сколько времени? Девять.",x:"Uhrzeit-Frage",mn:"SKOL-ko WREM-je-ni? = Wie viel Zeit? = Wie spät ist es?",o:["Wie spät ist es?","Wie viel kostet das?","Wie heißt das?","Wie weit?"],r:["Сколько времени?","Сколько стоит?","Как называется?","Как далеко?"]}
+],
+
+colors:[
+  {m:"красный",s:"rot (maskulin)",t:"rot",e:"красный цвет",x:"Adjektiv m.",mn:"KRASnyj — der Rote Platz heißt Красная площадь!",o:["rot","blau","grün","gelb"],r:["красный","синий","зелёный","жёлтый"]},
+  {m:"синий",s:"blau (maskulin)",t:"blau",e:"синее небо",x:"Adjektiv m.",mn:"SI-nij — klingt wie 'Sinie' — Meer ist blau",o:["blau","rot","grün","lila"],r:["синий","красный","зелёный","фиолетовый"]},
+  {m:"зелёный",s:"grün (maskulin)",t:"grün",e:"зелёная трава",x:"Adjektiv m.",mn:"ze-LJO-nyj — das Ё klingt wie 'jo' — Grünes Wäldchen",o:["grün","blau","rot","gelb"],r:["зелёный","синий","красный","жёлтый"]},
+  {m:"жёлтый",s:"gelb (maskulin)",t:"gelb",e:"жёлтое солнце",x:"Adjektiv m.",mn:"ЖÖL-tyj — das Ж klingt wie stimmhaftes Sch",o:["gelb","grün","orange","rot"],r:["жёлтый","зелёный","оранжевый","красный"]},
+  {m:"чёрный",s:"schwarz (maskulin)",t:"schwarz",e:"чёрная ночь",x:"Adjektiv m.",mn:"TSCHÖR-nyj — Schwarzes Meer = Чёрное море",o:["schwarz","weiß","grau","braun"],r:["чёрный","белый","серый","коричневый"]},
+  {m:"белый",s:"weiß (maskulin)",t:"weiß",e:"белый снег",x:"Adjektiv m.",mn:"BE-lyj — Weißes Russland = Belarus (Be-La-Rus)!",o:["weiß","schwarz","grau","blau"],r:["белый","чёрный","серый","синий"]},
+  {m:"серый",s:"grau (maskulin)",t:"grau",e:"серое небо",x:"Adjektiv m.",mn:"SE-ryj — klingt wie 'Seri' — seröser grauer Ton",o:["grau","schwarz","weiß","braun"],r:["серый","чёрный","белый","коричневый"]},
+  {m:"оранжевый",s:"orange (maskulin)",t:"orange",e:"оранжевый апельсин",x:"Adjektiv m.",mn:"o-RAN-zhe-vyj — fast wie 'Orange' auf Deutsch!",o:["orange","gelb","rot","rosa"],r:["оранжевый","жёлтый","красный","розовый"]},
+  {m:"розовый",s:"rosa (maskulin)",t:"rosa",e:"розовый цветок",x:"Adjektiv m.",mn:"RO-so-vyj — klingt fast wie 'rosa'!",o:["rosa","rot","lila","orange"],r:["розовый","красный","фиолетовый","оранжевый"]},
+  {m:"фиолетовый",s:"lila/violett (maskulin)",t:"lila",e:"фиолетовый цвет",x:"Adjektiv m.",mn:"fio-LE-to-vyj — Veilchen = фиалка",o:["lila","rosa","blau","grün"],r:["фиолетовый","розовый","синий","зелёный"]},
+  {m:"коричневый",s:"braun (maskulin)",t:"braun",e:"коричневый медведь",x:"Adjektiv m.",mn:"ko-RISCH-ne-vyj — Zimt = корица (verwandt!)",o:["braun","schwarz","grau","rot"],r:["коричневый","чёрный","серый","красный"]},
+  {m:"цвет",s:"Farbe / Farbe!",t:"Farbe",e:"Какой это цвет?",x:"Das Wort für Farbe",mn:"ZWET — auch: Blume! Цвет = Farbe UND Blume",o:["Farbe","Blume","Licht","Ton"],r:["цвет","цветок","свет","звук"]}
+],
+weekdays:[
+  {m:"понедельник",s:"Montag",t:"Montag",e:"в понедельник",x:"1. Wochentag",mn:"po-ne-DEL-nik — nach dem Sonntag (неделя = Woche)",o:["Montag","Dienstag","Mittwoch","Sonntag"],r:["понедельник","вторник","среда","воскресенье"]},
+  {m:"вторник",s:"Dienstag",t:"Dienstag",e:"во вторник",x:"2. Wochentag",mn:"WTOR-nik — второй = zweiter → Dienstag ist der zweite Tag",o:["Dienstag","Montag","Mittwoch","Donnerstag"],r:["вторник","понедельник","среда","четверг"]},
+  {m:"среда",s:"Mittwoch",t:"Mittwoch",e:"в среду",x:"3. Wochentag",mn:"SRE-da — bedeutet wörtlich 'Mitte' — Mittwoch!",o:["Mittwoch","Dienstag","Donnerstag","Freitag"],r:["среда","вторник","четверг","пятница"]},
+  {m:"четверг",s:"Donnerstag",t:"Donnerstag",e:"в четверг",x:"4. Wochentag",mn:"tsche-WERG — четыре = vier → vierter Tag",o:["Donnerstag","Mittwoch","Freitag","Montag"],r:["четверг","среда","пятница","понедельник"]},
+  {m:"пятница",s:"Freitag",t:"Freitag",e:"в пятницу",x:"5. Wochentag",mn:"PJAT-ni-za — пять = fünf → fünfter Tag = Freitag!",o:["Freitag","Donnerstag","Samstag","Montag"],r:["пятница","четверг","суббота","вторник"]},
+  {m:"суббота",s:"Samstag",t:"Samstag",e:"в субботу",x:"6. Wochentag",mn:"sub-BO-ta — Sabbat → Sabota → Subbota!",o:["Samstag","Freitag","Sonntag","Montag"],r:["суббота","пятница","воскресенье","понедельник"]},
+  {m:"воскресенье",s:"Sonntag",t:"Sonntag",e:"в воскресенье",x:"7. Wochentag",mn:"wos-kre-SEN-je — bedeutet 'Auferstehung' (Ostern!)",o:["Sonntag","Samstag","Montag","Freitag"],r:["воскресенье","суббота","понедельник","пятница"]},
+  {m:"январь",s:"Januar",t:"Januar",e:"в январе",x:"1. Monat",mn:"jan-WAR' — klingt fast wie 'Januar'!",o:["Januar","Februar","März","Dezember"],r:["январь","февраль","март","декабрь"]},
+  {m:"февраль",s:"Februar",t:"Februar",e:"в феврале",x:"2. Monat",mn:"fev-RAL' — klingt fast wie 'Februar'!",o:["Februar","Januar","März","April"],r:["февраль","январь","март","апрель"]},
+  {m:"март",s:"März",t:"März",e:"в марте",x:"3. Monat",mn:"MART — fast identisch mit März!",o:["März","Februar","April","Mai"],r:["март","февраль","апрель","май"]},
+  {m:"апрель",s:"April",t:"April",e:"в апреле",x:"4. Monat",mn:"ap-REL' — klingt fast wie 'April'!",o:["April","März","Mai","Juni"],r:["апрель","март","май","июнь"]},
+  {m:"май",s:"Mai",t:"Mai",e:"в мае",x:"5. Monat",mn:"MAJ — identisch mit Mai auf Deutsch!",o:["Mai","April","Juni","Juli"],r:["май","апрель","июнь","июль"]},
+  {m:"июнь",s:"Juni",t:"Juni",e:"в июне",x:"6. Monat",mn:"i-JUN' — klingt wie 'i-June'",o:["Juni","Mai","Juli","August"],r:["июнь","май","июль","август"]},
+  {m:"июль",s:"Juli",t:"Juli",e:"в июле",x:"7. Monat",mn:"i-JUL' — klingt wie 'i-July'",o:["Juli","Juni","August","September"],r:["июль","июнь","август","сентябрь"]},
+  {m:"август",s:"August",t:"August",e:"в августе",x:"8. Monat",mn:"aw-GUST — fast identisch mit August!",o:["August","Juli","September","Oktober"],r:["август","июль","сентябрь","октябрь"]},
+  {m:"сентябрь",s:"September",t:"September",e:"в сентябре",x:"9. Monat",mn:"sen-tjab-R' — klingt wie September",o:["September","August","Oktober","November"],r:["сентябрь","август","октябрь","ноябрь"]},
+  {m:"октябрь",s:"Oktober",t:"Oktober",e:"в октябре",x:"10. Monat",mn:"ok-tjab-R' — klingt wie Oktober",o:["Oktober","September","November","Dezember"],r:["октябрь","сентябрь","ноябрь","декабрь"]},
+  {m:"ноябрь",s:"November",t:"November",e:"в ноябре",x:"11. Monat",mn:"no-jab-R' — klingt wie November",o:["November","Oktober","Dezember","Januar"],r:["ноябрь","октябрь","декабрь","январь"]},
+  {m:"декабрь",s:"Dezember",t:"Dezember",e:"в декабре",x:"12. Monat",mn:"de-kab-R' — klingt wie Dezember",o:["Dezember","November","Januar","Oktober"],r:["декабрь","ноябрь","январь","октябрь"]},
+  {m:"зима",s:"Winter",t:"Winter",e:"холодная зима",x:"Jahreszeit",mn:"SI-ma — im Winter ist es kalt!",o:["Winter","Frühling","Sommer","Herbst"],r:["зима","весна","лето","осень"]},
+  {m:"весна",s:"Frühling",t:"Frühling",e:"тёплая весна",x:"Jahreszeit",mn:"wes-NA — klingt wie 'Wesna'",o:["Frühling","Winter","Sommer","Herbst"],r:["весна","зима","лето","осень"]},
+  {m:"лето",s:"Sommer",t:"Sommer",e:"жаркое лето",x:"Jahreszeit",mn:"LE-to — kurz und einfach!",o:["Sommer","Frühling","Herbst","Winter"],r:["лето","весна","осень","зима"]},
+  {m:"осень",s:"Herbst",t:"Herbst",e:"жёлтая осень",x:"Jahreszeit",mn:"o-SEN' — klingt wie 'Ossen'",o:["Herbst","Sommer","Winter","Frühling"],r:["осень","лето","зима","весна"]}
+],
+custom:[]
+};
+
+// Mini-Geschichten
+const STORIES=[
+  {title:"Im Caf\xe9",text:[{ru:"\u0410\u043d\u043d\u0430 ",de:"Anna ",tip:"Frauenname"},{ru:"\u0438\u0434\u0451\u0442",de:"geht",tip:"\u0438\u0434\u0442\u0438 = gehen"},{ru:" \u0432 \u043a\u0430\u0444\xe9.",de:" ins Caf\xe9.",tip:"\u0432 \u043a\u0430\u0444\xe9 = ins Caf\xe9"},{ru:" \u041e\u043d\u0430",de:" Sie",tip:"\u043e\u043d\u0430 = sie"},{ru:" \u0437\u0430\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442",de:" bestellt",tip:"\u0437\u0430\u043a\u0430\u0437\u044b\u0432\u0430\u0442\u044c = bestellen"},{ru:" \u0447\u0430\u0439",de:" Tee",tip:"\u0447\u0430\u0439 = Tee"},{ru:" \u0438 \u0442\u043e\u0440\u0442.",de:" und Kuchen.",tip:"\u0442\u043e\u0440\u0442 = Kuchen"},{ru:" \u0427\u0430\u0439",de:" Der Tee",tip:"\u0447\u0430\u0439 = Tee"},{ru:" \u0433\u043e\u0440\u044f\u0447\u0438\u0439,",de:" ist hei\xdf,",tip:"\u0433\u043e\u0440\u044f\u0447\u0438\u0439 = hei\xdf"},{ru:" \u0430 \u0442\u043e\u0440\u0442 \u0432\u043a\u0443\u0441\u043d\u044b\u0439.",de:" der Kuchen ist lecker.",tip:"\u0432\u043a\u0443\u0441\u043d\u044b\u0439 = lecker"}],vocab:["\u0447\u0430\u0439 = Tee","\u0442\u043e\u0440\u0442 = Kuchen","\u0433\u043e\u0440\u044f\u0447\u0438\u0439 = hei\xdf","\u0432\u043a\u0443\u0441\u043d\u044b\u0439 = lecker","\u0438\u0434\u0451\u0442 = geht","\u0437\u0430\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442 = bestellt"]},
+  {title:"Auf dem Markt",text:[{ru:"\u0418\u0432\u0430\u043d",de:"Iwan",tip:"\u0418\u0432\u0430\u043d = russischer Name"},{ru:" \u043f\u043e\u043a\u0443\u043f\u0430\u0435\u0442",de:" kauft",tip:"\u043f\u043e\u043a\u0443\u043f\u0430\u0442\u044c = kaufen"},{ru:" \u0445\u043b\u0435\u0431",de:" Brot",tip:"\u0445\u043b\u0435\u0431 = Brot"},{ru:" \u0438 \u044f\u0431\u043b\u043e\u043a\u0438.",de:" und \xc4pfel.",tip:"\u044f\u0431\u043b\u043e\u043a\u0438 = \xc4pfel"},{ru:' "\u0421\u043a\u043e\u043b\u044c\u043a\u043e',de:' "Wie viel',tip:"\u0441\u043a\u043e\u043b\u044c\u043a\u043e = wie viel"},{ru:" \u0441\u0442\u043e\u0438\u0442",de:" kostet",tip:"\u0441\u0442\u043e\u0438\u0442\u044c = kosten"},{ru:' \u0445\u043b\u0435\u0431?"',de:' das Brot?"',tip:"\u0445\u043b\u0435\u0431 = Brot"},{ru:' "\u0414\u0432\u0430\u0434\u0446\u0430\u0442\u044c \u0440\u0443\u0431\u043b\u0435\u0439!"',de:' "Zwanzig Rubel!"',tip:"\u0434\u0432\u0430\u0434\u0446\u0430\u0442\u044c = zwanzig"}],vocab:["\u0445\u043b\u0435\u0431 = Brot","\u044f\u0431\u043b\u043e\u043a\u0438 = \xc4pfel","\u0441\u043a\u043e\u043b\u044c\u043a\u043e = wie viel","\u0441\u0442\u043e\u0438\u0442 = kostet","\u0440\u0443\u0431\u043b\u0435\u0439 = Rubel","\u043f\u043e\u043a\u0443\u043f\u0430\u0435\u0442 = kauft"]},
+  {title:"Ein Brief",text:[{ru:"\u041f\u0440\u0438\u0432\u0435\u0442,",de:"Hallo,",tip:"\u041f\u0440\u0438\u0432\u0435\u0442 = Hallo (informell)"},{ru:" \u041c\u0430\u0448\u0430!",de:" Mascha!",tip:"\u041c\u0430\u0448\u0430 = Kurzform von Maria"},{ru:" \u042f",de:" Ich",tip:"\u044f = ich"},{ru:" \u043e\u0447\u0435\u043d\u044c",de:" bin sehr",tip:"\u043e\u0447\u0435\u043d\u044c = sehr"},{ru:" \u0441\u0447\u0430\u0441\u0442\u043b\u0438\u0432\u0430.",de:" gl\xfccklich.",tip:"\u0441\u0447\u0430\u0441\u0442\u043b\u0438\u0432\u0430 = gl\xfccklich (f.)"},{ru:" \u0412 \u041c\u043e\u0441\u043a\u0432\u0435",de:" In Moskau",tip:"\u0432 \u041c\u043e\u0441\u043a\u0432\u0435 = in Moskau"},{ru:" \u043e\u0447\u0435\u043d\u044c \u043a\u0440\u0430\u0441\u0438\u0432\u043e.",de:" ist es sehr sch\xf6n.",tip:"\u043a\u0440\u0430\u0441\u0438\u0432\u043e = sch\xf6n"}],vocab:["\u0441\u0447\u0430\u0441\u0442\u043b\u0438\u0432\u0430 = gl\xfccklich","\u043e\u0447\u0435\u043d\u044c = sehr","\u043a\u0440\u0430\u0441\u0438\u0432\u043e = sch\xf6n","\u043f\u0438\u0448\u0443 = ich schreibe","\u0436\u0434\u0443 = ich warte","\u0432\u0441\u0442\u0440\u0435\u0442\u0438\u043c\u0441\u044f = wir sehen uns"]}
+];
+
+const DLG=[
+  {ai:"\u041f\u0440\u0438\u0432\u0435\u0442! \u041a\u0430\u043a \u0442\u0435\u0431\u044f \u0437\u043e\u0432\u0443\u0442?",p:"Antworte: Ich hei\xdfe [Name]",h:"\u041c\u0435\u043d\u044f \u0437\u043e\u0432\u0443\u0442 ...",a:"\u043c\u0435\u043d\u044f \u0437\u043e\u0432\u0443\u0442"},
+  {ai:"\u041e\u0442\u043a\u0443\u0434\u0430 \u0442\u044b?",p:"Antworte: Ich komme aus Deutschland",h:"\u042f \u0438\u0437 \u0413\u0435\u0440\u043c\u0430\u043d\u0438\u0438",a:"\u044f \u0438\u0437"},
+  {ai:"\u041a\u0430\u043a \u0434\u0435\u043b\u0430?",p:"Antworte: Gut, danke",h:"\u0425\u043e\u0440\u043e\u0448\u043e, \u0441\u043f\u0430\u0441\u0438\u0431\u043e",a:"\u0445\u043e\u0440\u043e\u0448\u043e"},
+  {ai:"\u0422\u044b \u0433\u043e\u0432\u043e\u0440\u0438\u0448\u044c \u043f\u043e-\u0440\u0443\u0441\u0441\u043a\u0438?",p:"Antworte: Ja, ein bisschen",h:"\u0414\u0430, \u043d\u0435\u043c\u043d\u043e\u0433\u043e",a:"\u0434\u0430"},
+  {ai:"\u0427\u0442\u043e \u0442\u044b \u0434\u0435\u043b\u0430\u0435\u0448\u044c?",p:"Antworte: Ich lerne Russisch",h:"\u042f \u0443\u0447\u0443 \u0440\u0443\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u043a",a:"\u0443\u0447\u0443"}
+];
+
+const KYR=['\u0410','\u0411','\u0412','\u0413','\u0414','\u0415','\u0401','\u0416','\u0417','\u0418','\u0419','\u041a','\u041b','\u041c','\u041d','\u041e','\u041f','\u0420','\u0421','\u0422','\u0423','\u0424','\u0425','\u0426','\u0427','\u0428','\u0429','\u042a','\u042b','\u042c','\u042d','\u042e','\u042f'];
+
+// STATE
+let cu=null,cd='standard',sd='standard',cs=null,ci=0,qi=0,sp=0,sc=0,sw=0,cb=[],qm='ru-de',di=0,at=0;
+let retryCb=[],retryQi=0,retryAt=0,storyIdx=0,_voices=[],micRec=null;
+
+// STORAGE
+function _lg(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function _ls(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+const GU=()=>{try{return JSON.parse(_lg('ru_users')||'{}');}catch(e){return {};}};
+const SU=u=>{try{_ls('ru_users',JSON.stringify(u));}catch(e){}};
+const GS=()=>{try{return JSON.parse(_lg('ru_srs_'+cu)||'{}');}catch(e){return {};}};
+const SS=d=>{try{_ls('ru_srs_'+cu,JSON.stringify(d));}catch(e){}};
+function GT(){try{const t=new Date().toDateString(),s=JSON.parse(_lg('ru_today_'+cu)||'{}');return s.date===t?s:{date:t,cards:0,words:0,points:0,correct:0,total:0};}catch(e){return{date:new Date().toDateString(),cards:0,words:0,points:0,correct:0,total:0};}}
+const ST=d=>{try{_ls('ru_today_'+cu,JSON.stringify(d));}catch(e){}};
+function getSD(){try{return JSON.parse(_lg('ru_str_'+cu)||'{"days":[],"last":""}');}catch(e){return{days:[],last:''};}}
+function saveSD(d){_ls('ru_str_'+cu,JSON.stringify(d));}
+function getErrs(){try{return JSON.parse(_lg('ru_errs_'+cu)||'[]');}catch(e){return[];}}
+function saveErrs(e){_ls('ru_errs_'+cu,JSON.stringify(e));}
+
+function updateStreak(){
+  const sd=getSD(),today=new Date().toDateString();
+  if(sd.last===today)return;
+  const yest=new Date(Date.now()-86400000).toDateString();
+  if(sd.last!==yest&&sd.days.length>0)sd.days=[];
+  if(!sd.days.includes(today))sd.days.push(today);
+  sd.last=today;if(sd.days.length>7)sd.days=sd.days.slice(-7);
+  saveSD(sd);const us=GU();if(us[cu]){if(!us[cu].stats.streak)us[cu].stats.streak=0;us[cu].stats.streak=sd.days.length;SU(us);}
+}
+
+function showSc(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function init(){
+  const u=_lg('ru_cur');
+  if(u){const us=GU();if(us[u]){cu=u;cd=us[u].diff||'standard';showDash();return;}}
+  showSc('scLogin');
+  ['uname','pw','qIn','lIn','dlgIn','retryIn'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.addEventListener('keypress',e=>{if(e.key==='Enter'){if(id==='qIn')checkAns();else if(id==='lIn')checkListen();else if(id==='dlgIn')nxtDlg();else if(id==='retryIn')checkRetry();else login();}});
+  });
+  renderDiffCards();initMic();
+}
+
+function register(){
+  const u=document.getElementById('uname').value.trim(),p=document.getElementById('pw').value;
+  if(!u||!p||u.length<3||p.length<4){showLoginErr('Benutzername mind. 3 Zeichen, Passwort mind. 4 Zeichen.');return;}
+  const us=GU();if(us[u]){showLoginErr('Dieser Benutzername ist bereits vergeben.');return;}
+  us[u]={password:p,progress:{},stats:{},diff:'standard'};
+  SU(us);showLoginOk('✓ Konto erstellt! Du kannst dich jetzt anmelden.');
+}
+
+function login(){
+  const u=document.getElementById('uname').value.trim(),p=document.getElementById('pw').value;
+  const us=GU();if(!us[u]||us[u].password!==p){showLoginErr('Falscher Benutzername oder Passwort.');return;}
+  cu=u;cd=us[u].diff||'standard';_ls('ru_cur',u);
+  if(!us[cu].stats.totalXp)us[cu].stats.totalXp=us[cu].stats.totalPoints||0;SU(us);
+  if(!us[u].diffSet){renderDiffCards();showSc('scDiff');}else showDash();
+}
+function logout(){cu=null;try{localStorage.removeItem('ru_cur');}catch(e){}showSc('scLogin');}
+
+function renderDiffCards(){
+  const w=document.getElementById('diffCards');w.innerHTML='';
+  [{k:'anfaenger',e:'&#127807;',n:'Anf\xe4nger',p:'Viele Hilfen \xb7 3 Versuche \xb7 Ziel: 5/Tag',b:'A1',bc:'green'},
+   {k:'standard',e:'&#128216;',n:'Standard',p:'Normale Hilfe \xb7 2 Versuche \xb7 Ziel: 10/Tag',b:'A2',bc:'blue'},
+   {k:'fort',e:'&#128293;',n:'Fortgeschritten',p:'Weniger Hilfe \xb7 2 Versuche \xb7 Ziel: 15/Tag',b:'B1',bc:'orange'},
+   {k:'profi',e:'&#9889;',n:'Profi',p:'Keine Hilfe \xb7 1 Versuch \xb7 Ziel: 20/Tag',b:'B2+',bc:'red'}
+  ].forEach(it=>{
+    const d=document.createElement('div');d.className='diff-card glass'+(sd===it.k?' sel':'');d.id='diff-'+it.k;
+    d.innerHTML='<div class="di">'+it.e+'</div><div class="dt"><h3>'+it.n+'</h3><p>'+it.p+'</p></div><span class="badge '+it.bc+'">'+it.b+'</span>';
+    d.onclick=()=>{sd=it.k;document.querySelectorAll('.diff-card').forEach(b=>b.classList.remove('sel'));d.classList.add('sel');};
+    w.appendChild(d);
+  });
+}
+function changeDiff(){sd=cd;renderDiffCards();showSc('scDiff');}
+function confirmDiff(){cd=sd;const us=GU();us[cu].diff=cd;us[cu].diffSet=true;SU(us);showDash();}
+
+function showDash(){
+  showSc('scDash');updateStreak();
+  const us=GU(),d=us[cu];
+  document.getElementById('dName').textContent=cu;
+  if(!d.stats.totalXp)d.stats.totalXp=d.stats.totalPoints||0;
+  const li=getLvlInfo(d.stats.totalXp);
+  document.getElementById('dLvl').textContent=li.lvl;
+  document.getElementById('xpCur').textContent=li.cur;
+  document.getElementById('xpNext').textContent=li.need;
+  document.getElementById('xpBar').style.width=Math.round((li.cur/li.need)*100)+'%';
+  document.getElementById('dPts').textContent=d.stats.totalPoints||0;
+  const srs=GS(),now=Date.now();
+  document.getElementById('dRep').textContent=Object.values(srs).filter(v=>v.nr&&v.nr<=now).length;
+  const errs=getErrs();document.getElementById('dRetry').textContent=errs.length;
+  const strData=getSD();
+  document.getElementById('streakNum').textContent=strData.days.length||0;
+  const calEl=document.getElementById('streakCal');calEl.innerHTML='';
+  const todayStr=new Date().toDateString();
+  for(let i=6;i>=0;i--){
+    const dt=new Date(Date.now()-i*86400000);
+    const done=strData.days.includes(dt.toDateString());
+    const isToday=dt.toDateString()===todayStr;
+    const day=document.createElement('div');
+    day.className='streak-day'+(done?' done':'')+(isToday?' today':'');
+    day.textContent=done?'\u2605':'\xb7';
+    calEl.appendChild(day);
+  }
+  const ts=GT();const cfg=DC[cd];
+  const goal=cfg.goal,done2=ts.cards||0;
+  const pct=Math.min(100,Math.round((done2/goal)*100));
+  const circ=163,off=circ-(circ*(pct/100));
+  document.getElementById('goalRing').style.strokeDashoffset=off;
+  document.getElementById('goalPct').textContent=pct+'%';
+  document.getElementById('goalDone').textContent=done2;
+  document.getElementById('goalTarget').textContent=goal;
+  const msgs=['Los geht\'s! Starte deine erste Runde!','Weiter so, du machst das super!','Halbzeit! Noch die H\xe4lfte!','Fast geschafft!','Tagesziel erreicht! &#127881;'];
+  document.getElementById('goalMsg').innerHTML=msgs[Math.min(4,Math.floor(pct/25))];
+  document.getElementById('tCards').textContent=done2;
+  document.getElementById('tWords').textContent=ts.words||0;
+  document.getElementById('tPts').textContent=ts.points||0;
+  const acc=ts.total>0?Math.round((ts.correct/ts.total)*100):0;
+  document.getElementById('tAcc').textContent=acc+'%';
+  document.getElementById('accBar').style.width=acc+'%';
+  document.getElementById('diffE').textContent=cfg.e;
+  document.getElementById('diffL').textContent=cfg.l;
+  const pfEl=document.getElementById('pfad');pfEl.innerHTML='';
+  SECS.forEach(sec=>{
+    const lk=!cfg.sec.includes(sec.id);
+    const data=sec.id==='custom'?getCustomCards():C[sec.id];
+    const doneN=d.progress[sec.id]||0,pctN=Math.min(100,Math.round((doneN/data.length)*100));
+    const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
+    const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
+    row.onclick=lk?()=>showToast('Erhöhe dein Level um diesen Bereich freizuschalten.'):sec.id==='custom'?()=>showCustomScreen():()=>startSec(sec.id);
+    const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
+    row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
+    pfEl.appendChild(row);
+  });
+  const sb=document.createElement('div');sb.style.marginTop='.75rem';
+  sb.innerHTML='<button class="btn ghost" style="width:100%;padding:.72rem;" onclick="showStory()">&#128218; Mini-Geschichten lesen</button>';
+  pfEl.appendChild(sb);
+}
+
+function getDifficultyPool(data,diffKey){
+  // Karten nach Schwierigkeit aufteilen:
+  // A1 Anfaenger: erste 40% (einfachste Karten)
+  // A2 Standard: erste 65%
+  // B1 Fort: erste 85%
+  // B2 Profi: alle Karten
+  const n=data.length;
+  const cutoffs={anfaenger:Math.max(1,Math.ceil(n*0.40)),standard:Math.max(2,Math.ceil(n*0.65)),fort:Math.max(3,Math.ceil(n*0.85)),profi:n};
+  const cut=cutoffs[diffKey]||n;
+  return data.slice(0,cut);
+}
+
+function startSec(sec){
+  // Eigene Vokabeln: aus localStorage laden
+  if(sec==='custom'){
+    const customCards=getCustomCards();
+    if(!customCards.length){showCustomScreen();return;}
+    C['custom']=customCards;
+  }
+  cs=sec;const allData=C[sec];if(!allData||!allData.length){if(sec==='custom'){showCustomScreen();}return;}
+  const cfg=DC[cd],us=GU();
+  // Nur passende Karten fuer das Schwierigkeitslevel laden
+  const data=sec==='custom'?allData:getDifficultyPool(allData,cd);
+  const done=(us[cu].progress[sec]||0)%data.length,bs=cfg.bs;
+  cb=data.slice(done,done+bs);
+  if(cb.length<bs)cb=[...cb,...data.slice(0,bs-cb.length)];
+  ci=0;sp=0;sc=0;sw=0;
+  const from=done+1,to=Math.min(done+bs,data.length);
+  const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grammatik',listening:'H\xf6ren',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',custom:'Eigene Vokabeln'};
+  document.getElementById('lTitle').textContent=(tt[sec]||sec)+' '+cfg.e+' ('+from+'\u2013'+to+'/'+data.length+')';
+  showSc('scLearn');loadCard();
+}
+
+function loadCard(){
+  const item=cb[ci];
+  const lb={alphabet:'BUCHSTABE',vocabulary:'VOKABEL',grammar:'GRAMMATIK',listening:'H\xd6REN',speaking:'SPRECHEN',sentences:'SATZ',reading:'TEXT',numbers:'ZAHL',colors:'FARBE',weekdays:'WOCHENTAG',custom:'EIGENE'};
+  document.getElementById('cBadge').textContent=lb[cs]||cs.toUpperCase();
+  document.getElementById('cMain').textContent=item.m;
+  document.getElementById('cSub').textContent='Aussprache: '+item.s;
+  document.getElementById('cTrans').textContent='= '+item.t;
+  document.getElementById('cEx').textContent=item.e;
+  document.getElementById('cExtra').textContent=item.x||'';
+  document.getElementById('lProg').textContent=(ci+1)+' von '+cb.length;
+  const mn=document.getElementById('cMn');
+  if(item.mn){mn.textContent=item.mn;mn.style.display='block';}else mn.style.display='none';
+  const ctxEl=document.getElementById('ctxSents');
+  if(item.ctx&&item.ctx.length){
+    ctxEl.innerHTML='<div style="font-size:.7rem;color:var(--cyan);font-weight:700;margin-bottom:.3rem;">Beispiels\xe4tze:</div>'+item.ctx.map(s=>'<div class="ctx-s"><div class="ctx-ru">'+s.ru+'</div><div class="ctx-de">'+s.de+'</div></div>').join('');
+    ctxEl.style.display='block';
+  } else ctxEl.style.display='none';
+  const card=document.getElementById('learnCard');card.style.transform='scale(0.97)';
+  setTimeout(()=>{card.style.transform='scale(1)';},120);
+  document.getElementById('prevBtn').disabled=ci===0;
+  document.getElementById('nextBtn').innerHTML=ci===cb.length-1?'Quiz starten &#127919;':'Weiter <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span>';
+}
+function prevCard(){if(ci>0){ci--;loadCard();}}
+function nextCard(){if(ci<cb.length-1){ci++;loadCard();}else startQuiz();}
+
+// TTS
+function _lv(){try{const vs=speechSynthesis.getVoices();if(vs&&vs.length>0)_voices=vs;}catch(e){}}
+function spk(txt){
+  if(!txt||typeof txt!=='string'||!txt.trim())return;
+  const t=txt.trim();
+  try{
+    if(!window.speechSynthesis)return;
+    if(speechSynthesis.paused){try{speechSynthesis.resume();}catch(e){}}
+    speechSynthesis.cancel();
+    function _do(){try{const u=new SpeechSynthesisUtterance(t);u.lang='ru-RU';u.rate=0.8;u.pitch=1;u.volume=1;const vs=speechSynthesis.getVoices();if(vs&&vs.length>0)_voices=vs;const rv=_voices.find(v=>v.lang==='ru-RU')||_voices.find(v=>v.lang.startsWith('ru'));if(rv)u.voice=rv;speechSynthesis.speak(u);}catch(e){}}
+    const vs=speechSynthesis.getVoices();
+    if(vs&&vs.length>0){_voices=vs;_do();}else setTimeout(()=>{_lv();_do();},300);
+  }catch(e){}
+}
+
+// MIC
+function initMic(){
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window))return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  micRec=new SR();micRec.lang='ru-RU';micRec.continuous=false;micRec.interimResults=false;
+}
+function startMic(mode){
+  const btnId=mode==='learn'?'micLBtn':'micQBtn',resId=mode==='learn'?'micLRes':'micQRes';
+  const btn=document.getElementById(btnId),res=document.getElementById(resId);
+  const target=mode==='learn'?cb[ci].m:cb[qi].m;
+  btn.classList.add('listening');btn.innerHTML='&#127908; H\xf6re zu...';res.style.display='none';
+  micRec.onresult=(e)=>{
+    const spoken=e.results[0][0].transcript.toLowerCase().trim();
+    const conf=e.results[0][0].confidence;
+    const match=spoken===target.toLowerCase()||target.toLowerCase().includes(spoken)||spoken.includes(target.toLowerCase());
+    btn.classList.remove('listening');btn.innerHTML='&#127908; Nachsprechen';res.style.display='block';
+    if(match){res.style.cssText='display:block;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:var(--r-sm);padding:.45rem .7rem;font-size:.78rem;color:#22c55e;margin-top:.4rem;';res.innerHTML='\u2713 Gut! "'+spoken+'" ('+Math.round(conf*100)+'%)';}
+    else{res.style.cssText='display:block;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:var(--r-sm);padding:.45rem .7rem;font-size:.78rem;color:#f97316;margin-top:.4rem;';res.innerHTML='\u26a0 Du sagtest: "'+spoken+'" \u2014 Ziel: "'+target+'"';}
+  };
+  micRec.onerror=()=>{btn.classList.remove('listening');btn.innerHTML='&#127908; Nachsprechen';};
+  micRec.onend=()=>{btn.classList.remove('listening');btn.innerHTML='&#127908; Nachsprechen';};
+  try{micRec.start();}catch(e){btn.classList.remove('listening');btn.innerHTML='&#127908; Nachsprechen';}
+}
+
+function bldKB(iid,cid){
+  const c=document.getElementById(cid);if(!c)return;c.innerHTML='';
+  KYR.forEach(k=>{const b=document.createElement('button');b.className='kkey';b.textContent=k;b.onclick=()=>{const i=document.getElementById(iid);if(i){i.value+=k;i.focus();}};c.appendChild(b);});
+  const bs=document.createElement('button');bs.className='kkey sp';bs.textContent='\u232b';bs.onclick=()=>{const i=document.getElementById(iid);if(i)i.value=i.value.slice(0,-1);};c.appendChild(bs);
+  const spc=document.createElement('button');spc.className='kkey sp';spc.textContent='SPC';spc.onclick=()=>{const i=document.getElementById(iid);if(i)i.value+=' ';};c.appendChild(spc);
+}
+
+function flashScreen(color){const f=document.getElementById('flash');f.className='flash '+color+' show';setTimeout(()=>{f.classList.remove('show');},280);}
+
+function showConfetti(){
+  const cols=['#00e5c8','#22c55e','#fbbf24','#7c3aed','#f97316'];
+  for(let i=0;i<35;i++){
+    const c=document.createElement('div');c.className='confetti-p';
+    const sz=6+Math.random()*8;
+    c.style.cssText='left:'+Math.random()*100+'vw;top:'+Math.random()*30+'vh;width:'+sz+'px;height:'+sz+'px;background:'+cols[Math.floor(Math.random()*cols.length)]+';border-radius:2px;animation-delay:'+Math.random()*.5+'s;animation-duration:'+(0.8+Math.random()*0.8)+'s;';
+    document.body.appendChild(c);setTimeout(()=>c.remove(),2000);
+  }
+}
+
+function startQuiz(){
+  qi=0;at=0;showSc('scQuiz');const cfg=DC[cd];
+  if(cs==='listening'){
+    document.getElementById('modeTabs').style.display='none';
+    document.getElementById('stdQuiz').style.display='none';
+    document.getElementById('listenQuiz').style.display='block';
+    bldKB('lIn','lKyr');document.getElementById('qTitle').textContent='H\xf6r-Quiz';loadLQ();
+  } else {
+    document.getElementById('modeTabs').style.display='flex';
+    document.getElementById('stdQuiz').style.display='block';
+    document.getElementById('listenQuiz').style.display='none';
+    const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grammatik',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',listening:'H\xf6ren',custom:'Eigene Vokabeln'};
+    document.getElementById('qTitle').textContent=(tt[cs]||'')+' Quiz '+cfg.e;
+    document.getElementById('qPts').textContent=0;bldKB('qIn','kyr');
+    setMode('ru-de');
+  }
+}
+
+function setMode(mode){
+  qm=mode;
+  ['ru-de','de-ru'].forEach(m=>{const el=document.getElementById('tab-'+m);if(el)el.classList.toggle('active',m===mode);});
+  document.getElementById('stdQuiz').style.display='block';
+  at=0;loadQ();
+}
+
+function rdots(id,max){const el=document.getElementById(id);if(!el)return;el.innerHTML='';for(let i=0;i<max;i++){const d=document.createElement('span');d.className='dot'+(i<at?' used':'');el.appendChild(d);}}
+
+function loadQ(){
+  if(qi>=cb.length){finishQ();return;}
+  const item=cb[qi],cfg=DC[cd];at=0;
+  document.getElementById('qNum').textContent='Frage '+(qi+1)+'/'+cb.length;rdots('dotsEl',cfg.att);
+  let q,prompt,opts;
+  if(qm==='ru-de'){q=item.m;prompt=cs==='alphabet'?'Aussprache von "'+item.m+'"?':'Was bedeutet "'+item.m+'"?';opts=item.o;}
+  else{q=item.t;prompt=cs==='alphabet'?'Kyrillischer Buchstabe f\xfcr "'+item.t+'"?':'"'+item.t+'" auf Russisch?';opts=item.r;}
+  document.getElementById('qQ').textContent=q;document.getElementById('qPrompt').textContent=prompt;
+  const inp=document.getElementById('qIn');inp.value='';inp.className='qi';
+  ['hintBox','solBox','fb'].forEach(id=>{document.getElementById(id).style.display='none';});
+  document.getElementById('micQRes').style.display='none';
+  document.getElementById('bCheck').disabled=false;
+  const sw2=document.getElementById('suggWrap'),sg=document.getElementById('suggs');sg.innerHTML='';
+  if(cfg.sugg&&opts){sw2.style.display='block';[...opts].sort(()=>Math.random()-.5).forEach(opt=>{const b=document.createElement('button');b.className='sug';b.textContent=opt;b.onclick=()=>{inp.value=opt;document.querySelectorAll('#suggs .sug').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');};sg.appendChild(b);});}
+  else sw2.style.display='none';
+  document.getElementById('bHint').style.display=cfg.hints?'':'none';
+  document.getElementById('bSol').style.display=cfg.sol?'':'none';
+  document.getElementById('kyrLbl').style.display=(qm==='de-ru'&&cfg.kb)?'block':'none';
+  document.getElementById('kyr').style.display=(qm==='de-ru'&&cfg.kb)?'flex':'none';
+  inp.focus();
+}
+
+function showHint(){const item=cb[qi];document.getElementById('hintBox').innerHTML='<strong>Tipp:</strong> '+item.s+(item.mn?' \u2014 '+item.mn:'');document.getElementById('hintBox').style.display='block';}
+function showSol(){const item=cb[qi];document.getElementById('solBox').innerHTML='<strong>L\xf6sung:</strong> '+(qm==='ru-de'?item.t:item.m);document.getElementById('solBox').style.display='block';}
+function skipQ(){at=0;qi++;loadQ();}
+
+function checkAns(){
+  const item=cb[qi],ua=document.getElementById('qIn').value.trim().toLowerCase();
+  if(!ua){document.getElementById('qIn').classList.add('bad');setTimeout(()=>document.getElementById('qIn').classList.remove('bad'),600);return;}
+  const raw=qm==='ru-de'?item.t:item.m,correct=raw.toLowerCase().trim();
+  const uaC=ua.replace(/[().!?,\s]/g,''),cC=correct.replace(/[().!?,\s]/g,'');
+  const vars=correct.split('/').map(v=>v.trim().replace(/[().!?,]/g,'').trim());
+  const ok=ua===correct||uaC===cC||vars.some(v=>v===uaC)||correct.includes(ua)&&ua.length>1||ua.includes(cC)&&cC.length>1;
+  handleA(ok,item,false);
+}
+
+function handleA(ok,item,isL){
+  const cfg=DC[cd],iid=isL?'lIn':'qIn',fid=isL?'lFb':'fb',bid=isL?'lCheck':'bCheck',did=isL?'ldotsEl':'dotsEl';
+  const inp=document.getElementById(iid),fb=document.getElementById(fid);
+  if(ok){
+    flashScreen('green');inp.className='qi ok';
+    // ★ FIX: Punkte nur wenn erster Versuch korrekt (at===0)
+    // Bei Fehlversuchen davor: kein sc++, nur halbe Punkte
+    const hadErrors=at>0;
+    let xp=hadErrors?3:10;xp=Math.round(xp*cfg.xpM);
+    let pts=hadErrors?3:10;pts=Math.round(pts*cfg.pM);
+    const sb=document.getElementById(isL?'lSol':'solBox'),hb=document.getElementById(isL?'lHint':'hintBox');
+    if(sb&&sb.style.display==='block'){pts=0;xp=0;}else if(hb&&hb.style.display==='block'){pts=Math.floor(pts/2);xp=Math.floor(xp/2);}
+    fb.textContent=(hadErrors?'\u26a0 Noch geschafft! ':'\u2713 Richtig! ')+(xp>0?'+'+xp+' XP':'0 XP (Hilfe benutzt)');
+    fb.className='fb ok';
+    const dotEl=document.getElementById(did);if(dotEl){const d=dotEl.querySelectorAll('.dot');if(d[0])d[0].className='dot ok';}
+    document.getElementById(bid).disabled=true;
+    updSRS((cs||'?')+':'+qi,!hadErrors);
+    sp+=pts;
+    // ★ sc nur bei erstem Versuch richtig, sonst sw
+    if(!hadErrors){sc++;}else{sw++;}
+    document.getElementById('qPts').textContent=sp;
+    const us=GU();if(!us[cu].stats.totalXp)us[cu].stats.totalXp=0;us[cu].stats.totalXp+=xp;SU(us);
+    const ts=GT();ts.total=(ts.total||0)+1;if(!hadErrors){ts.correct=(ts.correct||0)+1;}ts.points=(ts.points||0)+pts;ST(ts);
+    setTimeout(()=>{if(isL){qi++;loadLQ();}else{qi++;loadQ();}},1100);
+  } else {
+    flashScreen('red');at++;rdots(did,cfg.att);
+    // Fehler speichern
+    if(at>=cfg.att){let errs=getErrs();if(!errs.find(e=>e.sec===cs&&e.m===item.m))errs.push({sec:cs,m:item.m,item:item});if(errs.length>50)errs=errs.slice(-50);saveErrs(errs);}
+    if(at<cfg.att){inp.className='qi bad';fb.textContent='\u2717 Falsch! Noch '+(cfg.att-at)+' Versuch'+(cfg.att-at!==1?'e':'')+'!';fb.className='fb warn';setTimeout(()=>{inp.className='qi retry';inp.value='';inp.focus();},600);}
+    else{inp.className='qi bad';const ca=isL?item.t:(qm==='ru-de'?item.t:item.m);fb.textContent='\u2717 Richtig w\xe4re: "'+ca+'"';fb.className='fb bad';document.getElementById(bid).disabled=true;sw++;updSRS((cs||'?')+':'+qi,false);const ts=GT();ts.total=(ts.total||0)+1;ST(ts);setTimeout(()=>{if(isL){qi++;loadLQ();}else{qi++;loadQ();}},1800);}
+  }
+}
+
+function loadLQ(){
+  if(qi>=cb.length){finishQ();return;}
+  const item=cb[qi];at=0;
+  document.getElementById('lqNum').textContent='Frage '+(qi+1)+'/'+cb.length;rdots('ldotsEl',DC[cd].att);
+  const inp=document.getElementById('lIn');inp.value='';inp.className='qi';
+  ['lHint','lSol','lFb'].forEach(id=>{document.getElementById(id).style.display='none';});
+  document.getElementById('lCheck').disabled=false;
+  document.getElementById('playBtn').innerHTML='&#9654; Abspielen';document.getElementById('playBtn').className='play-btn';
+  const sg=document.getElementById('lSuggs');sg.innerHTML='';
+  [...item.r].sort(()=>Math.random()-.5).forEach(opt=>{const b=document.createElement('button');b.className='sug';b.textContent=opt;b.onclick=()=>{inp.value=opt;document.querySelectorAll('#lSuggs .sug').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');};sg.appendChild(b);});
+  inp.focus();
+}
+function playAudio(){const pb=document.getElementById('playBtn');pb.innerHTML='&#128266; Spielt...';pb.className='play-btn playing';spk(cb[qi].m);setTimeout(()=>{pb.innerHTML='&#9654; Nochmal';pb.className='play-btn';},2500);}
+function showLHint(){const item=cb[qi];document.getElementById('lHint').innerHTML='<strong>Tipp:</strong> '+item.x;document.getElementById('lHint').style.display='block';}
+function showLSol(){const item=cb[qi];document.getElementById('lSol').innerHTML='<strong>L\xf6sung:</strong> '+item.t;document.getElementById('lSol').style.display='block';}
+function skipLQ(){at=0;qi++;loadLQ();}
+function checkListen(){
+  const item=cb[qi],ua=document.getElementById('lIn').value.trim().toLowerCase();
+  if(!ua){document.getElementById('qIn').classList.add('bad');setTimeout(()=>document.getElementById('qIn').classList.remove('bad'),600);return;}
+  const c=item.t.toLowerCase().trim(),uaC=ua.replace(/[!?.,]/g,'').trim(),cC=c.replace(/[!?.,]/g,'').trim();
+  handleA(uaC===cC||cC.includes(uaC)&&uaC.length>1||uaC.includes(cC)&&cC.length>1,item,true);
+}
+
+function updSRS(key,ok){
+  const srs=GS(),cfg=DC[cd];if(!srs[key])srs[key]={iv:1,ef:2.5,nr:0};const s=srs[key];
+  if(ok){s.iv=Math.round(s.iv*(s.ef||2.5)*cfg.srsM);s.ef=Math.max(1.3,(s.ef||2.5)+0.1);}
+  else{s.iv=1;s.ef=Math.max(1.3,(s.ef||2.5)-.2);}
+  s.nr=Date.now()+(s.iv*24*60*60*1000);SS(srs);
+}
+
+function loadDlg(){
+  if(di>=DLG.length)di=0;const d=DLG[di];
+  document.getElementById('dlgAI').textContent=d.ai;document.getElementById('dlgPrompt').textContent=d.p;
+  document.getElementById('dlgIn').value='';document.getElementById('dlgFb').style.display='none';spk(d.ai);
+}
+function showDlgHint(){const d=DLG[di];const fb=document.getElementById('dlgFb');fb.textContent='Tipp: '+d.h;fb.className='fb ok';fb.style.display='block';}
+function nxtDlg(){
+  const d=DLG[di],ua=document.getElementById('dlgIn').value.trim().toLowerCase(),fb=document.getElementById('dlgFb');
+  if(ua&&ua.includes(d.a)){fb.textContent='Gut gemacht! +'+Math.round(10*DC[cd].xpM)+' XP';fb.className='fb ok';fb.style.display='block';sp+=Math.round(10*DC[cd].pM);sc++;document.getElementById('qPts').textContent=sp;const us=GU();if(!us[cu].stats.totalXp)us[cu].stats.totalXp=0;us[cu].stats.totalXp+=Math.round(10*DC[cd].xpM);SU(us);setTimeout(()=>{di=(di+1)%DLG.length;loadDlg();},1200);}
+  else if(ua){fb.textContent='Nicht ganz. Tipp: '+d.h;fb.className='fb warn';fb.style.display='block';}
+  else{di=(di+1)%DLG.length;loadDlg();}
+}
+
+function finishQ(){
+  const total=sc+sw,acc=total>0?Math.round((sc/total)*100):0;
+  const us=GU();if(!us[cu].stats.totalXp)us[cu].stats.totalXp=0;
+  const xpE=Math.round(sp*DC[cd].xpM);
+  us[cu].stats.totalPoints=(us[cu].stats.totalPoints||0)+sp;
+  us[cu].stats.level=getLvlInfo(us[cu].stats.totalXp).lvl;
+  us[cu].progress[cs]=(us[cu].progress[cs]||0)+cb.length;
+  const ts=GT();ts.cards=(ts.cards||0)+cb.length;ts.words=(ts.words||0)+cb.length;ts.points=(ts.points||0)+sp;ts.date=new Date().toDateString();ST(ts);SU(us);
+  updateStreak();
+  document.getElementById('rEmoji').innerHTML=acc>=90?'&#127881;':acc>=70?'&#128522;':acc>=50?'&#128530;':'&#128549;';
+  document.getElementById('rTitle').textContent=acc>=90?'Perfekt!':acc>=70?'Sehr gut!':acc>=50?'Gut gemacht!':'Weiter \xfcben!';
+  document.getElementById('rPts').textContent='+'+sp;
+  document.getElementById('xpGained').innerHTML='+'+xpE+' XP verdient &#9889;';
+  document.getElementById('rOk').textContent=sc;document.getElementById('rFail').textContent=sw;document.getElementById('rAcc').textContent=acc+'%';
+  const dl=C[cs]?C[cs].length:0,td=us[cu].progress[cs]||0;
+  document.getElementById('rInfo').textContent='Gesamt: '+td+' Karten \xb7 '+dl+' verf\xfcgbar \xb7 N\xe4chste: '+(td%dl+1)+'\u2013'+Math.min(td%dl+DC[cd].bs,dl);
+  const errs=getErrs();document.getElementById('retryCount').textContent=errs.length;document.getElementById('retryBtn').style.display=errs.length>0?'block':'none';
+  showSc('scResult');if(acc>=90)showConfetti();
+}
+
+// FEHLER-WIEDERHOLUNG
+function startRetryMode(){
+  const errs=getErrs();if(!errs.length){showToast('Noch keine Fehler gespeichert 🎉');return;}
+  retryCb=errs.map(e=>e.item||{m:e.m,t:'?',s:'',x:'',o:[],r:[]}).filter(Boolean);
+  retryCb=[...retryCb].sort(()=>Math.random()-.5);
+  retryQi=0;retryAt=0;
+  document.getElementById('retryNum').textContent=retryCb.length;
+  showSc('scRetry');loadRetryQ();
+}
+function loadRetryQ(){
+  if(retryQi>=retryCb.length){saveErrs([]);showToast('Alle Fehler wiederholt! 🎯');goHome();return;}
+  const item=retryCb[retryQi];retryAt=0;
+  document.getElementById('retryQNum').textContent='Frage '+(retryQi+1)+'/'+retryCb.length;rdots('retryDots',DC[cd].att);
+  document.getElementById('retryQ').textContent=item.m;document.getElementById('retryPrompt').textContent='Was bedeutet oder wie lautet "'+item.m+'"?';
+  const inp=document.getElementById('retryIn');inp.value='';inp.className='qi';
+  ['retryHint','retrySol','retryFb'].forEach(id=>{document.getElementById(id).style.display='none';});
+  document.getElementById('retryCheck').disabled=false;
+  const sg=document.getElementById('retrySuggs');sg.innerHTML='';
+  if(item.o){[...item.o].sort(()=>Math.random()-.5).forEach(opt=>{const b=document.createElement('button');b.className='sug';b.textContent=opt;b.onclick=()=>{inp.value=opt;document.querySelectorAll('#retrySuggs .sug').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');};sg.appendChild(b);});}
+  inp.focus();
+}
+function showRetryHint(){const item=retryCb[retryQi];document.getElementById('retryHint').innerHTML='<strong>Tipp:</strong> '+(item.s||'')+(item.mn?' \u2014 '+item.mn:'');document.getElementById('retryHint').style.display='block';}
+function showRetrySol(){const item=retryCb[retryQi];document.getElementById('retrySol').innerHTML='<strong>L\xf6sung:</strong> '+(item.t||item.m);document.getElementById('retrySol').style.display='block';}
+function skipRetry(){retryQi++;loadRetryQ();}
+function checkRetry(){
+  const item=retryCb[retryQi],ua=document.getElementById('retryIn').value.trim().toLowerCase();
+  if(!ua){document.getElementById('qIn').classList.add('bad');setTimeout(()=>document.getElementById('qIn').classList.remove('bad'),600);return;}
+  const correct=(item.t||'').toLowerCase().trim(),uaC=ua.replace(/[().!?,\s]/g,''),cC=correct.replace(/[().!?,\s]/g,'');
+  const vars=correct.split('/').map(v=>v.trim().replace(/[().!?,]/g,'').trim());
+  const ok=ua===correct||uaC===cC||vars.some(v=>v===uaC)||correct.includes(ua)&&ua.length>1||ua.includes(cC)&&cC.length>1;
+  const inp=document.getElementById('retryIn'),fb=document.getElementById('retryFb');
+  if(ok){
+    flashScreen('green');inp.className='qi ok';fb.textContent='\u2713 Richtig! Fehler behoben!';fb.className='fb ok';
+    document.getElementById('retryCheck').disabled=true;
+    let errs=getErrs();errs=errs.filter(e=>e.m!==item.m);saveErrs(errs);
+    setTimeout(()=>{retryQi++;loadRetryQ();},1200);
+  } else {
+    flashScreen('red');retryAt++;
+    if(retryAt<DC[cd].att){inp.className='qi bad';fb.textContent='Noch nicht! Probier nochmal.';fb.className='fb warn';setTimeout(()=>{inp.className='qi retry';inp.value='';inp.focus();},600);}
+    else{inp.className='qi bad';fb.textContent='Richtig w\xe4re: "'+item.t+'"';fb.className='fb bad';document.getElementById('retryCheck').disabled=true;setTimeout(()=>{retryQi++;loadRetryQ();},2000);}
+  }
+}
+
+// MINI-GESCHICHTEN
+function showStory(){storyIdx=0;renderStory();showSc('scStory');}
+function nextStory(){storyIdx=(storyIdx+1)%STORIES.length;renderStory();}
+function renderStory(){
+  const story=STORIES[storyIdx];
+  document.querySelector('#scStory .top-bar h2').textContent='Geschichten ('+(storyIdx+1)+'/'+STORIES.length+')';
+  let html='<div class="glass" style="padding:1.1rem 1.2rem;margin-bottom:.75rem;">';
+  html+='<div style="font-size:.75rem;color:var(--cyan);font-weight:700;margin-bottom:.45rem;text-transform:uppercase;">'+story.title+'</div>';
+  html+='<div class="story-text">';
+  story.text.forEach(p=>{
+    if(p.tip)html+='<span class="rw" onclick="showTip(this,\''+p.tip.replace(/'/g,'\\\'')+'\')" title="'+p.de+'">'+p.ru+'</span>';
+    else html+=p.ru;
+  });
+  html+='</div>';
+  html+='<div style="margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border);display:flex;align-items:center;gap:.75rem;">';
+  html+='<div style="flex:1;font-size:.8rem;color:var(--text3);font-style:italic;" id="storyTranslation">';
+  story.text.forEach(p=>{html+=p.de;});
+  html+='</div>';
+  html+='<button onclick="readStory()" style="background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#000;border:none;border-radius:var(--r-sm);padding:.5rem .9rem;font-size:.78rem;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;" id="storyReadBtn">&#128266; Vorlesen</button>';
+  html+='</div></div>';
+  document.getElementById('storyContent').innerHTML=html;
+  document.getElementById('storyVocab').innerHTML=story.vocab.map(v=>'<span style="display:inline-block;margin-right:.7rem;white-space:nowrap;">\u25c6 '+v+'</span>').join('');
+}
+function showTip(el,tip){
+  const tt=document.getElementById('tooltip');const rect=el.getBoundingClientRect();
+  tt.textContent=tip;tt.style.display='block';tt.style.left=(rect.left+rect.width/2)+'px';tt.style.top=(rect.top-34+window.scrollY)+'px';
+  setTimeout(()=>{tt.style.display='none';},2000);
+}
+function readStory(){
+  const story=STORIES[storyIdx];
+  const btn=document.getElementById('storyReadBtn');
+  if(!btn)return;
+  // Ganzen russischen Text zusammenbauen
+  const ruText=story.text.map(p=>p.ru).join('');
+  btn.innerHTML='&#128266; Spielt...';
+  btn.style.opacity='.7';
+  spk(ruText);
+  // Button nach ~5 Sekunden zurücksetzen
+  setTimeout(()=>{
+    if(btn){btn.innerHTML='&#128266; Vorlesen';btn.style.opacity='1';}
+  },5000);
+}
+
+function goHome(){showDash();}
+
+// ── EIGENE VOKABELN ───────────────────────────────────────────────
+function getCustomCards(){try{return JSON.parse(_lg('ru_custom_'+cu)||'[]');}catch(e){return[];}}
+function saveCustomCards(cards){_ls('ru_custom_'+cu,JSON.stringify(cards));}
+
+function showCustomScreen(){
+  showSc('scCustom');
+  renderCustomList();
+}
+
+function addCustomCard(){
+  const ru=document.getElementById('customRu').value.trim();
+  const de=document.getElementById('customDe').value.trim();
+  const mn=document.getElementById('customMn').value.trim();
+  if(!ru||!de){showToast('Bitte russisches Wort und deutsche Bedeutung eingeben.');return;}
+  const cards=getCustomCards();
+  cards.push({m:ru,s:de,t:de,e:ru+' \u2192 '+de,x:'Eigene Vokabel',mn:mn||'',o:[de,'???','???','???'],r:[ru,'???','???','???']});
+  saveCustomCards(cards);
+  document.getElementById('customRu').value='';
+  document.getElementById('customDe').value='';
+  document.getElementById('customMn').value='';
+  renderCustomList();
+}
+
+function deleteCustomCard(idx){
+  if(!confirm('Diese Karte l\xf6schen?'))return;
+  const cards=getCustomCards();cards.splice(idx,1);saveCustomCards(cards);renderCustomList();
+}
+
+function renderCustomList(){
+  const cards=getCustomCards();
+  document.getElementById('customCount').textContent=cards.length;
+  const list=document.getElementById('customList');
+  const empty=document.getElementById('customEmpty');
+  const startBtn=document.getElementById('customStartBtn');
+  list.innerHTML='';
+  if(cards.length===0){empty.style.display='block';startBtn.style.display='none';return;}
+  empty.style.display='none';startBtn.style.display='block';
+  cards.forEach((card,idx)=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:.75rem;padding:.65rem .9rem;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:.4rem;';
+    row.innerHTML='<div style="flex:1;"><div style="font-size:.9rem;font-weight:700;color:var(--text);">'+card.m+'</div><div style="font-size:.78rem;color:var(--text3);">'+card.t+(card.mn?' \u2014 '+card.mn:'')+'</div></div><button onclick="deleteCustomCard('+idx+')" style="background:var(--red2);border:1px solid rgba(239,68,68,0.3);color:var(--red);border-radius:var(--r-sm);padding:.3rem .6rem;font-size:.75rem;cursor:pointer;font-weight:700;">\u00d7</button>';
+    list.appendChild(row);
+  });
+}
+
+
+function showMsg(id,msg,isOk){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.textContent=msg;
+  el.style.display='block';
+  setTimeout(()=>{el.style.display='none';},3500);
+}
+function showLoginErr(msg){showMsg('loginErr',msg,false);}
+function showLoginOk(msg){showMsg('loginOk',msg,true);}
+
+function showToast(msg){
+  let t=document.getElementById('_toast');
+  if(!t){t=document.createElement('div');t.id='_toast';
+    t.style.cssText='position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:rgba(30,30,40,.95);border:1px solid var(--border2);color:var(--text);padding:.65rem 1.1rem;border-radius:20px;font-size:.82rem;z-index:9999;pointer-events:none;transition:opacity .3s;max-width:85vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.4);';
+    document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';},2800);
+}
+
+window.addEventListener('load',()=>{
+  if(window.speechSynthesis){_lv();speechSynthesis.addEventListener('voiceschanged',()=>{_lv();});try{const w=new SpeechSynthesisUtterance('');w.volume=0;speechSynthesis.speak(w);speechSynthesis.cancel();}catch(e){}}
+  init();
+});
+</script>
+</body>
+</html>
