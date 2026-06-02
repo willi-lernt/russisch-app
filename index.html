@@ -162,8 +162,6 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 .mic-btn.listening{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.5);color:var(--red);animation:mpp .8s infinite;}
 @keyframes mpp{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.3);}50%{box-shadow:0 0 0 8px rgba(239,68,68,0);}}
 .mic-result{margin-top:.45rem;padding:.5rem .72rem;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:var(--r-sm);font-size:.8rem;color:#c4b5fd;display:none;}
-.dlg-bubble{padding:.6rem .88rem;border-radius:var(--r-sm);font-size:.86rem;margin-bottom:.42rem;background:linear-gradient(135deg,rgba(0,229,200,0.1),rgba(0,191,165,0.05));color:#67e8f9;border:1px solid rgba(0,229,200,0.2);}
-.dlg-prompt{font-size:.75rem;color:var(--text3);margin:.32rem 0;}
 .result-box{text-align:center;padding:1.5rem 0;}
 .r-emoji{font-size:3rem;margin-bottom:.5rem;animation:bn .6s ease;}
 @keyframes bn{0%{transform:scale(0);}60%{transform:scale(1.2);}100%{transform:scale(1);}}
@@ -349,7 +347,7 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 <div class="mode-tabs" id="modeTabs">
 <div class="mode-tab active" id="tab-ru-de" onclick="setMode('ru-de')">RU&#8594;DE</div>
 <div class="mode-tab" id="tab-de-ru" onclick="setMode('de-ru')">DE&#8594;RU</div>
-<div class="mode-tab" id="tab-dlg" onclick="setMode('dlg')">Dialog</div>
+
 </div>
 <div class="mode-info" id="mInfo"><strong>RU&#8594;DE:</strong> Russischer Buchstabe &#8594; tippe die Aussprache</div>
 <div id="stdQuiz">
@@ -399,11 +397,6 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 <button onclick="skipLQ()">&#9197; Weiter</button>
 <button id="lCheck" onclick="checkListen()">Pr&#252;fen &#10003;</button>
 </div>
-</div>
-<div id="dlgMode" style="display:none;">
-<div class="glass" style="padding:.82rem;margin-bottom:.82rem;">
-<div class="dlg-bubble" id="dlgAI">&#1055;&#1088;&#1080;&#1074;&#1077;&#1090;!</div>
-<div class="dlg-prompt" id="dlgPrompt">Antworte auf Russisch...</div>
 </div>
 <div class="kyr-lbl">Kyrillische Tastatur:</div>
 <div class="kyr" id="dlgKyr"></div>
@@ -811,7 +804,7 @@ function init(){
   showSc('scLogin');
   ['uname','pw','qIn','lIn','dlgIn','retryIn'].forEach(id=>{
     const el=document.getElementById(id);
-    if(el)el.addEventListener('keypress',e=>{if(e.key==='Enter'){if(id==='qIn')checkAns();else if(id==='lIn')checkListen();else if(id==='dlgIn')nxtDlg();else if(id==='retryIn')checkRetry();else login();}});
+    if(el)el.addEventListener('keypress',e=>{if(e.key==='Enter'){if(id==='qIn')checkAns();else if(id==='lIn')checkListen();else if(id==='retryIn')checkRetry();else login();}});
   });
   renderDiffCards();initMic();
 }
@@ -1040,31 +1033,25 @@ function startQuiz(){
   qi=0;at=0;showSc('scQuiz');const cfg=DC[cd];
   if(cs==='listening'){
     document.getElementById('modeTabs').style.display='none';document.getElementById('mInfo').style.display='none';
-    document.getElementById('stdQuiz').style.display='none';document.getElementById('listenQuiz').style.display='block';document.getElementById('dlgMode').style.display='none';
+    document.getElementById('stdQuiz').style.display='none';document.getElementById('listenQuiz').style.display='block';
     bldKB('lIn','lKyr');document.getElementById('qTitle').textContent='H\xf6r-Quiz';loadLQ();
   } else {
     document.getElementById('modeTabs').style.display='flex';document.getElementById('mInfo').style.display='block';
-    document.getElementById('listenQuiz').style.display='none';document.getElementById('dlgMode').style.display='none';
+    document.getElementById('listenQuiz').style.display='none';
     const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grammatik',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',listening:'H\xf6ren',custom:'Eigene Vokabeln'};
     document.getElementById('qTitle').textContent=(tt[cs]||'')+' Quiz '+cfg.e;
     document.getElementById('qPts').textContent=0;bldKB('qIn','kyr');
     // Dialog-Tab nur bei Vokabeln/Grammatik/etc., nicht beim Alphabet
-    document.getElementById('tab-dlg').style.display=cs==='alphabet'?'none':'';
+    
     setMode('ru-de');
   }
 }
 
 function setMode(mode){
-  // Alphabet: kein Dialog-Tab
-  if(cs==='alphabet'&&mode==='dlg')mode='ru-de';
-  qm=mode;['ru-de','de-ru','dlg'].forEach(m=>{document.getElementById('tab-'+m).classList.toggle('active',m===mode);});
-  document.getElementById('stdQuiz').style.display=mode==='dlg'?'none':'block';
-  document.getElementById('dlgMode').style.display=mode==='dlg'?'block':'none';
-  const mi=document.getElementById('mInfo');
-  if(mode==='ru-de')mi.innerHTML=cs==='alphabet'?'<strong>RU&#8594;DE:</strong> Buchstabe &#8594; tippe Aussprache (z.B. \u0410 &#8594; a)':'<strong>RU&#8594;DE:</strong> Russisches Wort &#8594; tippe deutsche Bedeutung';
-  else if(mode==='de-ru')mi.innerHTML=cs==='alphabet'?'<strong>DE&#8594;RU:</strong> Aussprache &#8594; tippe kyrillischen Buchstaben':'<strong>DE&#8594;RU:</strong> Deutsches Wort &#8594; tippe russisches Wort';
-  else mi.innerHTML='<strong>Dialog:</strong> Antworte auf Russisch';
-  if(mode==='dlg'){di=0;bldKB('dlgIn','dlgKyr');loadDlg();}else{at=0;loadQ();}
+  qm=mode;
+  ['ru-de','de-ru'].forEach(m=>{const el=document.getElementById('tab-'+m);if(el)el.classList.toggle('active',m===mode);});
+  const std=document.getElementById('stdQuiz');if(std)std.style.display='block';
+  at=0;loadQ();
 }
 
 function rdots(id,max){const el=document.getElementById(id);if(!el)return;el.innerHTML='';for(let i=0;i<max;i++){const d=document.createElement('span');d.className='dot'+(i<at?' used':'');el.appendChild(d);}}
