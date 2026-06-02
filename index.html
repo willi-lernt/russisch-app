@@ -331,7 +331,6 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 </div>
 <div class="mic-result" id="micLRes"></div>
 </div>
-<div id="gapBtnWrap" style="display:none;margin-bottom:.75rem;"><button onclick="openGap(cb[ci].m,'scLearn')" style="width:100%;background:linear-gradient(135deg,#7c3aed33,#4f46e533);border:1px solid #7c3aed55;border-radius:var(--r-sm);padding:.6rem;font-size:.82rem;font-weight:600;cursor:pointer;color:#a78bfa;font-family:inherit;">&#128221; L&#252;ckensatz &#252;ben</button></div>
 <div class="learn-nav">
 <button class="btn ghost" id="prevBtn" onclick="prevCard()">&#8592; Zur&#252;ck</button>
 <button class="btn primary" id="nextBtn" onclick="nextCard()">Weiter &#8594;</button>
@@ -931,6 +930,21 @@ function startSec(sec){
   const done=(us[cu].progress[sec]||0)%data.length,bs=cfg.bs;
   cb=data.slice(done,done+bs);
   if(cb.length<bs)cb=[...cb,...data.slice(0,bs-cb.length)];
+  // Alphabet: Lückensatz-Karten nach jeder Buchstaben-Karte einfügen
+  if(sec==='alphabet'&&typeof GAP_DATA!=='undefined'){
+    const expanded=[];
+    cb.forEach(card=>{
+      expanded.push(card);
+      const gd=GAP_DATA[card.m];
+      if(gd){
+        // Lückensatz 1
+        expanded.push({type:'gap',letter:card.m,step:0,m:card.m,s:gd.s1.ru,t:gd.s1.de,answer:gd.s1.answer,full:gd.s1.full,gapNum:1});
+        // Lückensatz 2
+        expanded.push({type:'gap',letter:card.m,step:1,m:card.m,s:gd.s2.ru,t:gd.s2.de,answer:gd.s2.answer,full:gd.s2.full,gapNum:2});
+      }
+    });
+    cb=expanded;
+  }
   ci=0;sp=0;sc=0;sw=0;
   const from=done+1,to=Math.min(done+bs,data.length);
   const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grammatik',listening:'H\xf6ren',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',custom:'Eigene Vokabeln'};
@@ -940,6 +954,8 @@ function startSec(sec){
 
 function loadCard(){
   const item=cb[ci];
+  // Gap-Karte: andere Darstellung
+  if(item&&item.type==='gap'){loadGapCard(item);return;}
   const lb={alphabet:'BUCHSTABE',vocabulary:'VOKABEL',grammar:'GRAMMATIK',listening:'H\xd6REN',speaking:'SPRECHEN',sentences:'SATZ',reading:'TEXT',numbers:'ZAHL',colors:'FARBE',weekdays:'WOCHENTAG',custom:'EIGENE'};
   document.getElementById('cBadge').textContent=lb[cs]||cs.toUpperCase();
   document.getElementById('cMain').textContent=item.m;
@@ -959,9 +975,73 @@ function loadCard(){
   setTimeout(()=>{card.style.transform='scale(1)';},120);
   document.getElementById('prevBtn').disabled=ci===0;
   document.getElementById('nextBtn').innerHTML=ci===cb.length-1?'Quiz starten &#127919;':'Weiter &#8594;';
-  const gapWrap=document.getElementById('gapBtnWrap');
-  if(gapWrap)gapWrap.style.display=(cs==='alphabet'&&typeof GAP_DATA!=='undefined'&&GAP_DATA[cb[ci].m])?'block':'none';
+  const gi=document.getElementById('gapInline');if(gi)gi.style.display='none';
 }
+
+function loadGapCard(item){
+  const card=document.getElementById('learnCard');
+  // Badge
+  document.getElementById('cBadge').textContent='LÜCKENSATZ '+item.gapNum+'/2';
+  // Hauptanzeige: Lückensatz
+  const display=item.s.replace(/___/g,'___');
+  document.getElementById('cMain').textContent=item.letter;
+  document.getElementById('cSub').textContent='Lückensatz '+item.gapNum+' — tippe den fehlenden Buchstaben';
+  document.getElementById('cTrans').textContent=item.t;
+  document.getElementById('cEx').textContent='';
+  document.getElementById('cExtra').textContent='';
+  document.getElementById('lProg').textContent=(ci+1)+' von '+cb.length;
+  const mn=document.getElementById('cMn');
+  mn.textContent='Satz: '+display;mn.style.display='block';
+  const ctxEl=document.getElementById('ctxSents');
+  ctxEl.style.display='none';
+  card.style.transform='scale(0.97)';
+  setTimeout(()=>{card.style.transform='scale(1)';},120);
+  document.getElementById('prevBtn').disabled=ci===0;
+  document.getElementById('nextBtn').innerHTML=ci===cb.length-1?'Quiz starten &#127919;':'Weiter &#8594;';
+  // Gap-Input anzeigen
+  let gapInline=document.getElementById('gapInline');
+  if(!gapInline){
+    gapInline=document.createElement('div');
+    gapInline.id='gapInline';
+    gapInline.style.cssText='margin-top:.75rem;';
+    const learnNav=document.querySelector('.learn-nav');
+    learnNav.parentNode.insertBefore(gapInline,learnNav);
+  }
+  gapInline.innerHTML=`
+    <div style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:var(--r-sm);padding:.9rem;margin-bottom:.5rem;">
+      <div style="font-size:1.1rem;font-weight:700;text-align:center;margin-bottom:.5rem;color:var(--text);">${display}</div>
+      <div style="display:flex;gap:.5rem;align-items:center;justify-content:center;margin:.5rem 0;">
+        <input id="gapInlineInput" type="text" maxlength="2" autocorrect="off" autocapitalize="none" spellcheck="false"
+          placeholder="?" style="width:70px;text-align:center;font-size:1.3rem;font-weight:700;padding:.4rem;background:var(--glass2);border:2px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:inherit;">
+        <button onclick="checkGapInline()" style="background:linear-gradient(135deg,var(--cyan),#00bfa5);color:#0a0a0f;font-weight:700;border:none;border-radius:var(--r-sm);padding:.5rem 1rem;font-size:.85rem;cursor:pointer;font-family:inherit;">Prüfen ✓</button>
+      </div>
+      <div id="gapInlineResult" style="text-align:center;font-size:.8rem;min-height:1.2rem;"></div>
+    </div>`;
+  setTimeout(()=>{const inp=document.getElementById('gapInlineInput');if(inp)inp.focus();},200);
+}
+
+function checkGapInline(){
+  const item=cb[ci];if(!item||item.type!=='gap')return;
+  const inp=document.getElementById('gapInlineInput');
+  const res=document.getElementById('gapInlineResult');
+  if(!inp||!res)return;
+  const val=inp.value.trim().toUpperCase();
+  const ans=item.answer.toUpperCase();
+  if(!val){inp.focus();return;}
+  if(val===ans){
+    inp.style.borderColor='#22c55e';inp.style.color='#22c55e';
+    res.style.color='#22c55e';
+    res.innerHTML='✓ Richtig! → '+item.full;
+    // Auto-weiter nach 1.5s
+    setTimeout(()=>{if(ci<cb.length-1){ci++;loadCard();}else startQuiz();},1500);
+  } else {
+    inp.style.borderColor='#ef4444';inp.style.color='#ef4444';
+    res.style.color='#ef4444';
+    res.innerHTML='✗ Der Buchstabe ist: <strong>'+item.answer+'</strong>';
+    setTimeout(()=>{inp.value='';inp.style.borderColor='';inp.style.color='';res.innerHTML='';inp.focus();},2000);
+  }
+}
+
 function prevCard(){if(ci>0){ci--;loadCard();}}
 function nextCard(){if(ci<cb.length-1){ci++;loadCard();}else startQuiz();}
 
