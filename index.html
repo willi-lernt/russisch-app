@@ -2,17 +2,8 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Bukva - Russisch lernen</title>
-<meta name="description" content="Lerne Russisch mit Karteikarten, Quiz und Spracherkennung">
-<meta name="theme-color" content="#00e5c8">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Bukva">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" href="icons/icon-192x192.png">
-<link rel="apple-touch-icon" href="icons/icon-192x192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Russisch Lernen v6</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -210,6 +201,20 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 .ctx-s{padding:.48rem .72rem;margin-bottom:.32rem;background:rgba(0,229,200,0.04);border:1px solid rgba(0,229,200,0.1);border-radius:var(--r-sm);font-size:.8rem;}
 .ctx-ru{color:var(--text);font-weight:600;margin-bottom:.12rem;}
 .ctx-de{color:var(--text3);font-style:italic;}
+
+.gap-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem var(--pad);}
+.gap-badge{display:inline-block;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-size:.65rem;font-weight:700;letter-spacing:.5px;padding:.25rem .6rem;border-radius:20px;margin-bottom:.75rem;text-transform:uppercase;}
+.gap-sentence{font-size:1.35rem;font-weight:700;color:var(--text);text-align:center;margin:1rem 0 .5rem;line-height:1.5;}
+.gap-translation{font-size:.82rem;color:var(--text3);text-align:center;margin-bottom:1rem;font-style:italic;}
+.gap-input-wrap{display:flex;gap:.5rem;align-items:center;justify-content:center;margin:.75rem 0;}
+.gap-input{width:80px;text-align:center;font-size:1.4rem;font-weight:700;padding:.5rem;background:var(--glass2);border:2px solid var(--border2);border-radius:var(--r-sm);color:var(--text);font-family:inherit;}
+.gap-input:focus{outline:none;border-color:var(--cyan);}
+.gap-input.correct{border-color:#22c55e;background:rgba(34,197,94,.1);color:#22c55e;}
+.gap-input.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444;}
+.gap-hint{font-size:.75rem;color:var(--text3);text-align:center;margin-bottom:.5rem;}
+.gap-check-btn{background:linear-gradient(135deg,var(--cyan),#00bfa5);color:#0a0a0f;font-weight:700;border:none;border-radius:var(--r-sm);padding:.6rem 1.4rem;font-size:.88rem;cursor:pointer;font-family:inherit;width:100%;margin-top:.5rem;}
+.gap-result{text-align:center;font-size:.82rem;font-weight:600;margin-top:.6rem;min-height:1.2rem;}
+
 </style>
 </head>
 <body>
@@ -225,7 +230,7 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 <div class="login-wrap">
 <div class="login-logo">
 <div style="font-size:3rem;margin-bottom:.5rem;">&#127479;&#127482;</div>
-<h1>Bukva</h1>
+<h1>Russisch Lernen</h1>
 <p>Dein smarter Lernbegleiter</p>
 </div>
 <div class="field"><label>Benutzername</label><input class="inp" id="uname" type="text" name="username" placeholder="Dein Benutzername" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false"></div>
@@ -494,6 +499,31 @@ Noch keine eigenen Vokabeln.<br>Füge deine ersten Karten hinzu!
 <button class="btn" id="retryBtn" style="width:100%;margin-bottom:.5rem;background:var(--orange2);border-color:rgba(249,115,22,0.4);color:var(--orange);display:none;" onclick="startRetryMode()">&#128260; Fehler wiederholen (<span id="retryCount">0</span>)</button>
 <button class="btn primary" style="width:100%;padding:.82rem;" onclick="goHome()">Weiter lernen &#8680;</button>
 </div>
+</div>
+
+<!-- GAP SENTENCE SCREEN -->
+<div id="scGap" class="sc" style="display:none;">
+  <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;">
+    <button class="btn ghost" onclick="closeGap()" style="padding:.4rem .8rem;font-size:.8rem;">← Zurück</button>
+    <span id="gapTitle" style="font-weight:700;font-size:.95rem;"></span>
+    <span id="gapCounter" style="margin-left:auto;font-size:.78rem;color:var(--text3);"></span>
+  </div>
+  <div class="gap-card">
+    <div class="gap-badge" id="gapBadge">Lückensatz</div>
+    <div class="gap-sentence" id="gapSentence"></div>
+    <div class="gap-translation" id="gapTranslation"></div>
+    <div class="gap-hint" id="gapHint"></div>
+    <div class="gap-input-wrap">
+      <input class="gap-input" id="gapInput" type="text" maxlength="2" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="?">
+    </div>
+    <div class="gap-result" id="gapResult"></div>
+    <button class="gap-check-btn" id="gapCheckBtn" onclick="checkGap()">Prüfen ✓</button>
+  </div>
+  <div style="margin-top:1rem;display:flex;gap:.5rem;">
+    <button class="btn ghost" style="flex:1;" onclick="gapKyr()">⌨ Kyrillisch</button>
+    <button class="btn ghost" style="flex:1;" onclick="skipGap()">Weiter <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span></button>
+  </div>
+  <div class="kyr" id="gapKyrKeys" style="margin-top:.75rem;display:none;"></div>
 </div>
 
 </div>
@@ -1304,20 +1334,102 @@ function renderCustomList(){
   });
 }
 
+const GAP_DATA={"А": {"s1": {"ru": "___нна — моя сестра.", "de": "Anna ist meine Schwester.", "answer": "А", "full": "Анна — моя сестра."}, "s2": {"ru": "___рбуз и ___пельсин — фрукты.", "de": "Wassermelone und Orange sind Früchte.", "answer": "А", "full": "Арбуз и Апельсин — фрукты.", "word2": "Апельсин"}}, "Б": {"s1": {"ru": "___рат живёт дома.", "de": "Der Bruder wohnt zu Hause.", "answer": "Б", "full": "Брат живёт дома."}, "s2": {"ru": "___абушка готовит ___орщ.", "de": "Die Oma kocht Borscht.", "answer": "Б", "full": "Бабушка готовит Борщ.", "word2": "Борщ"}}, "В": {"s1": {"ru": "___ода очень холодная.", "de": "Das Wasser ist sehr kalt.", "answer": "В", "full": "Вода очень холодная."}, "s2": {"ru": "___есна и ___ечер тёплые.", "de": "Frühling und Abend sind warm.", "answer": "В", "full": "Весна и Вечер тёплые.", "word2": "Вечер"}}, "Г": {"s1": {"ru": "___де ты живёшь?", "de": "Wo wohnst du?", "answer": "Г", "full": "Где ты живёшь?"}, "s2": {"ru": "___ород и ___оры красивые.", "de": "Stadt und Berge sind schön.", "answer": "Г", "full": "Город и Горы красивые.", "word2": "Горы"}}, "Д": {"s1": {"ru": "___ом большой и красивый.", "de": "Das Haus ist groß und schön.", "answer": "Д", "full": "Дом большой и красивый."}, "s2": {"ru": "___ети и ___едушка гуляют.", "de": "Die Kinder und der Opa spazieren.", "answer": "Д", "full": "Дети и Дедушка гуляют.", "word2": "Дедушка"}}, "Е": {"s1": {"ru": "___го зовут Иван.", "de": "Er heißt Iwan.", "answer": "Е", "full": "Его зовут Иван."}, "s2": {"ru": "___да и ___жевика вкусные.", "de": "Essen und Brombeere sind lecker.", "answer": "Е", "full": "Еда и Ежевика вкусные.", "word2": "Ежевика"}}, "Ё": {"s1": {"ru": "___лка стоит в комнате.", "de": "Der Tannenbaum steht im Zimmer.", "answer": "Ё", "full": "Ёлка стоит в комнате."}, "s2": {"ru": "___жик и ___лка в лесу.", "de": "Igel und Tanne sind im Wald.", "answer": "Ё", "full": "Ёжик и Ёлка в лесу.", "word2": "Ёлка"}}, "Ж": {"s1": {"ru": "Я ___иву в городе.", "de": "Ich wohne in der Stadt.", "answer": "Ж", "full": "Я живу в городе."}, "s2": {"ru": "___арко, ___ара сильная сегодня.", "de": "Es ist heiß, die Hitze ist heute stark.", "answer": "Ж", "full": "Жарко, Жара сильная сегодня.", "word2": "Жара"}}, "З": {"s1": {"ru": "___десь очень красиво.", "de": "Hier ist es sehr schön.", "answer": "З", "full": "Здесь очень красиво."}, "s2": {"ru": "___има и ___акат красивые.", "de": "Winter und Sonnenuntergang sind schön.", "answer": "З", "full": "Зима и Закат красивые.", "word2": "Закат"}}, "И": {"s1": {"ru": "___ван — мой друг.", "de": "Iwan ist mein Freund.", "answer": "И", "full": "Иван — мой друг."}, "s2": {"ru": "___гра и ___мя важны.", "de": "Spiel und Name sind wichtig.", "answer": "И", "full": "Игра и Имя важны.", "word2": "Имя"}}, "Й": {"s1": {"ru": "Это мо___ чай.", "de": "Das ist mein Tee.", "answer": "Й", "full": "Это мой чай."}, "s2": {"ru": "Тво___ и мо___ дома наши.", "de": "Deiner und meiner — unsere Häuser.", "answer": "Й", "full": "Твой и мой дома наши.", "word2": "мой"}}, "К": {"s1": {"ru": "___нига лежит на столе.", "de": "Das Buch liegt auf dem Tisch.", "answer": "К", "full": "Книга лежит на столе."}, "s2": {"ru": "___ошка и ___от дома.", "de": "Katze und Kater sind zu Hause.", "answer": "К", "full": "Кошка и Кот дома.", "word2": "Кот"}}, "Л": {"s1": {"ru": "___ето очень тёплое.", "de": "Der Sommer ist sehr warm.", "answer": "Л", "full": "Лето очень тёплое."}, "s2": {"ru": "___ес и ___уна красивые.", "de": "Wald und Mond sind schön.", "answer": "Л", "full": "Лес и Луна красивые.", "word2": "Луна"}}, "М": {"s1": {"ru": "___ама готовит суп.", "de": "Mama kocht Suppe.", "answer": "М", "full": "Мама готовит суп."}, "s2": {"ru": "___оре и ___ечта далеко.", "de": "Das Meer und der Traum sind weit.", "answer": "М", "full": "Море и Мечта далеко.", "word2": "Мечта"}}, "Н": {"s1": {"ru": "___очь тихая и тёмная.", "de": "Die Nacht ist still und dunkel.", "answer": "Н", "full": "Ночь тихая и тёмная."}, "s2": {"ru": "___ебо и ___очь красивые.", "de": "Himmel und Nacht sind schön.", "answer": "Н", "full": "Небо и Ночь красивые.", "word2": "Ночь"}}, "О": {"s1": {"ru": "___н читает книгу.", "de": "Er liest ein Buch.", "answer": "О", "full": "Он читает книгу."}, "s2": {"ru": "___сень и ___блако красивые.", "de": "Herbst und Wolke sind schön.", "answer": "О", "full": "Осень и Облако красивые.", "word2": "Облако"}}, "П": {"s1": {"ru": "___апа работает каждый день.", "de": "Papa arbeitet jeden Tag.", "answer": "П", "full": "Папа работает каждый день."}, "s2": {"ru": "___арк и ___руд рядом.", "de": "Park und Teich sind nebenan.", "answer": "П", "full": "Парк и Пруд рядом.", "word2": "Пруд"}}, "Р": {"s1": {"ru": "___ека течёт медленно.", "de": "Der Fluss fließt langsam.", "answer": "Р", "full": "Река течёт медленно."}, "s2": {"ru": "___оза и ___ека красивые.", "de": "Rose und Fluss sind schön.", "answer": "Р", "full": "Роза и Река красивые.", "word2": "Река"}}, "С": {"s1": {"ru": "___егодня хорошая погода.", "de": "Heute ist gutes Wetter.", "answer": "С", "full": "Сегодня хорошая погода."}, "s2": {"ru": "___олнце и ___нег красивые.", "de": "Sonne und Schnee sind schön.", "answer": "С", "full": "Солнце и Снег красивые.", "word2": "Снег"}}, "Т": {"s1": {"ru": "___ам живёт моя семья.", "de": "Dort wohnt meine Familie.", "answer": "Т", "full": "Там живёт моя семья."}, "s2": {"ru": "___игр и ___юльпан красивые.", "de": "Tiger und Tulpe sind schön.", "answer": "Т", "full": "Тигр и Тюльпан красивые.", "word2": "Тюльпан"}}, "У": {"s1": {"ru": "___тром я пью чай.", "de": "Morgens trinke ich Tee.", "answer": "У", "full": "Утром я пью чай."}, "s2": {"ru": "___лица и ___голок красивые.", "de": "Straße und Ecke sind schön.", "answer": "У", "full": "Улица и Уголок красивые.", "word2": "Уголок"}}, "Ф": {"s1": {"ru": "___рукты очень вкусные.", "de": "Die Früchte sind sehr lecker.", "answer": "Ф", "full": "Фрукты очень вкусные."}, "s2": {"ru": "___утбол и ___онарь рядом.", "de": "Fußball und Laterne sind nebenan.", "answer": "Ф", "full": "Футбол и Фонарь рядом.", "word2": "Фонарь"}}, "Х": {"s1": {"ru": "___леб всегда свежий.", "de": "Das Brot ist immer frisch.", "answer": "Х", "full": "Хлеб всегда свежий."}, "s2": {"ru": "___олод и ___лопок зимой.", "de": "Kälte und Baumwolle im Winter.", "answer": "Х", "full": "Холод и Хлопок зимой.", "word2": "Хлопок"}}, "Ц": {"s1": {"ru": "___веты растут в саду.", "de": "Die Blumen wachsen im Garten.", "answer": "Ц", "full": "Цветы растут в саду."}, "s2": {"ru": "___ирк и ___арство — сказка.", "de": "Zirkus und Königreich sind Märchen.", "answer": "Ц", "full": "Цирк и Царство — сказка.", "word2": "Царство"}}, "Ч": {"s1": {"ru": "___ай горячий и вкусный.", "de": "Der Tee ist heiß und lecker.", "answer": "Ч", "full": "Чай горячий и вкусный."}, "s2": {"ru": "___асы и ___емодан в углу.", "de": "Uhr und Koffer sind in der Ecke.", "answer": "Ч", "full": "Часы и Чемодан в углу.", "word2": "Чемодан"}}, "Ш": {"s1": {"ru": "___апка лежит на полке.", "de": "Die Mütze liegt im Regal.", "answer": "Ш", "full": "Шапка лежит на полке."}, "s2": {"ru": "___кола и ___арф рядом.", "de": "Schule und Schal sind nebenan.", "answer": "Ш", "full": "Школа и Шарф рядом.", "word2": "Шарф"}}, "Щ": {"s1": {"ru": "___и — русский суп.", "de": "Schi ist eine russische Suppe.", "answer": "Щ", "full": "Щи — русский суп."}, "s2": {"ru": "___енок и ___ётка дома.", "de": "Welpe und Bürste sind zu Hause.", "answer": "Щ", "full": "Щенок и Щётка дома.", "word2": "Щётка"}}, "Ъ": {"s1": {"ru": "От___езд скоро.", "de": "Die Abfahrt ist bald.", "answer": "Ъ", "full": "Отъезд скоро."}, "s2": {"ru": "От___езд и под___ём важны.", "de": "Abfahrt und Aufstieg sind wichtig.", "answer": "Ъ", "full": "Отъезд и подъём важны.", "word2": "подъём"}}, "Ы": {"s1": {"ru": "Кот___ мяукают громко.", "de": "Die Katzen miauen laut.", "answer": "Ы", "full": "Коты мяукают громко."}, "s2": {"ru": "Кот___ и собак___ — животные.", "de": "Katzen und Hunde sind Tiere.", "answer": "Ы", "full": "Коты и собаки — животные.", "word2": "собаки"}}, "Ь": {"s1": {"ru": "Сол___ на столе.", "de": "Das Salz ist auf dem Tisch.", "answer": "Ь", "full": "Соль на столе."}, "s2": {"ru": "Сол___ и кров___ нужны.", "de": "Salz und Blut werden gebraucht.", "answer": "Ь", "full": "Соль и кровь нужны.", "word2": "кровь"}}, "Э": {"s1": {"ru": "___то моя книга.", "de": "Das ist mein Buch.", "answer": "Э", "full": "Это моя книга."}, "s2": {"ru": "___то и ___кран важны.", "de": "Das und der Bildschirm sind wichtig.", "answer": "Э", "full": "Это и экран важны.", "word2": "экран"}}, "Ю": {"s1": {"ru": "___г тёплый и красивый.", "de": "Der Süden ist warm und schön.", "answer": "Ю", "full": "Юг тёплый и красивый."}, "s2": {"ru": "___г и ___мор важны.", "de": "Süden und Humor sind wichtig.", "answer": "Ю", "full": "Юг и Юмор важны.", "word2": "Юмор"}}, "Я": {"s1": {"ru": "___ учу русский язык.", "de": "Ich lerne die russische Sprache.", "answer": "Я", "full": "Я учу русский язык."}, "s2": {"ru": "___ и ___блоко — начало.", "de": "Ich und Apfel — ein Anfang.", "answer": "Я", "full": "Я и Яблоко — начало.", "word2": "Яблоко"}}};
+
+let gapLetter=null,gapStep=0,gapFrom='learn';
+
+function openGap(letter,fromScreen){
+  gapLetter=letter;
+  gapStep=0;
+  gapFrom=fromScreen||'learn';
+  showGapStep();
+  showSc('scGap');
+}
+
+function showGapStep(){
+  const d=GAP_DATA[gapLetter];
+  if(!d)return;
+  const step=gapStep===0?d.s1:d.s2;
+  const isS2=gapStep===1;
+  document.getElementById('gapTitle').textContent='Buchstabe '+gapLetter+' — Lückensatz';
+  document.getElementById('gapCounter').textContent=(gapStep+1)+'/2';
+  document.getElementById('gapBadge').textContent=isS2?'Lückensatz 2 — 2 Wörter':'Lückensatz 1';
+  document.getElementById('gapHint').textContent='Tipp: Ergänze den fehlenden Buchstaben '+gapLetter;
+  // Lücken optisch markieren: ___ → [   ]
+  const display=step.ru.replace(/___/g,'[ ___ ]');
+  document.getElementById('gapSentence').textContent=display;
+  document.getElementById('gapTranslation').textContent=step.de;
+  const inp=document.getElementById('gapInput');
+  inp.value='';inp.className='gap-input';
+  document.getElementById('gapResult').textContent='';
+  document.getElementById('gapCheckBtn').textContent='Prüfen ✓';
+  document.getElementById('gapCheckBtn').onclick=checkGap;
+  document.getElementById('gapKyrKeys').style.display='none';
+  setTimeout(()=>inp.focus(),200);
+}
+
+function checkGap(){
+  const d=GAP_DATA[gapLetter];
+  if(!d)return;
+  const step=gapStep===0?d.s1:d.s2;
+  const inp=document.getElementById('gapInput');
+  const val=inp.value.trim().toUpperCase();
+  const ans=step.answer.toUpperCase();
+  const res=document.getElementById('gapResult');
+  const btn=document.getElementById('gapCheckBtn');
+  if(!val){inp.focus();return;}
+  if(val===ans||val===ans.toLowerCase()){
+    inp.classList.add('correct');
+    res.style.color='#22c55e';
+    res.textContent='✓ Richtig! → '+step.full;
+    btn.textContent='Weiter →';
+    btn.onclick=nextGapStep;
+    // XP vergeben
+    try{const us=GU();if(us[cu]){us[cu].stats=us[cu].stats||{};us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+2;us[cu].stats.totalPoints=(us[cu].stats.totalPoints||0)+5;SU(us);}}catch(e){}
+  } else {
+    inp.classList.add('wrong');
+    res.style.color='#ef4444';
+    res.textContent='✗ Nicht ganz — der Buchstabe ist: '+step.answer;
+    btn.textContent='Nochmal';
+    btn.onclick=()=>{inp.value='';inp.className='gap-input';res.textContent='';inp.focus();btn.textContent='Prüfen ✓';btn.onclick=checkGap;};
+  }
+}
+
+function nextGapStep(){
+  if(gapStep===0){
+    gapStep=1;
+    showGapStep();
+  } else {
+    // Beide Lückensätze fertig → zurück zur Lernkarte
+    closeGap();
+    // Nächste Karte laden
+    if(typeof nextCard==='function')nextCard();
+  }
+}
+
+function skipGap(){nextGapStep();}
+
+function closeGap(){
+  showSc(gapFrom==='quiz'?'scQuiz':'scLearn');
+}
+
+function gapKyr(){
+  const kb=document.getElementById('gapKyrKeys');
+  if(kb.style.display==='none'||!kb.innerHTML){
+    bldKB('gapInput','gapKyrKeys');
+    kb.style.display='flex';
+    kb.style.flexWrap='wrap';
+    kb.style.gap='.3rem';
+    kb.style.marginTop='.5rem';
+  } else {
+    kb.style.display='none';
+  }
+}
+
 window.addEventListener('load',()=>{
   if(window.speechSynthesis){_lv();speechSynthesis.addEventListener('voiceschanged',()=>{_lv();});try{const w=new SpeechSynthesisUtterance('');w.volume=0;speechSynthesis.speak(w);speechSynthesis.cancel();}catch(e){}}
   init();
 });
-</script>
-
-<script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('service-worker.js')
-      .then(()=>console.log('Bukva SW registered'))
-      .catch(e=>console.log('SW error:',e));
-  });
-}
 </script>
 </body>
 </html>
