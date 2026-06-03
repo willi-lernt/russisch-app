@@ -1182,11 +1182,27 @@ function spk(txt){
   const t=txt.trim();
   try{
     if(!window.speechSynthesis)return;
-    if(speechSynthesis.paused){try{speechSynthesis.resume();}catch(e){}}
-    speechSynthesis.cancel();
-    function _do(){try{const u=new SpeechSynthesisUtterance(t);u.lang='ru-RU';u.rate=0.8;u.pitch=1;u.volume=1;const vs=speechSynthesis.getVoices();if(vs&&vs.length>0)_voices=vs;const rv=_voices.find(v=>v.lang==='ru-RU')||_voices.find(v=>v.lang.startsWith('ru'));if(rv)u.voice=rv;speechSynthesis.speak(u);}catch(e){}}
-    const vs=speechSynthesis.getVoices();
-    if(vs&&vs.length>0){_voices=vs;_do();}else setTimeout(()=>{_lv();_do();},300);
+    try{speechSynthesis.cancel();}catch(e){}
+    function _do(voices){
+      try{
+        const u=new SpeechSynthesisUtterance(t);
+        u.lang='ru-RU';u.rate=0.85;u.pitch=1;u.volume=1;
+        if(voices&&voices.length>0){
+          const rv=voices.find(v=>v.lang==='ru-RU')||voices.find(v=>v.lang.startsWith('ru'));
+          if(rv)u.voice=rv;
+        }
+        setTimeout(()=>{try{speechSynthesis.speak(u);}catch(e){}},50);
+      }catch(e){}
+    }
+    function _trySpeak(attempt){
+      try{
+        const vs=speechSynthesis.getVoices();
+        if(vs&&vs.length>0){_voices=vs;_do(vs);}
+        else if(attempt<6){setTimeout(()=>_trySpeak(attempt+1),500);}
+        else{_do([]);}
+      }catch(e){if(attempt<6)setTimeout(()=>_trySpeak(attempt+1),500);else _do([]);}
+    }
+    _trySpeak(0);
   }catch(e){}
 }
 
