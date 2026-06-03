@@ -1,13 +1,10 @@
-const CACHE = 'bukva-v1';
+const CACHE = 'bukva-v3';
 const ASSETS = [
-  '/russisch-app/',
-  '/russisch-app/index.html',
-  '/russisch-app/manifest.json',
-  '/russisch-app/icons/icon-192x192.png',
-  '/russisch-app/icons/icon-512x512.png'
+  '/',
+  '/index.html'
 ];
 
-// Installation: App-Dateien cachen
+// Installation: nur index.html cachen
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(cache => cache.addAll(ASSETS))
@@ -15,7 +12,7 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// Aktivierung: alten Cache löschen
+// Aktivierung: ALLE alten Caches löschen
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -25,12 +22,14 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// Fetch: zuerst Cache, dann Netzwerk
+// Fetch: Netzwerk zuerst, Cache als Fallback
 self.addEventListener('fetch', e => {
+  // Nur GET-Anfragen behandeln
+  if (e.request.method !== 'GET') return;
+
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(response => {
+    fetch(e.request)
+      .then(response => {
         // Nur gültige Antworten cachen
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
@@ -38,7 +37,7 @@ self.addEventListener('fetch', e => {
         const clone = response.clone();
         caches.open(CACHE).then(cache => cache.put(e.request, clone));
         return response;
-      }).catch(() => caches.match('/russisch-app/'));
-    })
+      })
+      .catch(() => caches.match(e.request).then(cached => cached || caches.match('/')))
   );
 });
