@@ -346,6 +346,37 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 </div>
 </div>
 
+
+<!-- SPRECHEN -->
+<div id="scSpeak" class="sc">
+<div style="margin-bottom:.72rem;display:flex;gap:.4rem;">
+<button class="btn sm primary" onclick="goHome()">&#8962; Start</button>
+</div>
+<div class="top-bar">
+<h2 id="spkTitle">Sprechen</h2>
+<span id="spkProg" style="font-size:.83rem;color:var(--text3);">1 von 5</span>
+</div>
+<div class="glass-cyan learn-card" id="spkCard">
+<div class="card-badge">SPRECHEN</div>
+<div id="spkMain" style="font-size:2.1rem;font-weight:900;color:var(--cyan);text-align:center;margin:.6rem 0 .3rem;letter-spacing:.04em;"></div>
+<div id="spkTrans" style="font-size:.95rem;color:var(--text3);text-align:center;margin-bottom:.5rem;"></div>
+<div id="spkSub" style="font-size:.78rem;color:var(--text2);text-align:center;margin-bottom:.8rem;"></div>
+<div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:.7rem;">
+<button class="btn sm" onclick="spkPlayWord()">&#128266; Vorsprechen</button>
+<button class="mic-btn" id="spkMicBtn" onclick="startSpkMic()">&#127908; Nachsprechen</button>
+</div>
+<div id="spkRes" style="display:none;text-align:center;padding:.5rem;border-radius:var(--r-sm);margin-bottom:.5rem;"></div>
+<div id="spkConfirm" style="display:none;text-align:center;">
+<div style="font-size:2rem;margin-bottom:.4rem;">&#10003;</div>
+<div style="font-size:.85rem;color:#22c55e;margin-bottom:.7rem;">Richtig gesprochen!</div>
+<button class="btn primary" onclick="nextSpk()">Weiter &#8594;</button>
+</div>
+</div>
+<div style="text-align:center;margin-top:.6rem;">
+<button class="btn ghost sm" onclick="skipSpk()">&#9197; Überspringen</button>
+</div>
+</div>
+
 <!-- QUIZ -->
 <div id="scQuiz" class="sc">
 <div style="margin-bottom:.72rem;"><button class="btn sm primary" onclick="goHome()">&#8962; Start</button></div>
@@ -658,10 +689,199 @@ listening:[
   {m:"\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e",s:"H\xf6r: Ich verstehe nicht",t:"\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e",e:"ja nje pa-ni-MA-ju",x:"NE macht weich",o:["\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e","\u042f \u043d\u0435 \u0437\u043d\u0430\u044e","\u042f \u043d\u0435 \u043c\u043e\u0433\u0443","\u042f \u043d\u0435 \u0445\u043e\u0447\u0443"],r:["\u042f \u043d\u0435 \u043f\u043e\u043d\u0438\u043c\u0430\u044e","\u042f \u043d\u0435 \u0437\u043d\u0430\u044e","\u042f \u043d\u0435 \u043c\u043e\u0433\u0443","\u042f \u043d\u0435 \u0445\u043e\u0447\u0443"]}
 ],
 speaking:[
-  {m:"\u0420",s:"Gerolltes Zungenspitzen-R",t:"Gerolltes Zungenspitzen-R",e:"Rossija, ryba",x:"\xdcbung: r-r-r",mn:"Tipp: Sage schnell 'drrr' und lass Zungenspitze vibrieren",o:["Gerolltes Zungenspitzen-R","Deutsches Z\xe4pfchen-R","Stummes R","Englisches R"],r:["\u0420 (Zungenspitze)","\u0420 (Z\xe4pfchen)","\u0420 (stumm)","\u0420 (englisch)"]},
-  {m:"\u042b",s:"Verdunkeltes I",t:"verdunkeltes i",e:"Ty, my, vy",x:"Zunge zur\xfcck",mn:"Sag 'i' aber schiebe die Zunge ganz nach hinten \u2014 klingt dumpfer",o:["verdunkeltes i","Langes I","Wie U","Wie \xd6"],r:["\u042b (verdunkelt)","\u0418 (klar)","\u0423","\u042d"]},
-  {m:"\u0416 / \u0428",s:"Russische Zischlaute",t:"\u0416=stimmhaftes Sch, \u0428=stimmloses Sch",e:"Zhara vs. Scharf",x:"Zunge weiter hinten",mn:"\u0416 = Sch mit Vibration, \u0428 = Sch ohne Vibration",o:["\u0416=stimmhaftes Sch, \u0428=stimmloses Sch","Beide stimmlos","Beide stimmhaft","Gleich"],r:["\u0416\u2260\u0428 (stimm.)","Beide glhh","Beide sth","Gleich"]},
-  {m:"Intonation?",s:"Fragesatz-Melodie",t:"Stimme steigt auf betonter Silbe",e:"Eto Iwan? \u2014 hoch bei WAN",x:"Anders als im Deutschen!",mn:"Im Russischen steigt Stimme auf betonter Silbe \u2014 nicht am Satzende!",o:["Stimme steigt auf betonter Silbe","Am Ende hoch","Gleichm\xe4\xdfig","Immer fallend"],r:["Anstieg Betonungssilbe","Immer am Ende","Gleichm\xe4\xdfig","Immer fallend"]}
+  {m:"привет",s:"Hallo (informell)",t:"Hallo",e:"Privet!",d:1},
+  {m:"пока",s:"Tschüss (informell)",t:"Tschüss",e:"Poka!",d:1},
+  {m:"да",s:"ja",t:"ja",e:"Da",d:1},
+  {m:"нет",s:"nein",t:"nein",e:"Net",d:1},
+  {m:"спасибо",s:"danke",t:"danke",e:"Spasibo",d:1},
+  {m:"пожалуйста",s:"bitte / gern geschehen",t:"bitte",e:"Poshalujsta",d:1},
+  {m:"хорошо",s:"gut / okay",t:"gut",e:"Choroscho",d:1},
+  {m:"плохо",s:"schlecht",t:"schlecht",e:"Plocho",d:1},
+  {m:"вода",s:"Wasser",t:"Wasser",e:"Woda",d:1},
+  {m:"хлеб",s:"Brot",t:"Brot",e:"Chleb",d:1},
+  {m:"молоко",s:"Milch",t:"Milch",e:"Moloko",d:1},
+  {m:"кофе",s:"Kaffee",t:"Kaffee",e:"Kofe",d:1},
+  {m:"чай",s:"Tee",t:"Tee",e:"Tschaj",d:1},
+  {m:"дом",s:"Haus",t:"Haus",e:"Dom",d:1},
+  {m:"город",s:"Stadt",t:"Stadt",e:"Gorod",d:1},
+  {m:"улица",s:"Straße",t:"Straße",e:"Uliza",d:1},
+  {m:"машина",s:"Auto",t:"Auto",e:"Maschina",d:1},
+  {m:"деньги",s:"Geld",t:"Geld",e:"Dengi",d:1},
+  {m:"время",s:"Zeit",t:"Zeit",e:"Wremja",d:1},
+  {m:"день",s:"Tag",t:"Tag",e:"Den",d:1},
+  {m:"ночь",s:"Nacht",t:"Nacht",e:"Notsch",d:1},
+  {m:"утро",s:"Morgen",t:"Morgen",e:"Utro",d:1},
+  {m:"вечер",s:"Abend",t:"Abend",e:"Wetschor",d:1},
+  {m:"год",s:"Jahr",t:"Jahr",e:"God",d:1},
+  {m:"неделя",s:"Woche",t:"Woche",e:"Nedjelja",d:1},
+  {m:"друг",s:"Freund",t:"Freund",e:"Drug",d:1},
+  {m:"семья",s:"Familie",t:"Familie",e:"Semja",d:1},
+  {m:"мама",s:"Mama",t:"Mama",e:"Mama",d:1},
+  {m:"папа",s:"Papa",t:"Papa",e:"Papa",d:1},
+  {m:"работа",s:"Arbeit",t:"Arbeit",e:"Rabota",d:1},
+  {m:"школа",s:"Schule",t:"Schule",e:"Schkola",d:1},
+  {m:"книга",s:"Buch",t:"Buch",e:"Kniga",d:1},
+  {m:"язык",s:"Sprache",t:"Sprache",e:"Jasyk",d:1},
+  {m:"слово",s:"Wort",t:"Wort",e:"Slowo",d:1},
+  {m:"большой",s:"groß",t:"groß",e:"Bolschoj",d:1},
+  {m:"маленький",s:"klein",t:"klein",e:"Malenkij",d:1},
+  {m:"красивый",s:"schön",t:"schön",e:"Krassiwyj",d:1},
+  {m:"новый",s:"neu",t:"neu",e:"Nowyj",d:1},
+  {m:"старый",s:"alt",t:"alt",e:"Staryj",d:1},
+  {m:"быстро",s:"schnell",t:"schnell",e:"Bystro",d:1},
+  {m:"медленно",s:"langsam",t:"langsam",e:"Medlenno",d:1},
+  {m:"очень",s:"sehr",t:"sehr",e:"Otschenj",d:1},
+  {m:"немного",s:"ein bisschen",t:"ein bisschen",e:"Nemnogo",d:1},
+  {m:"идти",s:"gehen",t:"gehen",e:"Idti",d:1},
+  {m:"говорить",s:"sprechen",t:"sprechen",e:"Goworit",d:1},
+  {m:"понимать",s:"verstehen",t:"verstehen",e:"Ponimat",d:1},
+  {m:"знать",s:"wissen / kennen",t:"wissen",e:"Snat",d:1},
+  {m:"хотеть",s:"wollen / möchten",t:"wollen",e:"Chotjet",d:1},
+  {m:"любить",s:"lieben / mögen",t:"lieben",e:"Ljubit",d:1},
+  {m:"жить",s:"leben / wohnen",t:"leben",e:"Schit",d:1},
+  {m:"видеть",s:"sehen",t:"sehen",e:"Widjet",d:1},
+  {m:"есть",s:"essen",t:"essen",e:"Jest",d:1},
+  {m:"пить",s:"trinken",t:"trinken",e:"Pit",d:1},
+  {m:"купить",s:"kaufen",t:"kaufen",e:"Kupit",d:1},
+  {m:"Привет!",s:"Hallo! (informell)",t:"Hallo!",e:"Privet!",d:2},
+  {m:"Здравствуйте!",s:"Guten Tag! (formell)",t:"Guten Tag!",e:"Sdrastwujtje!",d:2},
+  {m:"Доброе утро!",s:"Guten Morgen!",t:"Guten Morgen!",e:"Dobroe utro!",d:2},
+  {m:"Добрый день!",s:"Guten Tag!",t:"Guten Tag!",e:"Dobryj denj!",d:2},
+  {m:"Добрый вечер!",s:"Guten Abend!",t:"Guten Abend!",e:"Dobryj wetschor!",d:2},
+  {m:"Спокойной ночи!",s:"Gute Nacht!",t:"Gute Nacht!",e:"Spokojnoj nochi!",d:2},
+  {m:"Как дела?",s:"Wie geht es dir?",t:"Wie geht es dir?",e:"Kak djela?",d:2},
+  {m:"Всё хорошо.",s:"Alles gut.",t:"Alles gut.",e:"Wsjо choroscho.",d:2},
+  {m:"Как тебя зовут?",s:"Wie heißt du?",t:"Wie heißt du?",e:"Kak tebja sowut?",d:2},
+  {m:"Меня зовут...",s:"Ich heiße...",t:"Ich heiße...",e:"Menja sowut...",d:2},
+  {m:"Очень приятно!",s:"Sehr erfreulich! / Freut mich!",t:"Freut mich!",e:"Otschenj prijatno!",d:2},
+  {m:"Я не понимаю.",s:"Ich verstehe nicht.",t:"Ich verstehe nicht.",e:"Ja ne ponimaju.",d:2},
+  {m:"Я не знаю.",s:"Ich weiß es nicht.",t:"Ich weiß es nicht.",e:"Ja ne snaju.",d:2},
+  {m:"Повторите, пожалуйста.",s:"Wiederholen Sie bitte.",t:"Wiederholen Sie bitte.",e:"Powtorite, poshalujsta.",d:2},
+  {m:"Говорите помедленнее.",s:"Sprechen Sie langsamer.",t:"Sprechen Sie langsamer.",e:"Goworite pomedlennee.",d:2},
+  {m:"Где туалет?",s:"Wo ist die Toilette?",t:"Wo ist die Toilette?",e:"Gde tualjet?",d:2},
+  {m:"Сколько стоит?",s:"Wie viel kostet das?",t:"Wie viel kostet das?",e:"Skolko stoit?",d:2},
+  {m:"Дайте мне это.",s:"Geben Sie mir das.",t:"Geben Sie mir das.",e:"Dajtje mnje eto.",d:2},
+  {m:"Я хочу есть.",s:"Ich möchte essen.",t:"Ich möchte essen.",e:"Ja chotschu jest.",d:2},
+  {m:"Я хочу пить.",s:"Ich möchte trinken.",t:"Ich möchte trinken.",e:"Ja chotschu pit.",d:2},
+  {m:"Это вкусно!",s:"Das ist lecker!",t:"Das ist lecker!",e:"Eto wkusno!",d:2},
+  {m:"Помогите мне!",s:"Helfen Sie mir!",t:"Helfen Sie mir!",e:"Pomogtje mnje!",d:2},
+  {m:"Извините!",s:"Entschuldigung!",t:"Entschuldigung!",e:"Iswintje!",d:2},
+  {m:"Простите меня.",s:"Verzeihen Sie mir.",t:"Verzeihen Sie mir.",e:"Prostite menja.",d:2},
+  {m:"Спасибо большое!",s:"Vielen Dank!",t:"Vielen Dank!",e:"Spasibo bolschoje!",d:2},
+  {m:"Не за что.",s:"Bitte sehr. / Kein Problem.",t:"Bitte sehr.",e:"Nje sa schto.",d:2},
+  {m:"До свидания!",s:"Auf Wiedersehen!",t:"Auf Wiedersehen!",e:"Do swidanija!",d:2},
+  {m:"Пока-пока!",s:"Tschüss tschüss!",t:"Tschüss tschüss!",e:"Poka-poka!",d:2},
+  {m:"Да, конечно.",s:"Ja, natürlich.",t:"Ja, natürlich.",e:"Da, konetschno.",d:2},
+  {m:"Нет, спасибо.",s:"Nein, danke.",t:"Nein, danke.",e:"Net, spasibo.",d:2},
+  {m:"Я из Германии.",s:"Ich komme aus Deutschland.",t:"Ich komme aus Deutschland.",e:"Ja is Germanii.",d:3},
+  {m:"Я живу в Берлине.",s:"Ich wohne in Berlin.",t:"Ich wohne in Berlin.",e:"Ja schiwu w Berlinje.",d:3},
+  {m:"Я учу русский язык.",s:"Ich lerne Russisch.",t:"Ich lerne Russisch.",e:"Ja utschju russkij jasyk.",d:3},
+  {m:"Мне нравится русский язык.",s:"Mir gefällt die russische Sprache.",t:"Mir gefällt Russisch.",e:"Mnje nrawitsja russkij jasyk.",d:3},
+  {m:"Я люблю читать книги.",s:"Ich lese gern Bücher.",t:"Ich lese gern Bücher.",e:"Ja ljublju tschitat knigi.",d:3},
+  {m:"Я работаю в офисе.",s:"Ich arbeite im Büro.",t:"Ich arbeite im Büro.",e:"Ja rabotaju w ofise.",d:3},
+  {m:"Можно мне помочь?",s:"Kann ich helfen?",t:"Kann ich helfen?",e:"Moschno mnje pomosch?",d:3},
+  {m:"У меня есть вопрос.",s:"Ich habe eine Frage.",t:"Ich habe eine Frage.",e:"U menja jest wopros.",d:3},
+  {m:"Где находится вокзал?",s:"Wo ist der Bahnhof?",t:"Wo ist der Bahnhof?",e:"Gde nachoditsja woksal?",d:3},
+  {m:"Как доехать до центра?",s:"Wie komme ich ins Zentrum?",t:"Wie komme ich ins Zentrum?",e:"Kak dojechat do zentra?",d:3},
+  {m:"Мне нужна помощь.",s:"Ich brauche Hilfe.",t:"Ich brauche Hilfe.",e:"Mnje nuschna pomosch.",d:3},
+  {m:"Я хочу купить билет.",s:"Ich möchte eine Karte kaufen.",t:"Ich möchte eine Karte kaufen.",e:"Ja chotschu kupit bilet.",d:3},
+  {m:"Есть ли свободные места?",s:"Gibt es freie Plätze?",t:"Gibt es freie Plätze?",e:"Jest li swobodnyje mesta?",d:3},
+  {m:"Принесите счёт, пожалуйста.",s:"Bringen Sie die Rechnung bitte.",t:"Die Rechnung bitte.",e:"Prinesitje stschjot, poshalujsta.",d:3},
+  {m:"Я вегетарианец.",s:"Ich bin Vegetarier.",t:"Ich bin Vegetarier.",e:"Ja wegetarianez.",d:3},
+  {m:"Мне очень нравится здесь.",s:"Es gefällt mir hier sehr.",t:"Es gefällt mir hier sehr.",e:"Mnje otschenj nrawitsja sdes.",d:3},
+  {m:"Я давно здесь живу.",s:"Ich wohne schon lange hier.",t:"Ich wohne schon lange hier.",e:"Ja dawno sdes schiwu.",d:3},
+  {m:"Сегодня хорошая погода.",s:"Heute ist schönes Wetter.",t:"Heute ist schönes Wetter.",e:"Sewonja choroschaja pogoda.",d:3},
+  {m:"Который час?",s:"Wie spät ist es?",t:"Wie spät ist es?",e:"Kotoryj tschas?",d:3},
+  {m:"Я не говорю по-русски.",s:"Ich spreche kein Russisch.",t:"Ich spreche kein Russisch.",e:"Ja nje goworju po-russki.",d:3},
+  {m:"Вы говорите по-немецки?",s:"Sprechen Sie Deutsch?",t:"Sprechen Sie Deutsch?",e:"Wy goworite po-njemezki?",d:3},
+  {m:"Я изучаю русский язык уже год.",s:"Ich lerne seit einem Jahr Russisch.",t:"Ich lerne seit einem Jahr Russisch.",e:"Ja isutschaju russkij jasyk usche god.",d:3},
+  {m:"Мне нравится российская культура.",s:"Mir gefällt die russische Kultur.",t:"Mir gefällt die russische Kultur.",e:"Mnje nrawitsja rossijskaja kultura.",d:3},
+  {m:"Можно сфотографироваться здесь?",s:"Darf man hier fotografieren?",t:"Darf man hier fotografieren?",e:"Moschno sfotografirovatsa sdes?",d:3},
+  {m:"Я хотел бы забронировать номер.",s:"Ich möchte ein Zimmer buchen.",t:"Ich möchte ein Zimmer buchen.",e:"Ja chotjel by sabroniroват nomer.",d:3},
+  {m:"У вас есть меню на немецком?",s:"Haben Sie eine Speisekarte auf Deutsch?",t:"Haben Sie eine deutsche Karte?",e:"U was jest menju na njemezkom?",d:3},
+  {m:"Я не могли бы вы говорить помедленнее?",s:"Könnten Sie bitte langsamer sprechen?",t:"Könnten Sie langsamer sprechen?",e:"Ne mogli by wy goworit pomedlennjeje?",d:4},
+  {m:"Я давно изучаю русский язык.",s:"Ich lerne seit Langem Russisch.",t:"Ich lerne seit Langem Russisch.",e:"Ja dawno isutschaju russkij jasyk.",d:4},
+  {m:"Это очень интересно для меня.",s:"Das ist sehr interessant für mich.",t:"Das ist sehr interessant für mich.",e:"Eto otschenj interjesno dlja menja.",d:4},
+  {m:"Куда вы едете в отпуск?",s:"Wohin fahren Sie in den Urlaub?",t:"Wohin fahren Sie in den Urlaub?",e:"Kuda wy jedjete w otpusk?",d:4},
+  {m:"Я хотел бы улучшить свой русский.",s:"Ich möchte mein Russisch verbessern.",t:"Ich möchte mein Russisch verbessern.",e:"Ja chotjel by ulutschit swoj russkij.",d:4},
+  {m:"Расскажите мне о своей стране.",s:"Erzählen Sie mir von Ihrem Land.",t:"Erzählen Sie mir von Ihrem Land.",e:"Rasskaschitje mnje o swojej strannje.",d:4},
+  {m:"Что вы думаете об этом?",s:"Was denken Sie darüber?",t:"Was denken Sie darüber?",e:"Schto wy dumajete ob etom?",d:4},
+  {m:"Мне нужно подумать об этом.",s:"Ich muss darüber nachdenken.",t:"Ich muss darüber nachdenken.",e:"Mnje nuschno podumalt ob etom.",d:4},
+  {m:"Я согласен с вами.",s:"Ich stimme Ihnen zu.",t:"Ich stimme Ihnen zu.",e:"Ja soglasjen s wami.",d:4},
+  {m:"К сожалению, я не могу.",s:"Leider kann ich nicht.",t:"Leider kann ich nicht.",e:"K soschaleju, ja nje mogu.",d:4},
+  {m:"Это зависит от ситуации.",s:"Das kommt auf die Situation an.",t:"Das kommt darauf an.",e:"Eto sawissit ot situazii.",d:4},
+  {m:"Я живу здесь уже несколько лет.",s:"Ich wohne hier schon seit einigen Jahren.",t:"Ich wohne hier schon einige Jahre.",e:"Ja schiwu sdes usche njeskoljko let.",d:4},
+  {m:"Как вы относитесь к этому?",s:"Wie stehen Sie dazu?",t:"Wie stehen Sie dazu?",e:"Kak wy otnosites k etomu?",d:4},
+  {m:"Разрешите представиться.",s:"Gestatten Sie, mich vorzustellen.",t:"Gestatten Sie, mich vorzustellen.",e:"Rasreschiite predstawitsa.",d:4},
+  {m:"Я с удовольствием помогу вам.",s:"Ich helfe Ihnen gern.",t:"Ich helfe Ihnen gern.",e:"Ja s udowolstwjem pomogu wam.",d:4},
+  {m:"Не могли бы вы мне помочь?",s:"Könnten Sie mir helfen?",t:"Könnten Sie mir helfen?",e:"Nje mogli by wy mnje pomosch?",d:4},
+  {m:"Я очень рад познакомиться с вами.",s:"Ich freue mich sehr, Sie kennenzulernen.",t:"Ich freue mich, Sie kennenzulernen.",e:"Ja otschenj rad posnakomitsja s wami.",d:4},
+  {m:"Это было очень интересно.",s:"Das war sehr interessant.",t:"Das war sehr interessant.",e:"Eto bylo otschenj interjesno.",d:4},
+  {m:"Надеюсь увидеть вас снова.",s:"Ich hoffe, Sie wiederzusehen.",t:"Ich hoffe, Sie wiederzusehen.",e:"Nadejus uwidjet was snowa.",d:4},
+  {m:"Спасибо за ваше гостеприимство.",s:"Danke für Ihre Gastfreundschaft.",t:"Danke für Ihre Gastfreundschaft.",e:"Spasibo sa wasche gostepriimstwo.",d:4},
+  {m:"Желаю вам всего хорошего.",s:"Ich wünsche Ihnen alles Gute.",t:"Ich wünsche Ihnen alles Gute.",e:"Scheljaju wam wsego choroschego.",d:4},
+  {m:"Как называется это по-русски?",s:"Wie heißt das auf Russisch?",t:"Wie heißt das auf Russisch?",e:"Kak naswajetsja eto po-russki?",d:4}
+,
+  {m:"Я хожу в спортзал каждый день.",s:"Ich gehe jeden Tag ins Fitnessstudio.",t:"Ich gehe täglich ins Fitnessstudio.",e:"Ja choschу w sportsal kaschdy denj.",d:3},
+  {m:"Мне холодно.",s:"Mir ist kalt.",t:"Mir ist kalt.",e:"Mnje cholodno.",d:2},
+  {m:"Мне жарко.",s:"Mir ist heiß.",t:"Mir ist heiß.",e:"Mnje scharko.",d:2},
+  {m:"Я устал.",s:"Ich bin müde.",t:"Ich bin müde.",e:"Ja ustal.",d:2},
+  {m:"Я болен.",s:"Ich bin krank.",t:"Ich bin krank.",e:"Ja bolen.",d:2},
+  {m:"У меня болит голова.",s:"Ich habe Kopfschmerzen.",t:"Ich habe Kopfschmerzen.",e:"U menja bolit golowa.",d:3},
+  {m:"Вызовите врача!",s:"Rufen Sie einen Arzt!",t:"Rufen Sie einen Arzt!",e:"Wysowitje wracha!",d:3},
+  {m:"Позвоните в полицию!",s:"Rufen Sie die Polizei!",t:"Rufen Sie die Polizei!",e:"Poswontje w poliziju!",d:3},
+  {m:"Я потерял паспорт.",s:"Ich habe meinen Pass verloren.",t:"Ich habe meinen Pass verloren.",e:"Ja poterjal pasport.",d:3},
+  {m:"Где ближайшая аптека?",s:"Wo ist die nächste Apotheke?",t:"Wo ist die nächste Apotheke?",e:"Gde blischaischaja apteka?",d:3},
+  {m:"Покажите мне на карте.",s:"Zeigen Sie mir auf der Karte.",t:"Zeigen Sie mir auf der Karte.",e:"Pokaschiitje mnje na kartje.",d:3},
+  {m:"Как далеко отсюда?",s:"Wie weit ist es von hier?",t:"Wie weit ist es von hier?",e:"Kak daleko otssjuda?",d:3},
+  {m:"Поверните направо.",s:"Biegen Sie rechts ab.",t:"Biegen Sie rechts ab.",e:"Powernite naprawo.",d:3},
+  {m:"Поверните налево.",s:"Biegen Sie links ab.",t:"Biegen Sie links ab.",e:"Powernite naljewo.",d:3},
+  {m:"Идите прямо.",s:"Gehen Sie geradeaus.",t:"Gehen Sie geradeaus.",e:"Iditje pjamo.",d:3},
+  {m:"Остановите здесь!",s:"Halten Sie hier an!",t:"Halten Sie hier an!",e:"Ostanowite sdes!",d:3},
+  {m:"На следующей остановке.",s:"An der nächsten Haltestelle.",t:"An der nächsten Haltestelle.",e:"Na sledujuschtscher ostanowkje.",d:3},
+  {m:"Один билет до Москвы.",s:"Eine Fahrkarte nach Moskau.",t:"Eine Fahrkarte nach Moskau.",e:"Odin bilet do Moskwy.",d:3},
+  {m:"В котором часу отходит поезд?",s:"Um wie viel Uhr fährt der Zug ab?",t:"Um wie viel Uhr fährt der Zug?",e:"W kotorom tschasu otchodit pojest?",d:3},
+  {m:"Я хотел бы заказать столик.",s:"Ich möchte einen Tisch reservieren.",t:"Ich möchte einen Tisch reservieren.",e:"Ja chotjel by sakasat stolik.",d:3},
+  {m:"Что вы рекомендуете?",s:"Was empfehlen Sie?",t:"Was empfehlen Sie?",e:"Schto wy rekomendujetje?",d:3},
+  {m:"Я живу недалеко отсюда.",s:"Ich wohne nicht weit von hier.",t:"Ich wohne nicht weit von hier.",e:"Ja schiwu njedaleko otssjuda.",d:3},
+  {m:"Какой у вас номер телефона?",s:"Was ist Ihre Telefonnummer?",t:"Was ist Ihre Telefonnummer?",e:"Kakoj u was nomer tjelefona?",d:3},
+  {m:"Напишите мне.",s:"Schreiben Sie mir.",t:"Schreiben Sie mir.",e:"Napischiitje mnje.",d:3},
+  {m:"Я очень хочу побывать в России.",s:"Ich möchte unbedingt Russland besuchen.",t:"Ich möchte Russland besuchen.",e:"Ja otschenj chotschu pobywat w Rossii.",d:4},
+  {m:"Мне кажется, это неправильно.",s:"Mir scheint, das ist falsch.",t:"Mir scheint, das ist falsch.",e:"Mnje kaschetsa, eto neprawilno.",d:4},
+  {m:"Я не уверен в этом.",s:"Ich bin mir dabei nicht sicher.",t:"Ich bin mir nicht sicher.",e:"Ja nje uweren w etom.",d:4},
+  {m:"С одной стороны... с другой стороны...",s:"Einerseits... andererseits...",t:"Einerseits... andererseits...",e:"S odnoj storony... s drugoj storony...",d:4},
+  {m:"Это зависит от обстоятельств.",s:"Das hängt von den Umständen ab.",t:"Das hängt von den Umständen ab.",e:"Eto sawissit ot obstojatelstw.",d:4},
+  {m:"Я хотел бы узнать больше об этом.",s:"Ich würde gern mehr darüber erfahren.",t:"Ich würde gern mehr erfahren.",e:"Ja chotjel by usnat bolsche ob etom.",d:4},
+  {m:"Разрешите задать вам вопрос.",s:"Gestatten Sie, Ihnen eine Frage zu stellen.",t:"Darf ich Ihnen eine Frage stellen?",e:"Rasreschiite sadat wam wopros.",d:4},
+  {m:"По-моему, это хорошая идея.",s:"Meiner Meinung nach ist das eine gute Idee.",t:"Meiner Meinung nach ist das gut.",e:"Po-mojemu, eto choroschaja ideja.",d:4},
+  {m:"Я стараюсь говорить правильно.",s:"Ich versuche, richtig zu sprechen.",t:"Ich versuche, richtig zu sprechen.",e:"Ja starajus goworit prawilno.",d:4},
+  {m:"Русский язык очень богатый.",s:"Die russische Sprache ist sehr reich.",t:"Die russische Sprache ist sehr reich.",e:"Russkij jasyk otschenj bogatyj.",d:4},
+  {m:"Я делаю всё возможное.",s:"Ich tue alles mir Mögliche.",t:"Ich tue mein Bestes.",e:"Ja delaju wsjo wosmoschnoye.",d:4},
+  {m:"Это требует много практики.",s:"Das erfordert viel Übung.",t:"Das erfordert viel Übung.",e:"Eto trebujt mnogo praktiki.",d:4},
+  {m:"Язык нужно практиковать каждый день.",s:"Die Sprache muss man täglich üben.",t:"Man muss täglich üben.",e:"Jasyk nuschno praktikowat kaschdy denj.",d:4},
+  {m:"Я делаю ошибки, но это нормально.",s:"Ich mache Fehler, aber das ist normal.",t:"Fehler machen ist normal.",e:"Ja delaju oschybki, no eto normalno.",d:4},
+  {m:"Главное — не бояться говорить.",s:"Das Wichtigste ist, keine Angst zu haben zu sprechen.",t:"Hauptsache, keine Angst zu sprechen.",e:"Glawnoje — nje bojatsa goworit.",d:4}
+,
+  {m:"Скажите мне правду.",s:"Sagen Sie mir die Wahrheit.",t:"Sagen Sie mir die Wahrheit.",e:"Skaschitje mnje prawdu.",d:2},
+  {m:"Я согласен.",s:"Ich bin einverstanden.",t:"Ich bin einverstanden.",e:"Ja soglasjen.",d:2},
+  {m:"Я не согласен.",s:"Ich bin nicht einverstanden.",t:"Ich bin nicht einverstanden.",e:"Ja nje soglasjen.",d:2},
+  {m:"Не проблема!",s:"Kein Problem!",t:"Kein Problem!",e:"Nje problema!",d:2},
+  {m:"Подождите минуту.",s:"Warten Sie einen Moment.",t:"Warten Sie einen Moment.",e:"Podoschditje minutu.",d:2},
+  {m:"Я сейчас занят.",s:"Ich bin gerade beschäftigt.",t:"Ich bin gerade beschäftigt.",e:"Ja sejtschas sanjat.",d:2},
+  {m:"Позвоните мне позже.",s:"Rufen Sie mich später an.",t:"Rufen Sie mich später an.",e:"Poswontje mnje posche.",d:2},
+  {m:"Я рад вас видеть!",s:"Ich freue mich, Sie zu sehen!",t:"Schön, Sie zu sehen!",e:"Ja rad was widjet!",d:2},
+  {m:"Давайте поговорим.",s:"Lass uns reden.",t:"Lass uns reden.",e:"Dawajte pogowоrim.",d:2},
+  {m:"Удачи вам!",s:"Viel Glück!",t:"Viel Glück!",e:"Udatschi wam!",d:2},
+  {m:"Будьте здоровы!",s:"Bleiben Sie gesund!",t:"Bleiben Sie gesund!",e:"Budjtje sdorowy!",d:2},
+  {m:"Поздравляю вас!",s:"Ich gratuliere Ihnen!",t:"Ich gratuliere!",e:"Posdrawljaju was!",d:2},
+  {m:"С днём рождения!",s:"Herzlichen Glückwunsch zum Geburtstag!",t:"Herzlichen Glückwunsch!",e:"S dnjom roschdenija!",d:2},
+  {m:"Счастливого пути!",s:"Gute Reise!",t:"Gute Reise!",e:"Stschastliwowo puti!",d:2},
+  {m:"Я не знаю, что делать.",s:"Ich weiß nicht, was ich tun soll.",t:"Ich weiß nicht was ich tun soll.",e:"Ja nje snaju, schto delat.",d:4},
+  {m:"Могу я воспользоваться вашим телефоном?",s:"Darf ich Ihr Telefon benutzen?",t:"Darf ich Ihr Telefon benutzen?",e:"Mogu ja wospoljsovatsa waschim tjeljefonom?",d:4},
+  {m:"Как вы провели выходные?",s:"Wie haben Sie das Wochenende verbracht?",t:"Wie war Ihr Wochenende?",e:"Kak wy proweli wychhodnyje?",d:4},
+  {m:"Мне нравится ваш стиль общения.",s:"Mir gefällt Ihr Kommunikationsstil.",t:"Mir gefällt Ihr Stil.",e:"Mnje nrawitsja wasch stil obschenija.",d:4},
+  {m:"Это сложнее, чем я думал.",s:"Das ist schwieriger, als ich dachte.",t:"Das ist schwieriger als gedacht.",e:"Eto sloschnee, tschemja dumal.",d:4},
+  {m:"Я постараюсь сделать всё возможное.",s:"Ich werde mein Bestes tun.",t:"Ich werde mein Bestes tun.",e:"Ja postarajus sdelat wsjo wosmoschnoye.",d:4}
 ],
 sentences:[
   {m:"\u042d\u0442\u043e \u043a\u043e\u0442.",s:"Einfachster Satz",t:"Das ist eine Katze.",e:"Eto kot.",x:"Kein Verb n\xf6tig!",mn:"Im Russischen gibt es kein 'ist' im Pr\xe4sens \u2014 Subjekt + Nomen reicht!",o:["Das ist eine Katze.","Ich bin eine Katze.","Du bist eine Katze.","Es gibt eine Katze."],r:["\u042d\u0442\u043e \u043a\u043e\u0442.","\u042f \u043a\u043e\u0442.","\u0422\u044b \u043a\u043e\u0442.","\u0415\u0441\u0442\u044c \u043a\u043e\u0442."],ctx:[{ru:"\u042d\u0442\u043e \u043c\u043e\u0439 \u0434\u0440\u0443\u0433.",de:"Das ist mein Freund."}]},
@@ -921,6 +1141,13 @@ const DIFF_RANGES={
 };
 
 function getDifficultyPool(data,diffKey,sec){
+  if(sec==='speaking'){
+    // d=1: Wörter (Anfänger/Standard), d=2: einfache Sätze, d=3: mittlere Sätze, d=4: längere Sätze
+    const dMap={anfaenger:[1],standard:[1,2],fort:[2,3],profi:[3,4]};
+    const allowed=dMap[diffKey]||[1,2,3,4];
+    const pool=data.filter(item=>allowed.includes(item.d||1));
+    return pool.length>=2?pool:data;
+  }
   const range=(DIFF_RANGES[sec]||{})[diffKey]||[0,999];
   const pool=data.slice(range[0],Math.min(range[1],data.length));
   return pool.length>=2?pool:data;
@@ -955,11 +1182,16 @@ function startSec(sec){
     });
     cb=expanded;
   }
-  ci=0;sp=0;sc=0;sw=0;
+  ci=0;sp=0;sc=0;sw=0;spkIdx=0;
   const from=done+1,to=Math.min(done+bs,data.length);
   const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grammatik',listening:'H\xf6ren',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',custom:'Eigene Vokabeln'};
   document.getElementById('lTitle').textContent=(tt[sec]||sec)+' '+cfg.e+' ('+from+'\u2013'+to+'/'+data.length+')';
-  showSc('scLearn');loadCard();
+  if(sec==='speaking'){
+    document.getElementById('spkTitle').textContent='Sprechen '+cfg.e+' ('+from+'\u2013'+to+'/'+data.length+')';
+    showSc('scSpeak');loadSpkCard();
+  } else {
+    showSc('scLearn');loadCard();
+  }
 }
 
 function loadCard(){
@@ -1207,6 +1439,97 @@ function spk(txt){
 }
 
 // MIC
+
+// ===== SPRECHEN-MODUS =====
+let spkIdx=0,spkCorrect=false;
+
+function loadSpkCard(){
+  if(spkIdx>=cb.length){endSpk();return;}
+  const item=cb[spkIdx];
+  spkCorrect=false;
+  document.getElementById('spkProg').textContent=(spkIdx+1)+' von '+cb.length;
+  document.getElementById('spkMain').textContent=item.m;
+  document.getElementById('spkTrans').textContent='= '+item.t;
+  document.getElementById('spkSub').textContent=item.s?(item.e||''):'';
+  document.getElementById('spkRes').style.display='none';
+  document.getElementById('spkConfirm').style.display='none';
+  const btn=document.getElementById('spkMicBtn');
+  btn.innerHTML='&#127908; Nachsprechen';btn.classList.remove('listening');btn.disabled=false;
+  // Automatisch vorsprechen
+  setTimeout(()=>spk(item.m),400);
+}
+
+function spkPlayWord(){
+  if(spkIdx<cb.length)spk(cb[spkIdx].m);
+}
+
+function startSpkMic(){
+  if(!micRec){alert('Spracherkennung nicht verfügbar auf diesem Gerät.');return;}
+  const item=cb[spkIdx];
+  const btn=document.getElementById('spkMicBtn');
+  const res=document.getElementById('spkRes');
+  btn.classList.add('listening');btn.innerHTML='&#127908; Höre zu...';
+  res.style.display='none';
+  document.getElementById('spkConfirm').style.display='none';
+  micRec.onresult=(e)=>{
+    const spoken=e.results[0][0].transcript.toLowerCase().trim();
+    const target=item.m.toLowerCase().trim();
+    const conf=e.results[0][0].confidence;
+    // Flexibler Vergleich: target in spoken oder spoken in target oder > 70% ähnlich
+    const match=spoken===target||target.includes(spoken)||spoken.includes(target)||
+      spoken.replace(/\s+/g,'')===target.replace(/\s+/g,'')||
+      levenshteinSim(spoken,target)>=0.7;
+    btn.classList.remove('listening');btn.innerHTML='&#127908; Nochmal';
+    res.style.display='block';
+    if(match){
+      spkCorrect=true;
+      res.style.cssText='display:block;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);border-radius:var(--r-sm);padding:.5rem .7rem;font-size:.82rem;color:#22c55e;margin-bottom:.5rem;';
+      res.innerHTML='&#10003; Gut gesprochen! <span style="font-size:.75rem;opacity:.7;">('+Math.round(conf*100)+'%)</span>';
+      document.getElementById('spkConfirm').style.display='block';
+      flashScreen('green');
+    } else {
+      res.style.cssText='display:block;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:var(--r-sm);padding:.5rem .7rem;font-size:.82rem;color:#f97316;margin-bottom:.5rem;';
+      res.innerHTML='&#9888; Du sagtest: <strong>"'+spoken+'"</strong> &mdash; Ziel: <strong>"'+item.m+'"</strong>';
+    }
+  };
+  micRec.onerror=(e)=>{
+    btn.classList.remove('listening');btn.innerHTML='&#127908; Nachsprechen';
+    res.style.display='block';res.style.cssText='display:block;color:var(--text3);font-size:.78rem;';
+    res.innerHTML='Mikrofon-Fehler: '+e.error;
+  };
+  micRec.onend=()=>{btn.classList.remove('listening');if(btn.innerHTML==='&#127908; Höre zu...')btn.innerHTML='&#127908; Nachsprechen';};
+  try{micRec.start();}catch(err){btn.classList.remove('listening');btn.innerHTML='&#127908; Nachsprechen';}
+}
+
+function nextSpk(){
+  if(!spkCorrect)return;
+  const us=GU();
+  us[cu].progress[cs]=(us[cu].progress[cs]||0)+1;
+  us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+3;
+  SU(us);
+  spkIdx++;
+  if(spkIdx>=cb.length){endSpk();}else{loadSpkCard();}
+}
+
+function skipSpk(){
+  spkIdx++;
+  if(spkIdx>=cb.length){endSpk();}else{loadSpkCard();}
+}
+
+function endSpk(){
+  showDash();
+}
+
+function levenshteinSim(a,b){
+  if(!a||!b)return 0;
+  const m=a.length,n=b.length;
+  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0));
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return 1-dp[m][n]/Math.max(m,n);
+}
+// ===== ENDE SPRECHEN =====
+
 function initMic(){
   if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window))return;
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
