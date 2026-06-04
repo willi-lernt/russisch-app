@@ -222,6 +222,13 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 .gap-check-btn{background:linear-gradient(135deg,var(--cyan),#00bfa5);color:#0a0a0f;font-weight:700;border:none;border-radius:var(--r-sm);padding:.6rem 1.4rem;font-size:.88rem;cursor:pointer;font-family:inherit;width:100%;margin-top:.5rem;}
 .gap-result{text-align:center;font-size:.82rem;font-weight:600;margin-top:.6rem;min-height:1.2rem;}
 
+
+.levelup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s;}
+.levelup-box{background:linear-gradient(135deg,#0a1628,#0d2137);border:2px solid var(--cyan);border-radius:var(--r);padding:2rem 2.5rem;text-align:center;max-width:320px;width:90%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
+.levelup-num{font-size:4rem;font-weight:900;color:var(--cyan);line-height:1;}
+.levelup-new{font-size:.8rem;color:var(--text3);margin-bottom:.3rem;letter-spacing:.1em;}
+.levelup-unlock{font-size:.82rem;color:#22c55e;margin:.8rem 0;padding:.5rem .8rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:var(--r-sm);}
+@keyframes popIn{from{transform:scale(.6);opacity:0;}to{transform:scale(1);opacity:1;}}
 </style>
 </head>
 <body>
@@ -271,7 +278,7 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 </div>
 </div>
 <div class="glass xp-wrap">
-<div class="xp-top"><div class="xp-lvl">LEVEL <span id="dLvl">1</span></div><div class="xp-lbl"><span id="xpCur">0</span> / <span id="xpNext">100</span> XP</div></div>
+<div class="xp-top"><div class="xp-lvl">LEVEL <span id="dLvl">1</span> &nbsp;<span id="dDiff" style="font-size:.65rem;background:rgba(0,229,200,.12);color:var(--cyan);border:1px solid rgba(0,229,200,.3);padding:.08rem .4rem;border-radius:20px;vertical-align:middle;">Anfänger</span></div><div class="xp-lbl"><span id="xpCur">0</span> / <span id="xpNext">100</span> XP</div></div>
 <div class="xp-track"><div class="xp-fill" id="xpBar" style="width:0%"></div></div>
 </div>
 <div class="stats-row">
@@ -576,8 +583,33 @@ const SECS=[
   {id:'reading',icon:'&#128214;',title:'10. Texte analysieren',desc:'Russische Texte lesen'},
   {id:'custom',icon:'&#11088;',title:'11. Eigene Vokabeln',desc:'Deine eigenen Karteikarten'}
 ];
-function xpForLevel(l){return l*100;}
+function xpForLevel(l){
+  // Level 1-10: steigend, ab 10 fix 300
+  const t=[0,75,100,125,150,175,200,225,250,275];
+  return l<=9?t[l]:300;
+}
 function getLvlInfo(xp){let l=1,x=xp;while(x>=xpForLevel(l)){x-=xpForLevel(l);l++;}return{lvl:l,cur:x,need:xpForLevel(l)};}
+// Level → Schwierigkeit
+function getLvlDiff(lvl){
+  if(lvl<=3)return'anfaenger';
+  if(lvl<=6)return'standard';
+  if(lvl<=8)return'fort';
+  return'profi';
+}
+// Level → freigeschaltete Sektionen
+function getUnlockedSecs(lvl){
+  const base=['alphabet','vocabulary'];
+  if(lvl>=2)base.push('numbers');
+  if(lvl>=3)base.push('colors');
+  if(lvl>=4)base.push('weekdays');
+  if(lvl>=5)base.push('grammar');
+  if(lvl>=6)base.push('listening');
+  if(lvl>=7)base.push('speaking');
+  if(lvl>=8)base.push('sentences');
+  if(lvl>=9)base.push('reading');
+  if(lvl>=10)base.push('custom');
+  return base;
+}
 
 // ═══════════════════════════════════════════════════
 // INHALTE — Alphabet (33 Buchstaben + Mnemonics + Kontextsätze)
@@ -1070,6 +1102,9 @@ function showDash(){
   if(!d.stats.totalXp)d.stats.totalXp=d.stats.totalPoints||0;
   const li=getLvlInfo(d.stats.totalXp);
   document.getElementById('dLvl').textContent=li.lvl;
+  const diffLabels={anfaenger:'Anfänger',standard:'Standard',fort:'Fortgeschritten',profi:'Profi'};
+  const dDiffEl=document.getElementById('dDiff');
+  if(dDiffEl)dDiffEl.textContent=diffLabels[getLvlDiff(li.lvl)]||'';
   document.getElementById('xpCur').textContent=li.cur;
   document.getElementById('xpNext').textContent=li.need;
   document.getElementById('xpBar').style.width=Math.round((li.cur/li.need)*100)+'%';
@@ -1110,12 +1145,17 @@ function showDash(){
   document.getElementById('diffL').textContent=cfg.l;
   const pfEl=document.getElementById('pfad');pfEl.innerHTML='';
   SECS.forEach(sec=>{
-    const lk=!cfg.sec.includes(sec.id);
+    const lvl=getLvlInfo(d.stats.totalXp||0).lvl;const lk=!getUnlockedSecs(lvl).includes(sec.id);
     const data=sec.id==='custom'?getCustomCards():C[sec.id];
     const doneN=d.progress[sec.id]||0,pctN=Math.min(100,Math.round((doneN/data.length)*100));
     const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
     const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
-    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():()=>startSec(sec.id);
+    row.onclick=lk?(()=>{
+  const curLvl=getLvlInfo(d.stats.totalXp||0).lvl;
+  let needLvl=curLvl+1;
+  while(needLvl<=20&&!getUnlockedSecs(needLvl).includes(sec.id))needLvl++;
+  alert('🔒 '+sec.title+' wird ab Level '+needLvl+' freigeschaltet!');
+}):sec.id==='custom'?()=>showCustomScreen():()=>startSec(sec.id);
     const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
     row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
     pfEl.appendChild(row);
@@ -1162,8 +1202,10 @@ function startSec(sec){
   }
   cs=sec;const allData=C[sec];if(!allData||!allData.length){if(sec==='custom'){showCustomScreen();}return;}
   const cfg=DC[cd],us=GU();
-  // Nur passende Karten fuer das Schwierigkeitslevel laden
-  const data=sec==='custom'?allData:getDifficultyPool(allData,cd,sec);
+  // Schwierigkeit automatisch aus Level ableiten
+  const curLvl=getLvlInfo(us[cu]&&us[cu].stats?us[cu].stats.totalXp||0:0).lvl;
+  const autoDiff=getLvlDiff(curLvl);
+  const data=sec==='custom'?allData:getDifficultyPool(allData,autoDiff,sec);
   const done=(us[cu].progress[sec]||0)%data.length,bs=cfg.bs;
   cb=data.slice(done,done+bs);
   if(cb.length<bs)cb=[...cb,...data.slice(0,bs-cb.length)];
@@ -1505,8 +1547,12 @@ function nextSpk(){
   if(!spkCorrect)return;
   const us=GU();
   us[cu].progress[cs]=(us[cu].progress[cs]||0)+1;
-  us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+3;
+  const oldLvl=getLvlInfo(us[cu].stats.totalXp||0).lvl;
+  us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+10;
+  const newLvl=getLvlInfo(us[cu].stats.totalXp).lvl;
+  us[cu].stats.level=newLvl;
   SU(us);
+  if(newLvl>oldLvl)showLevelUp(newLvl);
   spkIdx++;
   if(spkIdx>=cb.length){endSpk();}else{loadSpkCard();}
 }
@@ -1529,6 +1575,35 @@ function levenshteinSim(a,b){
   return 1-dp[m][n]/Math.max(m,n);
 }
 // ===== ENDE SPRECHEN =====
+
+
+function showLevelUp(lvl){
+  const unlockMap={
+    2:'🔢 Zahlen freigeschaltet!',
+    3:'🎨 Farben freigeschaltet!',
+    4:'📅 Wochentage & Monate freigeschaltet!',
+    5:'📝 Grammatik freigeschaltet!',
+    6:'🎧 Hören freigeschaltet!',
+    7:'🎤 Sprechen freigeschaltet!',
+    8:'💬 Sätze freigeschaltet!',
+    9:'📖 Lesen freigeschaltet!',
+    10:'✏️ Eigene Vokabeln freigeschaltet!'
+  };
+  const diffNames={anfaenger:'Anfänger',standard:'Standard',fort:'Fortgeschritten',profi:'Profi'};
+  const diff=diffNames[getLvlDiff(lvl)]||'';
+  const unlock=unlockMap[lvl]||'';
+  const ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  ov.innerHTML=`<div class="levelup-box">
+    <div style="font-size:2.5rem;margin-bottom:.5rem;">🏆</div>
+    <div class="levelup-new">LEVEL UP!</div>
+    <div class="levelup-num">${lvl}</div>
+    <div style="font-size:.85rem;color:var(--text2);margin:.5rem 0;">${diff}</div>
+    ${unlock?`<div class="levelup-unlock">${unlock}</div>`:''}
+    <button class="btn primary" style="margin-top:.8rem;width:100%;" onclick="this.closest('.levelup-overlay').remove()">Weiter! 🚀</button>
+  </div>`;
+  document.body.appendChild(ov);
+}
 
 function initMic(){
   if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window))return;
@@ -1644,7 +1719,7 @@ function handleA(ok,item,isL){
     // ★ FIX: Punkte nur wenn erster Versuch korrekt (at===0)
     // Bei Fehlversuchen davor: kein sc++, nur halbe Punkte
     const hadErrors=at>0;
-    let xp=hadErrors?3:10;xp=Math.round(xp*cfg.xpM);
+    let xp=hadErrors?8:15;
     let pts=hadErrors?3:10;pts=Math.round(pts*cfg.pM);
     const sb=document.getElementById(isL?'lSol':'solBox'),hb=document.getElementById(isL?'lHint':'hintBox');
     if(sb&&sb.style.display==='block'){pts=0;xp=0;}else if(hb&&hb.style.display==='block'){pts=Math.floor(pts/2);xp=Math.floor(xp/2);}
@@ -1703,9 +1778,12 @@ function updSRS(key,ok){
 function finishQ(){
   const total=sc+sw,acc=total>0?Math.round((sc/total)*100):0;
   const us=GU();if(!us[cu].stats.totalXp)us[cu].stats.totalXp=0;
-  const xpE=Math.round(sp*DC[cd].xpM);
+  const oldLvl=getLvlInfo(us[cu].stats.totalXp).lvl;
+  const xpE=Math.round(sp*(DC[getLvlDiff(oldLvl)]?DC[getLvlDiff(oldLvl)].xpM:1));
+  us[cu].stats.totalXp+=xpE;
   us[cu].stats.totalPoints=(us[cu].stats.totalPoints||0)+sp;
-  us[cu].stats.level=getLvlInfo(us[cu].stats.totalXp).lvl;
+  const newLvl=getLvlInfo(us[cu].stats.totalXp).lvl;
+  us[cu].stats.level=newLvl;
   us[cu].progress[cs]=(us[cu].progress[cs]||0)+cb.length;
   const ts=GT();ts.cards=(ts.cards||0)+cb.length;ts.words=(ts.words||0)+cb.length;ts.points=(ts.points||0)+sp;ts.date=new Date().toDateString();ST(ts);SU(us);
   updateStreak();
@@ -1713,6 +1791,7 @@ function finishQ(){
   document.getElementById('rTitle').textContent=acc>=90?'Perfekt!':acc>=70?'Sehr gut!':acc>=50?'Gut gemacht!':'Weiter \xfcben!';
   document.getElementById('rPts').textContent='+'+sp;
   document.getElementById('xpGained').innerHTML='+'+xpE+' XP verdient &#9889;';
+  if(newLvl>oldLvl){setTimeout(()=>showLevelUp(newLvl),800);}
   document.getElementById('rOk').textContent=sc;document.getElementById('rFail').textContent=sw;document.getElementById('rAcc').textContent=acc+'%';
   const dl=C[cs]?C[cs].length:0,td=us[cu].progress[cs]||0;
   document.getElementById('rInfo').textContent='Gesamt: '+td+' Karten \xb7 '+dl+' verf\xfcgbar \xb7 N\xe4chste: '+(td%dl+1)+'\u2013'+Math.min(td%dl+DC[cd].bs,dl);
@@ -1904,7 +1983,7 @@ function checkGap(){
     btn.textContent='Weiter →';
     btn.onclick=nextGapStep;
     // XP vergeben
-    try{const us=GU();if(us[cu]){us[cu].stats=us[cu].stats||{};us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+2;us[cu].stats.totalPoints=(us[cu].stats.totalPoints||0)+5;SU(us);}}catch(e){}
+    try{const us=GU();if(us[cu]){us[cu].stats=us[cu].stats||{};us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+5;us[cu].stats.totalPoints=(us[cu].stats.totalPoints||0)+5;SU(us);}}catch(e){}
   } else {
     inp.classList.add('wrong');
     res.style.color='#ef4444';
