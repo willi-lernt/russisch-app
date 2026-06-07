@@ -624,6 +624,95 @@ Noch keine eigenen Vokabeln.<br>Füge deine ersten Karten hinzu!
   </div>
 </div>
 
+
+<!-- SATZPUZZLE -->
+<div id="scPuzzle" class="sc">
+  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;">
+    <button class="btn sm primary" onclick="goHome()">&#8962; Start</button>
+    <span style="font-size:.82rem;font-weight:700;color:var(--cyan);">&#129327; Satzpuzzle</span>
+    <span id="puzzleProg" style="margin-left:auto;font-size:.78rem;color:var(--text3);"></span>
+  </div>
+  <div class="glass learn-card" style="padding:1.2rem;">
+    <div class="card-badge">SATZPUZZLE</div>
+    <div style="font-size:.82rem;color:var(--text3);margin-bottom:.4rem;">Deutsch:</div>
+    <div id="puzzleDE" style="font-size:1rem;font-weight:700;color:var(--cyan);margin-bottom:1rem;line-height:1.5;"></div>
+    <div style="font-size:.78rem;color:var(--text3);margin-bottom:.5rem;">Bringe die Wörter in die richtige Reihenfolge:</div>
+    <div id="puzzleAnswer" style="min-height:2.5rem;background:rgba(0,229,200,.05);border:2px dashed rgba(0,229,200,.3);border-radius:var(--r-sm);padding:.5rem .7rem;margin-bottom:.7rem;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;cursor:pointer;" onclick="puzzleRemoveLast()">
+      <span style="font-size:.72rem;color:var(--text3);font-style:italic;" id="puzzleAnswerHint">Tippe Wörter an um sie hinzuzufügen...</span>
+    </div>
+    <div id="puzzleWords" style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem;"></div>
+    <div id="puzzleFeedback" style="min-height:1.2rem;font-size:.83rem;margin-bottom:.5rem;text-align:center;"></div>
+    <div style="display:flex;gap:.5rem;">
+      <button class="btn" style="flex:1;" onclick="puzzleClear()">&#8635; Reset</button>
+      <button class="btn primary" style="flex:2;" onclick="checkPuzzle()">&#10003; Prüfen</button>
+    </div>
+    <div id="puzzleWeiter" style="display:none;margin-top:.5rem;">
+      <button class="btn primary" style="width:100%;" onclick="nextPuzzle()">Weiter &#8594;</button>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:.5rem;">
+    <button class="btn ghost sm" onclick="skipPuzzle()">&#9197; Überspringen</button>
+  </div>
+</div>
+
+<!-- DIKTAT -->
+<div id="scDiktat" class="sc">
+  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;">
+    <button class="btn sm primary" onclick="goHome()">&#8962; Start</button>
+    <span style="font-size:.82rem;font-weight:700;color:var(--cyan);">&#127908; Diktat</span>
+    <span id="diktatProg" style="margin-left:auto;font-size:.78rem;color:var(--text3);"></span>
+  </div>
+  <div class="glass learn-card" style="padding:1.2rem;">
+    <div class="card-badge">DIKTAT — HÖREN & SCHREIBEN</div>
+    <div style="text-align:center;margin:1rem 0 .5rem;">
+      <button class="btn" id="diktatPlayBtn" onclick="diktatPlay()" style="font-size:1rem;padding:.8rem 1.5rem;">
+        &#128266; Satz anhören
+      </button>
+    </div>
+    <div style="font-size:.75rem;color:var(--text3);text-align:center;margin-bottom:.8rem;">Tippe was du hörst auf Russisch</div>
+    <div style="position:relative;margin-bottom:.7rem;">
+      <input id="diktatInput" class="qi" style="width:100%;font-size:1rem;padding:.7rem .8rem;padding-right:2.5rem;" 
+        placeholder="Русский текст..." oninput="diktatInputChange()" onkeydown="if(event.key==='Enter')checkDiktat()">
+      <button onclick="bldKBDiktat()" style="position:absolute;right:.4rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--cyan);">&#1056;</button>
+    </div>
+    <div id="diktatKyr" style="display:none;"></div>
+    <div id="diktatFeedback" style="min-height:1.2rem;font-size:.83rem;margin-bottom:.5rem;text-align:center;"></div>
+    <button class="btn primary" style="width:100%;" onclick="checkDiktat()">&#10003; Prüfen</button>
+    <div id="diktatWeiter" style="display:none;margin-top:.5rem;">
+      <button class="btn primary" style="width:100%;" onclick="nextDiktat()">Weiter &#8594;</button>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:.5rem;">
+    <button class="btn ghost sm" onclick="skipDiktat()">&#9197; Überspringen</button>
+  </div>
+</div>
+
+<!-- RICHTIG ODER FALSCH -->
+<div id="scRichtigFalsch" class="sc">
+  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;">
+    <button class="btn sm primary" onclick="goHome()">&#8962; Start</button>
+    <span style="font-size:.82rem;font-weight:700;color:var(--cyan);">&#10067; Richtig oder Falsch</span>
+    <span id="rfProg" style="margin-left:auto;font-size:.78rem;color:var(--text3);"></span>
+  </div>
+  <div class="glass learn-card" style="padding:1.4rem;text-align:center;">
+    <div class="card-badge">RICHTIG ODER FALSCH</div>
+    <div id="rfRU" style="font-size:1.5rem;font-weight:900;color:var(--cyan);margin:.6rem 0 .4rem;line-height:1.4;"></div>
+    <div style="font-size:.75rem;color:var(--text3);margin-bottom:.3rem;">bedeutet:</div>
+    <div id="rfDE" style="font-size:1.1rem;font-weight:700;margin-bottom:1.2rem;padding:.5rem .8rem;background:rgba(255,255,255,.05);border-radius:var(--r-sm);"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;max-width:300px;margin:0 auto;">
+      <button class="btn" id="rfBtnR" style="padding:.9rem;font-size:1rem;font-weight:700;color:#22c55e;border-color:rgba(34,197,94,.4);" onclick="answerRF(true)">&#10003; Richtig</button>
+      <button class="btn" id="rfBtnF" style="padding:.9rem;font-size:1rem;font-weight:700;color:#ef4444;border-color:rgba(239,68,68,.4);" onclick="answerRF(false)">&#10007; Falsch</button>
+    </div>
+    <div id="rfFeedback" style="min-height:1.5rem;font-size:.85rem;margin-top:.8rem;"></div>
+    <div id="rfWeiter" style="display:none;margin-top:.5rem;">
+      <button class="btn primary" style="width:100%;" onclick="nextRF()">Weiter &#8594;</button>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:.5rem;">
+    <button class="btn ghost sm" onclick="skipRF()">&#9197; Überspringen</button>
+  </div>
+</div>
+
 </div>
 <script>
 
@@ -1461,6 +1550,9 @@ function startSec(sec){
   if(sec==='speaking'){
     document.getElementById('spkTitle').textContent='Sprechen '+cfg.e;
     showSc('scSpeak');loadSpkCard();
+  } else if(sec==='listening'){
+    // Hören: Diktat-Modus nach normalem Quiz
+    showSc('scLearn');loadCard();
   } else {
     showSc('scLearn');loadCard();
   }
@@ -2007,6 +2099,285 @@ function levenshteinSim(a,b){
 
 
 
+
+// ===== SATZPUZZLE =====
+var puzzleIdx=0,puzzleCB=[],puzzleSelected=[],puzzleWords=[];
+
+function startPuzzleMode(cards){
+  puzzleCB=cards.filter(function(c){return c.m&&c.m.indexOf(' ')>0;}).slice(0,10);
+  if(puzzleCB.length<3){
+    // Fallback: normale Karten
+    puzzleCB=cards.slice(0,10);
+  }
+  puzzleIdx=0;
+  showSc('scPuzzle');
+  loadPuzzle();
+}
+
+function loadPuzzle(){
+  if(puzzleIdx>=puzzleCB.length){endPuzzle();return;}
+  var item=puzzleCB[puzzleIdx];
+  puzzleSelected=[];
+  document.getElementById('puzzleProg').textContent=(puzzleIdx+1)+' / '+puzzleCB.length;
+  document.getElementById('puzzleDE').textContent=item.t;
+  document.getElementById('puzzleFeedback').innerHTML='';
+  document.getElementById('puzzleWeiter').style.display='none';
+  // Wörter mischen
+  puzzleWords=item.m.split(' ').sort(function(){return Math.random()-.5;});
+  renderPuzzleWords();
+  renderPuzzleAnswer();
+}
+
+function renderPuzzleWords(){
+  var box=document.getElementById('puzzleWords');
+  box.innerHTML='';
+  puzzleWords.forEach(function(w,i){
+    if(puzzleSelected.indexOf(i)>=0)return;
+    var btn=document.createElement('button');
+    btn.className='btn';
+    btn.style.cssText='padding:.4rem .7rem;font-size:1rem;font-weight:700;';
+    btn.textContent=w;
+    btn.onclick=(function(idx){return function(){puzzleAdd(idx);};})(i);
+    box.appendChild(btn);
+  });
+}
+
+function renderPuzzleAnswer(){
+  var box=document.getElementById('puzzleAnswer');
+  box.innerHTML='';
+  if(puzzleSelected.length===0){
+    box.innerHTML='<span style="font-size:.72rem;color:var(--text3);font-style:italic;">Tippe Wörter an...</span>';
+    return;
+  }
+  puzzleSelected.forEach(function(idx,pos){
+    var span=document.createElement('span');
+    span.style.cssText='background:rgba(0,229,200,.15);border:1px solid rgba(0,229,200,.4);border-radius:6px;padding:.25rem .5rem;font-size:.95rem;font-weight:700;cursor:pointer;';
+    span.textContent=puzzleWords[idx];
+    span.onclick=function(){puzzleRemoveAt(pos);};
+    box.appendChild(span);
+  });
+}
+
+function puzzleAdd(wordIdx){
+  if(puzzleSelected.indexOf(wordIdx)>=0)return;
+  puzzleSelected.push(wordIdx);
+  renderPuzzleWords();
+  renderPuzzleAnswer();
+}
+
+function puzzleRemoveAt(pos){
+  puzzleSelected.splice(pos,1);
+  renderPuzzleWords();
+  renderPuzzleAnswer();
+}
+
+function puzzleRemoveLast(){
+  if(puzzleSelected.length===0)return;
+  puzzleSelected.pop();
+  renderPuzzleWords();
+  renderPuzzleAnswer();
+}
+
+function puzzleClear(){
+  puzzleSelected=[];
+  renderPuzzleWords();
+  renderPuzzleAnswer();
+  document.getElementById('puzzleFeedback').innerHTML='';
+  document.getElementById('puzzleWeiter').style.display='none';
+}
+
+function checkPuzzle(){
+  if(puzzleSelected.length===0)return;
+  var item=puzzleCB[puzzleIdx];
+  var answer=puzzleSelected.map(function(i){return puzzleWords[i];}).join(' ');
+  var correct=item.m.trim();
+  var fb=document.getElementById('puzzleFeedback');
+  var ansBox=document.getElementById('puzzleAnswer');
+  // Alle Buttons deaktivieren
+  document.getElementById('puzzleWords').querySelectorAll('button').forEach(function(b){b.disabled=true;});
+  ansBox.onclick=null;
+  if(answer===correct){
+    fb.innerHTML='<span style="color:#22c55e;">&#10003; Richtig! — '+correct+'</span>';
+    spk(correct);
+    document.getElementById('puzzleWeiter').style.display='block';
+    var us=GU();if(us[cu]){us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+8;SU(us);}
+  } else {
+    // Ähnlichkeit prüfen
+    var sim=levenshteinSim?levenshteinSim(answer,correct):0;
+    if(sim>0.7){
+      fb.innerHTML='<span style="color:#f97316;">&#9888; Fast! Richtig: <strong>'+correct+'</strong></span>';
+    } else {
+      fb.innerHTML='<span style="color:#ef4444;">&#10007; Falsch. Richtig: <strong>'+correct+'</strong></span>';
+    }
+    setTimeout(function(){
+      puzzleClear();
+      document.getElementById('puzzleWords').querySelectorAll('button').forEach(function(b){b.disabled=false;});
+    },1800);
+  }
+}
+
+function nextPuzzle(){
+  var us=GU();
+  if(us[cu]){us[cu].progress[cs]=(us[cu].progress[cs]||0)+1;SU(us);}
+  puzzleIdx++;
+  loadPuzzle();
+}
+
+function skipPuzzle(){puzzleIdx++;loadPuzzle();}
+
+function endPuzzle(){showDash();}
+// ===== ENDE SATZPUZZLE =====
+
+// ===== DIKTAT =====
+var diktatIdx=0,diktatCB=[],diktatKyrBuilt=false;
+
+function startDiktatMode(cards){
+  diktatCB=cards.filter(function(c){return c.m&&c.m.length>2;});
+  diktatIdx=0;
+  diktatKyrBuilt=false;
+  showSc('scDiktat');
+  loadDiktat();
+}
+
+function loadDiktat(){
+  if(diktatIdx>=diktatCB.length){endDiktat();return;}
+  var item=diktatCB[diktatIdx];
+  document.getElementById('diktatProg').textContent=(diktatIdx+1)+' / '+diktatCB.length;
+  document.getElementById('diktatInput').value='';
+  document.getElementById('diktatFeedback').innerHTML='';
+  document.getElementById('diktatWeiter').style.display='none';
+  document.getElementById('diktatInput').disabled=false;
+  document.getElementById('diktatKyr').style.display='none';
+  diktatKyrBuilt=false;
+  // Automatisch vorsprechen
+  setTimeout(function(){spk(item.m);},400);
+}
+
+function diktatPlay(){
+  if(diktatIdx<diktatCB.length)spk(diktatCB[diktatIdx].m);
+}
+
+function bldKBDiktat(){
+  var kd=document.getElementById('diktatKyr');
+  if(kd.style.display==='none'||kd.innerHTML===''){
+    kd.style.display='block';
+    if(!diktatKyrBuilt){
+      bldKB('diktatInput','diktatKyr');
+      diktatKyrBuilt=true;
+    }
+  } else {
+    kd.style.display='none';
+  }
+}
+
+function diktatInputChange(){
+  document.getElementById('diktatFeedback').innerHTML='';
+}
+
+function checkDiktat(){
+  var item=diktatCB[diktatIdx];
+  var answer=document.getElementById('diktatInput').value.trim();
+  if(!answer)return;
+  var correct=item.m.trim();
+  var fb=document.getElementById('diktatFeedback');
+  document.getElementById('diktatInput').disabled=true;
+  var sim=typeof levenshteinSim==='function'?levenshteinSim(answer.toLowerCase(),correct.toLowerCase()):0;
+  if(answer===correct||sim>=0.85){
+    fb.innerHTML='<span style="color:#22c55e;">&#10003; Richtig!</span>';
+    spk(correct);
+    document.getElementById('diktatWeiter').style.display='block';
+    var us=GU();if(us[cu]){us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+10;SU(us);}
+  } else if(sim>=0.6){
+    fb.innerHTML='<span style="color:#f97316;">&#9888; Fast richtig! Richtig: <strong>'+correct+'</strong><br>Du: '+answer+'</span>';
+    document.getElementById('diktatWeiter').style.display='block';
+  } else {
+    fb.innerHTML='<span style="color:#ef4444;">&#10007; Richtig wäre: <strong>'+correct+'</strong></span>';
+    setTimeout(function(){
+      document.getElementById('diktatInput').value='';
+      document.getElementById('diktatInput').disabled=false;
+      fb.innerHTML='<span style="color:var(--text3);">Nochmal versuchen:</span>';
+    },2000);
+  }
+}
+
+function nextDiktat(){
+  var us=GU();
+  if(us[cu]){us[cu].progress[cs]=(us[cu].progress[cs]||0)+1;SU(us);}
+  diktatIdx++;
+  loadDiktat();
+}
+
+function skipDiktat(){diktatIdx++;loadDiktat();}
+function endDiktat(){showDash();}
+// ===== ENDE DIKTAT =====
+
+// ===== RICHTIG ODER FALSCH =====
+var rfIdx=0,rfCB=[],rfItems=[];
+
+function startRFMode(cards){
+  rfCB=cards;
+  rfItems=buildRFItems(cards);
+  rfIdx=0;
+  showSc('scRichtigFalsch');
+  loadRF();
+}
+
+function buildRFItems(cards){
+  var items=[];
+  cards.forEach(function(card){
+    // Richtiger Eintrag
+    items.push({ru:card.m,de:card.t,correct:true,card:card});
+    // Falscher Eintrag: richtige RU aber falsche DE
+    var wrongCard=cards[Math.floor(Math.random()*cards.length)];
+    var tries=0;
+    while(wrongCard.m===card.m&&tries<5){wrongCard=cards[Math.floor(Math.random()*cards.length)];tries++;}
+    items.push({ru:card.m,de:wrongCard.t,correct:false,card:card});
+  });
+  return items.sort(function(){return Math.random()-.5;}).slice(0,Math.min(16,items.length));
+}
+
+function loadRF(){
+  if(rfIdx>=rfItems.length){endRF();return;}
+  var item=rfItems[rfIdx];
+  document.getElementById('rfProg').textContent=(rfIdx+1)+' / '+rfItems.length;
+  document.getElementById('rfRU').textContent=item.ru;
+  document.getElementById('rfDE').textContent=item.de;
+  document.getElementById('rfFeedback').innerHTML='';
+  document.getElementById('rfWeiter').style.display='none';
+  var rb=document.getElementById('rfBtnR'),fb=document.getElementById('rfBtnF');
+  rb.disabled=false;fb.disabled=false;
+  rb.style.opacity='1';fb.style.opacity='1';
+  // Kurz vorsprechen
+  setTimeout(function(){spk(item.ru);},300);
+}
+
+function answerRF(userSaysTrue){
+  var item=rfItems[rfIdx];
+  var fb=document.getElementById('rfFeedback');
+  var rb=document.getElementById('rfBtnR'),wb=document.getElementById('rfBtnF');
+  rb.disabled=true;wb.disabled=true;
+  var correct=item.correct===userSaysTrue;
+  if(correct){
+    fb.innerHTML='<span style="color:#22c55e;font-size:1rem;">&#10003; Richtig!</span>';
+    (userSaysTrue?rb:wb).style.background='rgba(34,197,94,.2)';
+    var us=GU();if(us[cu]){us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+5;SU(us);}
+  } else {
+    fb.innerHTML='<span style="color:#ef4444;">&#10007; Falsch!<br><small style="color:var(--text3);">'+
+      item.ru+' = '+item.card.t+'</small></span>';
+    (userSaysTrue?rb:wb).style.background='rgba(239,68,68,.2)';
+  }
+  document.getElementById('rfWeiter').style.display='block';
+}
+
+function nextRF(){rfIdx++;loadRF();}
+function skipRF(){rfIdx++;loadRF();}
+function endRF(){
+  var us=GU();
+  if(us[cu]){us[cu].progress[cs]=(us[cu].progress[cs]||0)+Math.floor(rfItems.length/2);SU(us);}
+  showDash();
+}
+// ===== ENDE RICHTIG ODER FALSCH =====
+
 // ===== ACHIEVEMENTS =====
 const ACHIEVEMENTS=[
   {id:'first_login',icon:'&#127775;',title:'Erster Schritt',desc:'Zum ersten Mal eingeloggt',xp:10,check:function(us){return us.stats&&(us.stats.totalXp||0)>0;}},
@@ -2353,7 +2724,21 @@ function showConfetti(){
 }
 
 function startQuiz(){
-  qi=0;at=0;showSc('scQuiz');const cfg=DC[cd];
+  qi=0;at=0;const cfg=DC[cd];
+  // Neue Quiz-Modi je nach Pfad
+  if(cs==='sentences'){
+    var _m=Math.floor(Math.random()*3);
+    if(_m===0){startPuzzleMode(cb);return;}
+    if(_m===1){startRFMode(cb);return;}
+  }
+  if(cs==='grammar'||cs==='grammar_faelle'||cs==='grammar_verben'||cs==='grammar_pronomen'||cs==='grammar_praepositionen'){
+    if(Math.random()<0.4){startRFMode(cb);return;}
+  }
+  if(cs==='listening'){
+    if(Math.random()<0.4){startDiktatMode(cb);return;}
+  }
+  if(cs==='alphabet'){startAlphabetQuiz();return;}
+  showSc('scQuiz');
   if(cs==='listening'){
     document.getElementById('modeTabs').style.display='none';
     document.getElementById('stdQuiz').style.display='none';document.getElementById('listenQuiz').style.display='block';
