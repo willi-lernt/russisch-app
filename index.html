@@ -226,6 +226,11 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 .levelup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9998;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s;}
 .levelup-box{background:linear-gradient(135deg,#0a1628,#0d2137);border:2px solid var(--cyan);border-radius:var(--r);padding:2rem 2.5rem;text-align:center;max-width:320px;width:90%;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+.onb-card{background:var(--glass);border:2px solid var(--border);border-radius:var(--r-sm);padding:.7rem .8rem;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;color:var(--text);}
+.onb-card:hover{border-color:var(--cyan);color:var(--cyan);}
+.onb-card.selected{border-color:var(--cyan);background:rgba(0,229,200,.12);color:var(--cyan);}
+.onb-card.wide{text-align:left;padding:.75rem 1rem;}
 </style>
 </head>
 <body>
@@ -263,6 +268,57 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 </div>
 
 <!-- DASHBOARD -->
+
+<!-- ONBOARDING -->
+<div id="scOnboard" class="sc">
+<div style="max-width:480px;margin:0 auto;padding:1rem;">
+  <div style="text-align:center;margin-bottom:1.5rem;">
+    <div style="font-size:2.5rem;margin-bottom:.5rem;">&#127468;&#127479;</div>
+    <h2 style="font-size:1.4rem;font-weight:900;color:var(--cyan);margin-bottom:.3rem;">Willkommen!</h2>
+    <p style="font-size:.85rem;color:var(--text3);">Lass uns herausfinden, wie wir dich am besten unterstützen können.</p>
+  </div>
+
+  <!-- Schritt 1: Ziel -->
+  <div id="onbStep1">
+    <h3 style="font-size:.95rem;font-weight:800;margin-bottom:.8rem;color:var(--text);">&#127919; Warum lernst du Russisch?</h3>
+    <div id="goalCards" style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
+      <div class="onb-card" data-goal="urlaub" onclick="selectGoal(this)">&#9992; Urlaub & Reisen</div>
+      <div class="onb-card" data-goal="beruf" onclick="selectGoal(this)">&#128188; Beruf & Business</div>
+      <div class="onb-card" data-goal="familie" onclick="selectGoal(this)">&#128106; Familie & Freunde</div>
+      <div class="onb-card" data-goal="kultur" onclick="selectGoal(this)">&#127981; Kultur & Interesse</div>
+      <div class="onb-card" data-goal="studium" onclick="selectGoal(this)">&#127979; Studium</div>
+      <div class="onb-card" data-goal="allgemein" onclick="selectGoal(this)">&#10024; Allgemein</div>
+    </div>
+    <button class="btn primary" style="width:100%;" id="onbBtn1" onclick="onbNext1()" disabled>Weiter &#8594;</button>
+  </div>
+
+  <!-- Schritt 2: Kenntnisse -->
+  <div id="onbStep2" style="display:none;">
+    <h3 style="font-size:.95rem;font-weight:800;margin-bottom:.8rem;">&#127919; Wie gut kennst du Russisch?</h3>
+    <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem;">
+      <div class="onb-card wide" data-level="anfaenger" onclick="selectLevel(this)">&#128640; Kompletter Anfänger — ich kenne nichts</div>
+      <div class="onb-card wide" data-level="anfaenger" onclick="selectLevel(this)">&#128218; Ich kenne das Alphabet und einige Wörter</div>
+      <div class="onb-card wide" data-level="standard" onclick="selectLevel(this)">&#128172; Ich kann einfache Sätze bilden</div>
+      <div class="onb-card wide" data-level="fort" onclick="selectLevel(this)">&#128483; Ich kann mich in vielen Situationen unterhalten</div>
+      <div class="onb-card wide" data-level="profi" onclick="selectLevel(this)">&#11088; Ich bin fortgeschritten, möchte verfeinern</div>
+    </div>
+    <button class="btn primary" style="width:100%;" id="onbBtn2" onclick="onbNext2()" disabled>Weiter &#8594;</button>
+  </div>
+
+  <!-- Schritt 3: Tagesziel -->
+  <div id="onbStep3" style="display:none;">
+    <h3 style="font-size:.95rem;font-weight:800;margin-bottom:.8rem;">&#9200; Wie viel Zeit hast du täglich?</h3>
+    <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem;">
+      <div class="onb-card wide" data-mins="5" onclick="selectMins(this)">&#9889; 5 Minuten — schnell und effektiv</div>
+      <div class="onb-card wide" data-mins="10" onclick="selectMins(this)">&#128293; 10 Minuten — guter Rhythmus</div>
+      <div class="onb-card wide" data-mins="20" onclick="selectMins(this)">&#127775; 20 Minuten — intensiv lernen</div>
+      <div class="onb-card wide" data-mins="30" onclick="selectMins(this)">&#127942; 30+ Minuten — maximaler Fortschritt</div>
+    </div>
+    <button class="btn primary" style="width:100%;" id="onbBtn3" onclick="finishOnboarding()" disabled>Los geht's! &#127919;</button>
+  </div>
+</div>
+</div>
+
 <div id="scDash" class="sc">
 <div class="top-bar">
 <div>
@@ -281,7 +337,7 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 <div class="stats-row">
 <div class="stat-box glass"><div class="v" id="dPts">0</div><div class="l">Punkte</div></div>
 <div class="stat-box glass"><div class="v" id="dStreak">0</div><div class="l">&#128293; Streak</div></div>
-<div class="stat-box glass"><div class="v" id="dRep">0</div><div class="l">Wiederholen</div></div>
+<div class="stat-box glass"><div class="v" id="dRep" style="cursor:pointer;" onclick="startSRSSession()" title="Jetzt wiederholen">0</div><div class="l">&#128260; Wiederholen</div></div>
 <div class="stat-box glass"><div class="v" id="dRetry">0</div><div class="l">&#128260; Fehler</div></div>
 </div>
 <div class="glass streak-box">
@@ -300,13 +356,12 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 </div>
 </div>
 <div class="glass today-box">
-<h3>Heute gelernt</h3>
-<div class="today-grid">
-<div class="today-item glass2"><div class="tv" id="tCards">0</div><div class="tl">Karten</div></div>
-<div class="today-item glass2"><div class="tv" id="tWords">0</div><div class="tl">W&#246;rter</div></div>
-<div class="today-item glass2"><div class="tv" id="tPts">0</div><div class="tl">Punkte</div></div>
+<h3>Zuletzt stehen geblieben</h3>
+<div id="lastSessionBox" style="padding:.3rem 0;">
+  <div id="lastSessionInfo" style="font-size:.85rem;color:var(--text3);margin-bottom:.7rem;">Noch nichts gelernt &mdash; leg los!</div>
+  <button id="lastSessionBtn" class="btn primary" style="width:100%;display:none;" onclick="continueLastSession()">&#9654; Weitermachen</button>
 </div>
-<div class="acc-wrap">
+<div class="acc-wrap" style="margin-top:.5rem;">
 <div class="al"><span>Genauigkeit heute</span><span id="tAcc">0%</span></div>
 <div class="acc-bg"><div class="acc-fill" id="accBar" style="width:0%"></div></div>
 </div>
@@ -587,7 +642,7 @@ const SECS=[
   {id:'numbers',icon:'&#128290;',title:'3. Zahlen',desc:'Zahlen 1\u201320 auf Russisch'},
   {id:'colors',icon:'&#127912;',title:'4. Farben',desc:'Alle wichtigen Farben'},
   {id:'weekdays',icon:'&#128197;',title:'5. Wochentage & Monate',desc:'Tage, Monate und Jahreszeiten'},
-  {id:'grammar',icon:'&#128209;',title:'6. Grammatik',desc:'F\xe4lle und Satzbau'},
+  {id:'grammar',icon:'&#128209;',title:'6. Grammatik',desc:'Fälle, Verben, Pronomen & mehr'},
   {id:'listening',icon:'&#127911;',title:'7. H\xf6ren und Verstehen',desc:'Nur h\xf6ren, dann tippen'},
   {id:'speaking',icon:'&#127908;',title:'8. Sprechen',desc:'Aussprache und Konversation'},
   {id:'sentences',icon:'&#9999;&#65039;',title:'9. S\xe4tze schreiben',desc:'Eigene S\xe4tze formulieren'},
@@ -691,46 +746,79 @@ vocabulary:[
   {m:"\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c",s:"M\xf6glichkeit / Chance",t:"M\xf6glichkeit",e:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c.",x:"Nomen (f.)",mn:"vos-MOSH-nost' \u2014 langer Begriff, typisch f\xfcr h\xf6heres Niveau",o:["M\xf6glichkeit","Notwendigkeit","Erlaubnis","Verbot"],r:["\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c","\u043d\u0435\u043e\u0431\u0445\u043e\u0434\u0438\u043c\u043e\u0441\u0442\u044c","\u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043d\u0438\u0435","\u0437\u0430\u043f\u0440\u0435\u0442"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c \u0443\u0447\u0438\u0442\u044c\u0441\u044f.",de:"Ich habe die M\xf6glichkeit zu lernen."}]}
 ],
 grammar:[
-  {m:"Мужской род",t:"Männliches Geschlecht",s:"3 Geschlechter",e:"стол, брат, город",x:"Endet meist auf Konsonant oder -й",mn:"Er → он: стол (Tisch), брат (Bruder)",o:["Männliches Geschlecht","Weibliches Geschlecht","Sächliches Geschlecht","Kein Geschlecht"],r:["Мужской род","Женский род","Средний род","Без рода"],ctx:[{ru:"Это стол. Он большой.",de:"Das ist ein Tisch. Er ist groß."}]},
-  {m:"Женский род",t:"Weibliches Geschlecht",s:"3 Geschlechter",e:"мама, книга, улица",x:"Endet meist auf -а oder -я",mn:"Sie → она: книга (Buch), мама (Mama)",o:["Weibliches Geschlecht","Männliches Geschlecht","Sächliches Geschlecht","Kein Geschlecht"],r:["Женский род","Мужской род","Средний род","Без рода"],ctx:[{ru:"Это книга. Она интересная.",de:"Das ist ein Buch. Es ist interessant."}]},
-  {m:"Средний род",t:"Sächliches Geschlecht",s:"3 Geschlechter",e:"окно, море, имя",x:"Endet meist auf -о oder -е",mn:"Es → оно: окно (Fenster), море (Meer)",o:["Sächliches Geschlecht","Männliches Geschlecht","Weibliches Geschlecht","Kein Geschlecht"],r:["Средний род","Мужской род","Женский род","Без рода"],ctx:[{ru:"Это окно. Оно большое.",de:"Das ist ein Fenster. Es ist groß."}]},
-  {m:"Именительный падеж",t:"Nominativ (1. Fall)",s:"6 Fälle",e:"Кто? Что?",x:"Wer? Was? → Subjekt des Satzes",mn:"Брат читает. (Der Bruder liest.)",o:["Wer? Was? — Subjekt","Wessen? — Besitz","Wem? — indirektes Objekt","Wen? Was? — direktes Objekt"],r:["Именительный","Родительный","Дательный","Винительный"],ctx:[{ru:"Брат читает книгу.",de:"Der Bruder liest ein Buch."}]},
-  {m:"Родительный падеж",t:"Genitiv (2. Fall)",s:"6 Fälle",e:"Кого? Чего?",x:"Wessen? — Besitz, Verneinung, Mengenangabe",mn:"книга брата (das Buch des Bruders)",o:["Wessen? Besitz/Verneinung","Wer? Was? — Subjekt","Wem? — indirektes Objekt","Wen? — direktes Objekt"],r:["Родительный","Именительный","Дательный","Винительный"],ctx:[{ru:"Нет времени. (Нет + Genitiv)",de:"Keine Zeit. (кein + Genitiv)"}]},
-  {m:"Дательный падеж",t:"Dativ (3. Fall)",s:"6 Fälle",e:"Кому? Чему?",x:"Wem? — indirektes Objekt, bei мне/тебе",mn:"Я дал книгу брату. (Ich gab dem Bruder das Buch.)",o:["Wem? — indirektes Objekt","Wessen? — Besitz","Wer? — Subjekt","Wen? — direktes Objekt"],r:["Дательный","Родительный","Именительный","Винительный"],ctx:[{ru:"Мне нравится музыка.",de:"Mir gefällt die Musik."}]},
-  {m:"Винительный падеж",t:"Akkusativ (4. Fall)",s:"6 Fälle",e:"Кого? Что?",x:"Wen? Was? — direktes Objekt",mn:"Я читаю книгу. (Ich lese ein Buch.)",o:["Wen? Was? — direktes Objekt","Wem? — indirektes Objekt","Wessen? — Besitz","Wer? — Subjekt"],r:["Винительный","Дательный","Родительный","Именительный"],ctx:[{ru:"Я вижу брата.",de:"Ich sehe den Bruder."}]},
-  {m:"Творительный падеж",t:"Instrumental (5. Fall)",s:"6 Fälle",e:"Кем? Чем?",x:"Womit? Durch wen? — Mittel, Begleitung",mn:"Я пишу ручкой. (Ich schreibe mit dem Stift.)",o:["Womit? Durch wen?","Wem?","Wessen?","Wen?"],r:["Творительный","Дательный","Родительный","Винительный"],ctx:[{ru:"Я еду с другом.",de:"Ich fahre mit dem Freund."}]},
-  {m:"Предложный падеж",t:"Präpositional (6. Fall)",s:"6 Fälle",e:"О ком? О чём?",x:"Nach Präpositionen: в, на, о, при",mn:"Я живу в Москве. (Ich wohne in Moskau.)",o:["Nach Präpositionen: в, на, о","Wem?","Wessen?","Wen?"],r:["Предложный","Дательный","Родительный","Винительный"],ctx:[{ru:"Я думаю о тебе.",de:"Ich denke an dich."}]},
-  {m:"Я читаю",t:"ich lese",s:"Konjugation Präsens",e:"читать = lesen",x:"1. Person Singular: -ю / -у",mn:"читать → я читаю, ты читаешь, он читает",o:["ich lese","du liest","er liest","wir lesen"],r:["Я читаю","Ты читаешь","Он читает","Мы читаем"],ctx:[{ru:"Я читаю каждый день.",de:"Ich lese jeden Tag."}]},
-  {m:"Ты читаешь",t:"du liest",s:"Konjugation Präsens",e:"читать = lesen",x:"2. Person Singular: -ешь / -ишь",mn:"Endung -ешь für die meisten Verben",o:["du liest","ich lese","er liest","ihr lest"],r:["Ты читаешь","Я читаю","Он читает","Вы читаете"],ctx:[{ru:"Что ты читаешь?",de:"Was liest du?"}]},
-  {m:"Он/она читает",t:"er/sie liest",s:"Konjugation Präsens",e:"читать = lesen",x:"3. Person Singular: -ет / -ит",mn:"Endung -ет für die meisten Verben",o:["er/sie liest","ich lese","du liest","wir lesen"],r:["Он читает","Я читаю","Ты читаешь","Мы читаем"],ctx:[{ru:"Она читает книгу.",de:"Sie liest ein Buch."}]},
-  {m:"Мы читаем",t:"wir lesen",s:"Konjugation Präsens",e:"читать = lesen",x:"1. Person Plural: -ем / -им",mn:"Endung -ем für die meisten Verben",o:["wir lesen","ihr lest","sie lesen","ich lese"],r:["Мы читаем","Вы читаете","Они читают","Я читаю"],ctx:[{ru:"Мы читаем вместе.",de:"Wir lesen zusammen."}]},
-  {m:"Вы читаете",t:"ihr lest / Sie lesen",s:"Konjugation Präsens",e:"читать = lesen",x:"2. Person Plural: -ете / -ите",mn:"Вы = Höflichkeitsform für Sie (Singular)",o:["ihr lest / Sie lesen","wir lesen","sie lesen","du liest"],r:["Вы читаете","Мы читаем","Они читают","Ты читаешь"],ctx:[{ru:"Вы читаете по-русски?",de:"Lesen Sie auf Russisch?"}]},
-  {m:"Они читают",t:"sie lesen",s:"Konjugation Präsens",e:"читать = lesen",x:"3. Person Plural: -ют / -ут / -ят / -ат",mn:"Endung -ют für die meisten Verben",o:["sie lesen","wir lesen","ihr lest","er liest"],r:["Они читают","Мы читаем","Вы читаете","Он читает"],ctx:[{ru:"Они читают газету.",de:"Sie lesen die Zeitung."}]},
-  {m:"Я читал / читала",t:"Ich las (m/f)",s:"Vergangenheitsform",e:"читать → читал/читала",x:"Vergangenheit: Stamm + -л (m) / -ла (f) / -ло (n) / -ли (pl)",mn:"читал = männlich, читала = weiblich",o:["Ich las","Ich lese","Ich werde lesen","Ich habe gelesen"],r:["Я читал/читала","Я читаю","Я буду читать","Я прочитал/прочитала"],ctx:[{ru:"Вчера я читал книгу.",de:"Gestern las ich ein Buch."}]},
-  {m:"Он читал",t:"Er las",s:"Vergangenheitsform",e:"Maskulinum Singular",x:"-л Endung für männliche Subjekte",mn:"Он читал, она читала, оно читало, они читали",o:["Er las","Sie las","Es las","Sie lasen"],r:["Он читал","Она читала","Оно читало","Они читали"],ctx:[{ru:"Он читал всю ночь.",de:"Er las die ganze Nacht."}]},
-  {m:"Я не читаю",t:"Ich lese nicht",s:"Verneinung",e:"не + Verb",x:"Verneinung: не direkt vor dem Verb",mn:"Я читаю → Я не читаю (einfach не davor)",o:["Ich lese nicht","Ich lese","Ich las nicht","Ich will nicht lesen"],r:["Я не читаю","Я читаю","Я не читал","Я не хочу читать"],ctx:[{ru:"Я не понимаю по-русски.",de:"Ich verstehe kein Russisch."}]},
-  {m:"нет + Genitiv",t:"kein/keine + Genitiv",s:"Verneinung mit нет",e:"Нет времени. / Нет денег.",x:"нет (es gibt kein) + Genitiv",mn:"время → нет времени (keine Zeit)",o:["нет + Genitiv — Verneinung","не + Verb — Verneinung","без + Genitiv — ohne","ни...ни — weder...noch"],r:["Нет времени","Не читаю","Без денег","Ни то ни другое"],ctx:[{ru:"У меня нет денег.",de:"Ich habe kein Geld."}]},
-  {m:"мой / моя / моё / мои",t:"mein / meine",s:"Possessivpronomen",e:"mein Buch = моя книга",x:"Endung richtet sich nach Geschlecht des Nomens",mn:"мой стол, моя книга, моё окно, мои друзья",o:["mein/meine (alle Geschlechter)","dein/deine","sein/seine","unser/unsere"],r:["мой/моя/моё/мои","твой/твоя/твоё/твои","его/её","наш/наша/наше/наши"],ctx:[{ru:"Это моя книга.",de:"Das ist mein Buch."}]},
-  {m:"твой / твоя / твоё",t:"dein / deine",s:"Possessivpronomen",e:"dein Freund = твой друг",x:"Endung nach Geschlecht des Nomens",mn:"твой (м), твоя (ж), твоё (н), твои (мн)",o:["dein/deine","mein/meine","sein/ihre","euer/eure"],r:["твой/твоя/твоё","мой/моя/моё","его/её","ваш/ваша/ваше"],ctx:[{ru:"Где твой паспорт?",de:"Wo ist dein Pass?"}]},
-  {m:"его / её / их",t:"sein / ihr / ihr (Plural)",s:"Possessivpronomen",e:"sein Haus = его дом",x:"его/её/их — unveränderlich (keine Endungen)",mn:"его дом, его книга, его окно — immer его!",o:["sein/ihr/ihr — unveränderlich","mein — mit Endung","unser — mit Endung","dein — mit Endung"],r:["его/её/их","мой/моя","наш/наша","твой/твоя"],ctx:[{ru:"Это его машина.",de:"Das ist sein Auto."}]},
-  {m:"наш / наша / наше",t:"unser / unsere",s:"Possessivpronomen",e:"unser Lehrer = наш учитель",x:"Endung nach Geschlecht des Nomens",mn:"наш (м), наша (ж), наше (н), наши (мн)",o:["unser/unsere","mein/meine","euer/eure","ihr/ihre"],r:["наш/наша/наше","мой/моя/моё","ваш/ваша/ваше","их"],ctx:[{ru:"Наш город красивый.",de:"Unsere Stadt ist schön."}]},
-  {m:"я, ты, он, она",t:"ich, du, er, sie",s:"Personalpronomen",e:"Singular",x:"Personalpronomen Singular",mn:"я=ich, ты=du, он=er, она=sie, оно=es",o:["ich, du, er, sie","wir, ihr, sie","ich, er, wir","du, sie, ihr"],r:["я, ты, он, она","мы, вы, они","я, он, мы","ты, она, вы"],ctx:[{ru:"Он и она — друзья.",de:"Er und sie sind Freunde."}]},
-  {m:"мы, вы, они",t:"wir, ihr, sie",s:"Personalpronomen",e:"Plural",x:"Personalpronomen Plural",mn:"мы=wir, вы=ihr/Sie, они=sie (Plural)",o:["wir, ihr, sie","ich, du, er","wir, er, Sie","ich, wir, sie"],r:["мы, вы, они","я, ты, он","мы, он, вы","я, мы, они"],ctx:[{ru:"Мы и они — одна команда.",de:"Wir und sie sind ein Team."}]},
-  {m:"Прилагательное + Существительное",t:"Adjektiv + Nomen — Endungen",s:"Adjektive",e:"красивый город, красивая книга",x:"Adjektiv-Endung richtet sich nach Geschlecht",mn:"-ый/-ий (м), -ая/-яя (ж), -ое/-ее (н), -ые/-ие (мн)",o:["Endung nach Geschlecht des Nomens","Endung immer -ый","Keine Endungen nötig","Endung nach Kasus"],r:["Endung nach Geschlecht","Immer -ый","Keine Endung","Nach Kasus"],ctx:[{ru:"Красивый город. Красивая книга.",de:"Eine schöne Stadt. Ein schönes Buch."}]},
-  {m:"большой / большая / большое",t:"groß — alle Geschlechter",s:"Adjektive",e:"großer Tisch, große Stadt",x:"-ой/-ая/-ое/-ие",mn:"большой стол, большая книга, большое окно",o:["groß (m/f/n)","klein (m/f/n)","gut (m/f/n)","neu (m/f/n)"],r:["большой/большая/большое","маленький/маленькая/маленькое","хороший/хорошая/хорошее","новый/новая/новое"],ctx:[{ru:"У меня большая семья.",de:"Ich habe eine große Familie."}]},
-  {m:"хороший / хорошая / хорошее",t:"gut — alle Geschlechter",s:"Adjektive",e:"guter Freund, gute Freundin",x:"-ий/-ая/-ее/-ие",mn:"хороший друг, хорошая подруга, хорошее место",o:["gut (m/f/n)","schlecht (m/f/n)","groß (m/f/n)","neu (m/f/n)"],r:["хороший/хорошая/хорошее","плохой/плохая/плохое","большой/большая/большое","новый/новая/новое"],ctx:[{ru:"Это хороший фильм.",de:"Das ist ein guter Film."}]},
-  {m:"Kein 'ist' im Präsens",t:"Russisch hat kein 'ist' im Präsens",s:"Satzbau",e:"Это книга. = Das ist ein Buch.",x:"Subjekt + Nomen/Adjektiv — ohne Verb!",mn:"Это книга. / Он врач. / Мама дома.",o:["Kein Verb im Präsens nötig","Verb 'быть' immer nötig","Verb am Satzende","Verb am Satzanfang"],r:["Без глагола в настоящем","Всегда нужен глагол","Глагол в конце","Глагол в начале"],ctx:[{ru:"Он врач. Она учитель.",de:"Er ist Arzt. Sie ist Lehrerin."}]},
-  {m:"Wortstellung im Russischen",t:"Freie Wortstellung",s:"Satzbau",e:"Я читаю книгу. = Книгу я читаю.",x:"Russisch hat freie Wortstellung — Betonung ändert sich",mn:"Subjekt-Verb-Objekt ist häufigste Reihenfolge",o:["Freie Wortstellung möglich","Immer SVO-Reihenfolge","Verb immer am Ende","Subjekt immer zuerst"],r:["Свободный порядок слов","Всегда СГД","Глагол всегда в конце","Подлежащее всегда первое"],ctx:[{ru:"Книгу читает мама. / Мама читает книгу.",de:"Das Buch liest Mama. / Mama liest das Buch."}]},
-  {m:"Вопросительные слова",t:"Fragewörter",s:"Fragesätze",e:"кто, что, где, когда, почему, как",x:"Fragewort am Satzanfang, Satzmelodie steigt",mn:"кто=wer, что=was, где=wo, когда=wann, почему=warum, как=wie",o:["кто/что/где/когда/почему/как","ja/nein-Frage mit ли","Frage nur durch Intonation","Frage mit разве"],r:["Вопросительные слова","Вопрос с ли","Интонационный вопрос","Вопрос с разве"],ctx:[{ru:"Где ты живёшь? Как дела?",de:"Wo wohnst du? Wie geht's?"}]},
-  {m:"у меня есть",t:"ich habe (wörtl: bei mir ist)",s:"Haben-Konstruktion",e:"У меня есть книга.",x:"Russisch hat kein 'haben' — stattdessen у + Genitiv + есть",mn:"у меня есть = ich habe, у тебя есть = du hast",o:["У + Genitiv + есть","Я имею + Akkusativ","Мне есть","Я держу"],r:["У меня есть","Я имею","Мне есть","Я держу"],ctx:[{ru:"У меня есть собака.",de:"Ich habe einen Hund."}]},
-  {m:"у меня нет",t:"ich habe kein/e",s:"Haben-Konstruktion",e:"У меня нет времени.",x:"Verneinung: у + Genitiv + нет + Genitiv",mn:"у меня нет денег = ich habe kein Geld",o:["У + Genitiv + нет + Genitiv","Я не имею","Мне нет","Я без"],r:["У меня нет","Я не имею","Мне нет","Я без"],ctx:[{ru:"У меня нет машины.",de:"Ich habe kein Auto."}]},
-  {m:"Числительные 1-10",t:"Zahlen 1-10",s:"Zahlen & Grammatik",e:"один, два, три, четыре, пять...",x:"1=один/одна, 2=два/две, 3=три, 4=четыре, 5-10=пять-десять",mn:"Nach 1: Nominativ. Nach 2-4: Genitiv Sg. Nach 5+: Genitiv Pl.",o:["один/два/три/четыре/пять","первый/второй/третий","раз/два/три","одного/двух/трёх"],r:["Количественные числительные","Порядковые числительные","Счётные слова","Родительный падеж"],ctx:[{ru:"Три книги. Пять книг.",de:"Drei Bücher. Fünf Bücher."}]},
-  {m:"Будущее время",t:"Zukunft",s:"Zeitformen",e:"Я буду читать. / Я прочитаю.",x:"Imperfektiv: буду + Infinitiv. Perfektiv: konjugierte Perfektivform",mn:"буду читать (werde lesen) / прочитаю (werde gelesen haben)",o:["Imperfektiv: буду + Inf. / Perfektiv: Konjugation","Nur буду + Infinitiv","Nur Perfektivform","будет + Infinitiv"],r:["Буду читать / прочитаю","Только буду + инф","Только прочитаю","Будет читать"],ctx:[{ru:"Завтра я буду дома.",de:"Morgen werde ich zu Hause sein."}]},
-  {m:"Мягкий знак (ь)",t:"Das weiche Zeichen",s:"Aussprache & Schreibung",e:"день, мать, писать",x:"ь erweicht den vorherigen Konsonanten, kein eigener Laut",mn:"день (Tag) vs. ден — ь macht д weich",o:["Erweicht den Konsonanten davor","Ist ein eigenständiger Laut","Ersetzt den Vokal","Hat keinen Einfluss"],r:["Смягчает согласный","Самостоятельный звук","Заменяет гласный","Не влияет"],ctx:[{ru:"Мать читает. День длинный.",de:"Die Mutter liest. Der Tag ist lang."}]},
-  {m:"Твёрдый знак (ъ)",t:"Das harte Zeichen",s:"Aussprache & Schreibung",e:"объект, съезд, подъезд",x:"ъ trennt Präfix vom Wortstamm — kein eigener Laut",mn:"объект = ob-jekt (ъ verhindert Erweichung)",o:["Trennt Präfix vom Stamm","Erweicht den Konsonanten","Ist ein Vokal","Verlängert den Laut"],r:["Разделительный знак","Смягчает согласный","Является гласным","Удлиняет звук"],ctx:[{ru:"Объект. Подъезд. Съезд.",de:"Objekt. Auffahrt. Abfahrt."}]},
-  {m:"Глаголы движения",t:"Bewegungsverben",s:"Besondere Verben",e:"идти vs. ходить",x:"идти = jetzt gehen (einmalig), ходить = gehen (regelmäßig)",mn:"Я иду в школу. (Ich gehe gerade.) / Я хожу в школу. (Ich gehe regelmäßig.)",o:["идти=jetzt/einmalig, ходить=regelmäßig","идти=schnell, ходить=langsam","идти=gehen, ходить=laufen","Kein Unterschied"],r:["идти/ходить (однокр./многокр.)","идти/ходить (быстро/медленно)","идти/ходить (ходьба/бег)","Нет разницы"],ctx:[{ru:"Я иду домой. Я хожу в спортзал.",de:"Ich gehe nach Hause. Ich gehe (regelmäßig) ins Fitnessstudio."}]},
-  {m:"Предлоги места",t:"Ortsprepositions",s:"Präpositionen",e:"в, на, у, около, рядом с",x:"в=in(nen), на=auf/an, у=bei, около=neben, рядом с=neben",mn:"в школе (in der Schule), на столе (auf dem Tisch), у окна (am Fenster)",o:["в=in, на=auf, у=bei","в=auf, на=in, у=neben","в=bei, на=unter, у=in","в=neben, на=bei, у=auf"],r:["в=в, на=на, у=у","в=на, на=в, у=рядом","в=у, на=под, у=в","в=рядом, на=у, у=на"],ctx:[{ru:"Книга в сумке. Тетрадь на столе.",de:"Das Buch ist in der Tasche. Das Heft liegt auf dem Tisch."}]},
-  {m:"Предлоги времени",t:"Zeitpräpositionen",s:"Präpositionen",e:"в, на, через, до, после",x:"в + Akkusativ (Wochentage/Monate), через=in (Zeitraum), после=nach",mn:"в понедельник (am Montag), через час (in einer Stunde), после работы (nach der Arbeit)",o:["в=am/in, через=in (Zeitraum), после=nach","в=nach, через=am, после=in","в=in, через=nach, после=am","в=vor, через=nach, после=während"],r:["в/через/после","в/через/после (другое)","в/через/после (иначе)","до/через/во время"],ctx:[{ru:"В пятницу. Через час. После обеда.",de:"Am Freitag. In einer Stunde. Nach dem Mittagessen."}]},
+  {m:"Мужской род",t:"Männliches Geschlecht",s:"Geschlechter",e:"стол, брат, город",x:"Endet meist auf Konsonant oder -й",mn:"он: стол (Tisch), брат (Bruder), день (Tag)",o:["Männliches Geschlecht","Weibliches Geschlecht","Sächliches Geschlecht","Kein Geschlecht"],r:["Мужской род","Женский род","Средний род","Без рода"],ctx:[{ru:"Это стол. Он большой.",de:"Das ist ein Tisch. Er ist groß."}]},
+  {m:"Женский род",t:"Weibliches Geschlecht",s:"Geschlechter",e:"мама, книга, улица",x:"Endet meist auf -а oder -я",mn:"она: книга (Buch), мама (Mama), земля (Erde)",o:["Weibliches Geschlecht","Männliches Geschlecht","Sächliches Geschlecht","Kein Geschlecht"],r:["Женский род","Мужской род","Средний род","Без рода"],ctx:[{ru:"Это книга. Она интересная.",de:"Das ist ein Buch. Es ist interessant."}]},
+  {m:"Средний род",t:"Sächliches Geschlecht",s:"Geschlechter",e:"окно, море, имя",x:"Endet meist auf -о oder -е",mn:"оно: окно (Fenster), море (Meer), имя (Name)",o:["Sächliches Geschlecht","Männliches Geschlecht","Weibliches Geschlecht","Kein Geschlecht"],r:["Средний род","Мужской род","Женский род","Без рода"],ctx:[{ru:"Это окно. Оно большое.",de:"Das ist ein Fenster. Es ist groß."}]},
+  {m:"Множественное число",t:"Pluralbildung",s:"Geschlechter",e:"столы, книги, окна",x:"-ы/-и für m/f, -а/-я für n",mn:"стол→столы, книга→книги, окно→окна, море→моря",o:["Plural: -ы/-и (m/f), -а/-я (n)","Immer -ы","Immer -и","Kein Plural"],r:["Мн.ч.: -ы/-и, -а/-я","Всегда -ы","Всегда -и","Без мн.ч."],ctx:[{ru:"Один стол — два стола — пять столов.",de:"Ein Tisch — zwei Tische — fünf Tische."}]},
+  {m:"Kein 'ist' im Präsens",t:"Russisch hat kein 'ist' im Präsens",s:"Satzbau",e:"Это книга. = Das ist ein Buch.",x:"Subjekt + Nomen/Adjektiv ohne Verb!",mn:"Это книга. Он врач. Мама дома. Погода хорошая.",o:["Kein Verb im Präsens nötig","Verb 'быть' immer nötig","Verb am Satzende","Verb am Satzanfang"],r:["Без глагола","Всегда нужен глагол","Глагол в конце","Глагол в начале"],ctx:[{ru:"Он врач. Она учитель. Я студент.",de:"Er ist Arzt. Sie ist Lehrerin. Ich bin Student."}]},
+  {m:"Свободный порядок слов",t:"Freie Wortstellung",s:"Satzbau",e:"Я читаю книгу. = Книгу я читаю.",x:"Russisch hat freie Wortstellung — Betonung ändert sich",mn:"SVO häufigste Reihenfolge, aber alle Varianten möglich",o:["Freie Wortstellung möglich","Immer SVO","Verb immer am Ende","Subjekt immer zuerst"],r:["Свободный порядок","Всегда СГД","Глагол в конце","Подлежащее первое"],ctx:[{ru:"Книгу читает мама. / Мама читает книгу.",de:"Das Buch liest Mama. / Mama liest das Buch."}]},
+  {m:"У меня есть",t:"Ich habe (wörtl: bei mir ist)",s:"Haben-Konstruktion",e:"У меня есть книга.",x:"у + Genitiv + есть — kein Verb 'haben'",mn:"у меня=ich habe, у тебя=du hast, у него=er hat",o:["У + Genitiv + есть","Я имею + Akkusativ","Мне есть","Я держу"],r:["У меня есть","Я имею","Мне есть","Я держу"],ctx:[{ru:"У меня есть собака. У тебя есть кошка?",de:"Ich habe einen Hund. Hast du eine Katze?"}]},
+  {m:"У меня нет",t:"Ich habe kein/e",s:"Haben-Konstruktion",e:"У меня нет времени.",x:"у + Genitiv + нет + Genitiv",mn:"нет + Genitiv: нет денег, нет времени, нет машины",o:["У + Genitiv + нет + Genitiv","Я не имею","Мне нет","Я без"],r:["У меня нет","Я не имею","Мне нет","Я без"],ctx:[{ru:"У меня нет денег. У него нет машины.",de:"Ich habe kein Geld. Er hat kein Auto."}]},
+  {m:"Вопросительные слова",t:"Fragewörter",s:"Fragesätze",e:"кто, что, где, когда, почему, как",x:"Fragewort am Satzanfang",mn:"кто=wer, что=was, где=wo, когда=wann, почему=warum, как=wie, сколько=wie viel",o:["кто/что/где/когда/почему/как","Frage nur durch Intonation","Frage mit ли","Frage mit разве"],r:["Вопросительные слова","Интонация","Вопрос с ли","Вопрос с разве"],ctx:[{ru:"Где ты живёшь? Когда ты придёшь?",de:"Wo wohnst du? Wann kommst du?"}]},
+  {m:"Вопрос через интонацию",t:"Frage durch Intonation",s:"Fragesätze",e:"Ты читаешь? (Du liest?)",x:"Selber Satz wie Aussage — nur Intonation steigt",mn:"Ты читаешь. (Aussage) → Ты читаешь? (Frage)",o:["Intonation steigt am betonten Wort","Wortstellung ändert sich","Verb vorne","Fragewort nötig"],r:["Интонация на ударном слове","Порядок слов меняется","Глагол впереди","Нужно вопросительное слово"],ctx:[{ru:"Ты идёшь домой? — Да, иду.",de:"Gehst du nach Hause? — Ja, ich gehe."}]},
+  {m:"Сравнительная степень",t:"Komparativ",s:"Komparativ",e:"больше, меньше, лучше, хуже",x:"Komparativ: больше=größer, меньше=kleiner, лучше=besser, хуже=schlechter",mn:"Москва больше Берлина. / Этот лучше того.",o:["Komparativ mit больше/меньше/лучше/хуже","Mit -ее Endung","Mit самый","Mit более"],r:["Простой компаратив","Компаратив на -ее","Превосходная степень","Аналитический компаратив"],ctx:[{ru:"Этот фильм лучше того.",de:"Dieser Film ist besser als jener."}]},
+  {m:"Степени сравнения прилагательных",t:"Steigerung der Adjektive",s:"Komparativ",e:"хороший → лучше → самый лучший",x:"Positiv → Komparativ → Superlativ",mn:"хороший→лучше→самый лучший / большой→больше→самый большой",o:["Positiv/Komparativ/Superlativ","Nur Komparativ","Nur Superlativ","Keine Steigerung"],r:["Положительная/сравнительная/превосходная","Только сравнительная","Только превосходная","Без степеней"],ctx:[{ru:"Самый красивый город в мире.",de:"Die schönste Stadt der Welt."}]},
+  {m:"Числа и падежи",t:"Zahlen und Fälle",s:"Zahlen & Kasus",e:"1=Nom., 2-4=Gen.Sg., 5+=Gen.Pl.",x:"Nach 1: Nominativ. Nach 2-4: Genitiv Sg. Nach 5+: Genitiv Pl.",mn:"1 стол, 2 стола, 5 столов / 1 книга, 2 книги, 5 книг",o:["1=Nom, 2-4=Gen.Sg., 5+=Gen.Pl.","Immer Nominativ","Immer Genitiv","Immer Plural"],r:["1/2-4/5+","Всегда именит.","Всегда родит.","Всегда мн.ч."],ctx:[{ru:"Три книги. Семь книг. Одна книга.",de:"Drei Bücher. Sieben Bücher. Ein Buch."}]},
+  {m:"Краткая форма прилагательного",t:"Kurzform des Adjektivs",s:"Adjektive",e:"красив, красива, красиво, красивы",x:"Kurzform im Prädikat: рад (froh), готов (bereit), должен (soll)",mn:"Он готов. Она рада. Они должны. — Kurzform im Prädikat",o:["Kurzform im Prädikat","Immer Vollform","Nur bei Qualität","Nur im Nominativ"],r:["Краткая форма в предикате","Всегда полная","Только качество","Только именит."],ctx:[{ru:"Я рад видеть тебя. Она готова.",de:"Ich bin froh, dich zu sehen. Sie ist bereit."}]},
+],
+grammar_faelle:[
+  {m:"Именительный падеж",t:"Nominativ (1. Fall) — Wer? Was?",s:"Nominativ",e:"Брат читает.",x:"Subjekt des Satzes",mn:"Брат читает. Книга лежит. Окно открыто.",o:["Wer? Was? — Subjekt","Wessen? — Besitz","Wem? — ind. Objekt","Wen? — dir. Objekt"],r:["Именительный","Родительный","Дательный","Винительный"],ctx:[{ru:"Брат читает книгу.",de:"Der Bruder liest ein Buch."}]},
+  {m:"Родительный падеж",t:"Genitiv (2. Fall) — Wessen?",s:"Genitiv",e:"книга брата, нет времени",x:"Besitz, Verneinung (нет), nach Zahlen 2-4",mn:"книга брата (des Bruders), нет денег (kein Geld), два стола (zwei Tische)",o:["Wessen? Besitz, Verneinung, nach Zahlen","Wem?","Wen?","Wo?"],r:["Родительный","Дательный","Винительный","Предложный"],ctx:[{ru:"У меня нет времени. Книга брата.",de:"Ich habe keine Zeit. Das Buch des Bruders."}]},
+  {m:"Дательный падеж",t:"Dativ (3. Fall) — Wem?",s:"Dativ",e:"Я дал книгу брату.",x:"Indirektes Objekt, bei мне нравится",mn:"брату (dem Bruder), мне (mir), тебе (dir), нам (uns)",o:["Wem? — indir. Objekt","Wessen?","Wen?","Womit?"],r:["Дательный","Родительный","Винительный","Творительный"],ctx:[{ru:"Мне нравится музыка. Я дал другу книгу.",de:"Mir gefällt Musik. Ich gab dem Freund ein Buch."}]},
+  {m:"Винительный падеж",t:"Akkusativ (4. Fall) — Wen? Was?",s:"Akkusativ",e:"Я читаю книгу.",x:"Direktes Objekt, Richtung (в/на + Akk.)",mn:"книгу (das Buch), брата (den Bruder), в Москву (nach Moskau)",o:["Wen? Was? — dir. Objekt","Wem?","Wessen?","Womit?"],r:["Винительный","Дательный","Родительный","Творительный"],ctx:[{ru:"Я читаю книгу. Я еду в Москву.",de:"Ich lese ein Buch. Ich fahre nach Moskau."}]},
+  {m:"Творительный падеж",t:"Instrumental (5. Fall) — Womit?",s:"Instrumental",e:"Я пишу ручкой.",x:"Mittel, Begleitung (с), Beruf (работать + Instr.)",mn:"ручкой (mit dem Stift), с другом (mit dem Freund), врачом (als Arzt)",o:["Womit? Mit wem? Als was?","Wem?","Wessen?","Wen?"],r:["Творительный","Дательный","Родительный","Винительный"],ctx:[{ru:"Я еду с другом. Он работает врачом.",de:"Ich fahre mit dem Freund. Er arbeitet als Arzt."}]},
+  {m:"Предложный падеж",t:"Präpositional (6. Fall) — Worüber? Wo?",s:"Präpositional",e:"в Москве, о книге",x:"Nach Präpositionen: в, на, о, при, по",mn:"в Москве (in Moskau), на столе (auf dem Tisch), о тебе (über dich)",o:["Nach Präpositionen: в, на, о","Wem?","Wessen?","Wen?"],r:["Предложный","Дательный","Родительный","Винительный"],ctx:[{ru:"Я живу в Москве. Я думаю о тебе.",de:"Ich wohne in Moskau. Ich denke an dich."}]},
+  {m:"Падежные окончания существительных",t:"Kasusendungen der Substantive",s:"Deklination",e:"стол→стола→столу→стол→столом→столе",x:"Männl.: -а(Gen),-у(Dat),-ом(Instr),-е(Präp)",mn:"Nom: стол / Gen: стола / Dat: столу / Akk: стол / Instr: столом / Präp: столе",o:["Nom/Gen/Dat/Akk/Instr/Präp","Nur Nom/Akk","Nur Gen/Dat","Keine Endungen"],r:["Все падежи","Только им./вин.","Только род./дат.","Без окончаний"],ctx:[{ru:"В столе, на столе, со столом.",de:"Im Tisch, auf dem Tisch, mit dem Tisch."}]},
+  {m:"Склонение прилагательных",t:"Adjektiv-Deklination",s:"Deklination",e:"новый, новая, новое, новые",x:"-ый/-ой(m),-ая(f),-ое(n),-ые(pl) im Nominativ",mn:"новый стол, новая книга, новое окно, новые столы",o:["Endung nach Geschlecht des Nomens","Immer -ый","Keine Endungen","Endung -ый/-ая/-ое/-ые"],r:["По роду существительного","Всегда -ый","Без окончаний","-ый/-ая/-ое/-ые"],ctx:[{ru:"Красивый город. Красивая девушка. Красивое место.",de:"Eine schöne Stadt. Ein schönes Mädchen. Ein schöner Ort."}]},
+  {m:"Родительный падеж мн.ч.",t:"Genitiv Plural",s:"Genitiv Plural",e:"столов, книг, окон",x:"Nach Zahlen 5+: Genitiv Plural",mn:"5 столов, много книг, несколько окон",o:["Genitiv Plural nach 5+","Genitiv Singular","Nominativ Plural","Akkusativ Plural"],r:["Родит. мн.ч. после 5+","Родит. ед.ч.","Именит. мн.ч.","Винит. мн.ч."],ctx:[{ru:"Пять книг. Много столов. Несколько окон.",de:"Fünf Bücher. Viele Tische. Einige Fenster."}]},
+  {m:"Предлоги с падежами",t:"Präpositionen mit Fällen",s:"Präpositionen+Fälle",e:"в+Akk(Richtung) vs в+Präp(Ort)",x:"в/на + Akkusativ = Richtung; в/на + Präpositional = Ort",mn:"Я иду в школу. (Akk/Richtung) / Я в школе. (Präp/Ort)",o:["в/на+Akk=Richtung, в/на+Präp=Ort","Immer Akkusativ","Immer Präpositional","Immer Dativ"],r:["в/на+вин=куда, в/на+пред=где","Всегда вин.","Всегда пред.","Всегда дат."],ctx:[{ru:"Я иду в школу. Я учусь в школе.",de:"Ich gehe in die Schule. Ich lerne in der Schule."}]},
+  {m:"Одушевлённые существительные",t:"Belebte Substantive im Akkusativ",s:"Akkusativ belebt",e:"Я вижу брата (nicht брат!)",x:"Belebte m-Nomen: Akkusativ = Genitiv",mn:"видеть брата (den Bruder), любить друга (den Freund)",o:["Belebt: Akk=Gen Form","Belebt: Akk=Nom Form","Kein Unterschied","Nur bei Tieren"],r:["Одуш.: вин.=род.","Одуш.: вин.=им.","Нет разницы","Только животные"],ctx:[{ru:"Я вижу брата. Я люблю маму.",de:"Ich sehe den Bruder. Ich liebe die Mama."}]},
+],
+grammar_verben:[
+  {m:"Я читаю / ты читаешь",t:"Konjugation Präsens: читать",s:"Konjugation",e:"я→-ю, ты→-ешь, он→-ет",x:"1. Konjugation: -ю/-ешь/-ет/-ем/-ете/-ют",mn:"я читаю, ты читаешь, он/она читает, мы читаем, вы читаете, они читают",o:["я→-ю, ты→-ешь, он→-ет, мы→-ем","я→-ю, ты→-ишь, он→-ит, мы→-им","я→-у, ты→-ешь, он→-ет, мы→-ем","Keine Endungen"],r:["1 спряжение (-ю/-ешь)","2 спряжение (-ю/-ишь)","Смешанное","Без окончаний"],ctx:[{ru:"Я читаю книгу. Ты читаешь газету.",de:"Ich lese ein Buch. Du liest die Zeitung."}]},
+  {m:"Я говорю / ты говоришь",t:"Konjugation Präsens: говорить",s:"Konjugation",e:"я→-ю, ты→-ишь, он→-ит",x:"2. Konjugation: -ю/-ишь/-ит/-им/-ите/-ят",mn:"я говорю, ты говоришь, он говорит, мы говорим, вы говорите, они говорят",o:["я→-ю, ты→-ишь, он→-ит, мы→-им","я→-ю, ты→-ешь, он→-ет, мы→-ем","Keine Endungen","Gemischte Konjugation"],r:["2 спряжение (-ю/-ишь)","1 спряжение (-ю/-ешь)","Без окончаний","Смешанное"],ctx:[{ru:"Я говорю по-русски. Ты говоришь по-немецки?",de:"Ich spreche Russisch. Sprichst du Deutsch?"}]},
+  {m:"Глагол БЫТЬ",t:"Verb sein — быть",s:"Unregelmäßige Verben",e:"Präsens: fehlt / Vergangenheit: был/была",x:"Präsens fehlt (außer есть). Vergangenheit: был(m)/была(f)/было(n)/были(pl)",mn:"Я был дома. Она была в школе. Мы были вместе.",o:["Präsens fehlt, Verg.: был/была/было/были","Präsens: есть für alle","Präsens: буду","Präsens: являюсь"],r:["Нет наст., прош.: был/была","Наст.: есть","Наст.: буду","Наст.: являюсь"],ctx:[{ru:"Вчера я был дома. Завтра буду в офисе.",de:"Gestern war ich zu Hause. Morgen werde ich im Büro sein."}]},
+  {m:"Глагол ХОТЕТЬ",t:"Verb wollen — хотеть",s:"Unregelmäßige Verben",e:"хочу, хочешь, хочет, хотим, хотите, хотят",x:"Gemischte Konjugation: Sg=1.Konj., Pl=2.Konj.",mn:"я хочу, ты хочешь, он хочет, мы хотим, вы хотите, они хотят",o:["хочу/хочешь/хочет/хотим/хотите/хотят","хочу/хочешь/хочет/хочем/хочете/хочут","Immer хочу","хочу/хочишь/хочит"],r:["Верное спряжение","Неверное спряжение","Только хочу","Неверное спряжение 2"],ctx:[{ru:"Я хочу есть. Ты хочешь пить?",de:"Ich möchte essen. Möchtest du trinken?"}]},
+  {m:"Глагол ИДТИ / ХОДИТЬ",t:"Gehen — einmalig vs. regelmäßig",s:"Bewegungsverben",e:"иду (jetzt) vs. хожу (regelmäßig)",x:"идти=einmalige Bewegung jetzt, ходить=wiederholte/gewohnheitsmäßige Bewegung",mn:"Я иду в школу. (jetzt) / Я хожу в школу. (jeden Tag)",o:["идти=jetzt/einmalig, ходить=regelmäßig","идти=schnell, ходить=langsam","Kein Unterschied","идти=zu Fuß, ходить=fahren"],r:["идти/ходить (однокр./привычн.)","Скорость","Нет разницы","Способ передвижения"],ctx:[{ru:"Я иду домой. Я каждый день хожу в спортзал.",de:"Ich gehe nach Hause. Ich gehe jeden Tag ins Fitnessstudio."}]},
+  {m:"Глагол ЕХАТЬ / ЕЗДИТЬ",t:"Fahren — einmalig vs. regelmäßig",s:"Bewegungsverben",e:"еду (jetzt) vs. езжу (regelmäßig)",x:"ехать=einmalig mit Verkehrsmittel, ездить=regelmäßig mit Verkehrsmittel",mn:"Я еду в Москву. (jetzt) / Я езжу в Москву каждый год. (jährlich)",o:["ехать=jetzt, ездить=regelmäßig","ехать=schnell, ездить=langsam","Kein Unterschied","ехать=Zug, ездить=Auto"],r:["ехать/ездить (однокр./привычн.)","Скорость","Нет разницы","Транспорт"],ctx:[{ru:"Я еду в Берлин. Я езжу туда каждый год.",de:"Ich fahre nach Berlin. Ich fahre jedes Jahr hin."}]},
+  {m:"Прошедшее время",t:"Vergangenheitsform",s:"Zeitformen",e:"читал(m)/читала(f)/читало(n)/читали(pl)",x:"Stamm + -л/-ла/-ло/-ли je nach Geschlecht des Subjekts",mn:"Он читал. Она читала. Оно читало. Они читали.",o:["Endung nach Geschlecht des Subjekts","-л für alle","Endung nach Kasus","Keine Endungen"],r:["По роду подлежащего","Всегда -л","По падежу","Без окончаний"],ctx:[{ru:"Вчера я читал книгу. Она готовила обед.",de:"Gestern las ich ein Buch. Sie kochte Mittagessen."}]},
+  {m:"Будущее время",t:"Zukunftsformen",s:"Zeitformen",e:"буду читать / прочитаю",x:"Imperfektiv: буду+Inf. / Perfektiv: konjugierte Form",mn:"буду читать (werde lesen/Prozess) / прочитаю (werde fertig lesen)",o:["Imperfektiv: буду+Inf, Perfektiv: Konjugation","Nur буду+Infinitiv","Nur Perfektivform","будет+Infinitiv für alle"],r:["НСВ: буду+инф, СВ: спряжение","Только буду+инф","Только СВ","будет для всех"],ctx:[{ru:"Завтра буду работать. Скоро прочитаю книгу.",de:"Morgen werde ich arbeiten. Bald werde ich das Buch zu Ende lesen."}]},
+  {m:"Виды глагола: НСВ и СВ",t:"Verbalaspekte: imperfektiv und perfektiv",s:"Aspekte",e:"читать(НСВ) / прочитать(СВ)",x:"НСВ=Prozess/Wiederholung, СВ=abgeschlossene Handlung",mn:"Я читал книгу (Prozess) / Я прочитал книгу (fertig gelesen)",o:["НСВ=Prozess, СВ=abgeschlossen","НСВ=Vergangenheit, СВ=Zukunft","Kein Unterschied","НСВ=lang, СВ=kurz"],r:["НСВ/СВ по завершённости","По времени","Нет разницы","По длительности"],ctx:[{ru:"Я читал (НСВ) / Я прочитал (СВ) эту книгу.",de:"Ich las (Prozess) / Ich habe gelesen (fertig) dieses Buch."}]},
+  {m:"Отрицание: НЕ + глагол",t:"Verneinung mit не",s:"Verneinung",e:"Я не читаю. Он не говорит.",x:"не direkt vor dem Verb",mn:"Я читаю → Я не читаю / Он знает → Он не знает",o:["не direkt vor dem Verb","не am Satzende","nie + Genitiv","без + Genitiv"],r:["не перед глаголом","не в конце","не + родит.","без + родит."],ctx:[{ru:"Я не понимаю. Она не знает.",de:"Ich verstehe nicht. Sie weiß es nicht."}]},
+  {m:"НЕТ + родительный падеж",t:"Verneinung des Habens",s:"Verneinung",e:"У меня нет времени/денег/машины",x:"нет + Genitiv = es gibt kein/keinen",mn:"нет времени (keine Zeit), нет денег (kein Geld), нет машины (kein Auto)",o:["нет + Genitiv","не + Verb","без + Genitiv","никто + Nominativ"],r:["нет + родит.","не + глагол","без + родит.","никто + им."],ctx:[{ru:"У меня нет денег. Здесь нет врача.",de:"Ich habe kein Geld. Hier gibt es keinen Arzt."}]},
+  {m:"Императив",t:"Imperativ (Befehlsform)",s:"Imperativ",e:"читай!/читайте!, говори!/говорите!",x:"Singular: -й/-и/-ь / Plural: + -те",mn:"читай (lies du!) / читайте (lesen Sie!) / говори / говорите",o:["Sg: -й/-и/-ь, Pl: +-те","Immer -й","Immer -ите","Infinitiv"],r:["ед.ч.: -й/-и/-ь, мн.ч.: +те","Всегда -й","Всегда -ите","Инфинитив"],ctx:[{ru:"Читайте! Говорите медленнее! Иди сюда!",de:"Lesen Sie! Sprechen Sie langsamer! Komm her!"}]},
+  {m:"Возвратные глаголы на -СЯ/-СЬ",t:"Reflexivverben",s:"Reflexivverben",e:"одеваться, учиться, называться",x:"-ся nach Konsonant/-ть, -сь nach Vokal",mn:"одеваться (sich anziehen), учиться (lernen), называться (heißen)",o:["Reflexiv: -ся/-сь","Immer -ся","Nur bei Körperpflege","Kein Unterschied zu Nicht-Reflexiv"],r:["Возвратный: -ся/-сь","Всегда -ся","Только гигиена","Нет разницы"],ctx:[{ru:"Как называется этот город? Я учусь русскому.",de:"Wie heißt diese Stadt? Ich lerne Russisch."}]},
+  {m:"Модальные слова: можно, нужно, надо",t:"Modalwörter: kann, muss, soll",s:"Modalverben",e:"Можно войти? Нужно учиться. Надо идти.",x:"Unpersönlich + Infinitiv — kein Subjekt im Nominativ",mn:"Можно=man darf/kann, Нужно/Надо=man muss/soll",o:["Unpersönlich + Infinitiv","Mit Subjekt im Nominativ","Только с местоимением","Mit Verb быть"],r:["Безличное + инфинитив","С подлежащим","Только с местоим.","С глаголом быть"],ctx:[{ru:"Можно здесь курить? Нужно учить русский.",de:"Darf man hier rauchen? Man muss Russisch lernen."}]},
+  {m:"НЕЛЬЗЯ — запрет и невозможность",t:"Nельзя — Verbot und Unmöglichkeit",s:"Modalverben",e:"Нельзя курить. Нельзя этого знать.",x:"Нельзя+Imperfektiv=Verbot, Нельзя+Perfektiv=Unmöglichkeit",mn:"Нельзя курить! (Rauchen verboten!) / Этого нельзя знать (unmöglich zu wissen)",o:["Нельзя+НСВ=Verbot, +СВ=Unmöglichkeit","Immer Verbot","Immer Unmöglichkeit","Synonym zu не надо"],r:["НСВ=запрет, СВ=невозможность","Всегда запрет","Всегда невозможность","Синоним не надо"],ctx:[{ru:"Здесь нельзя курить. Нельзя знать будущее.",de:"Hier darf man nicht rauchen. Man kann die Zukunft nicht kennen."}]},
+],
+grammar_pronomen:[
+  {m:"Личные местоимения",t:"Personalpronomen",s:"Personalpronomen",e:"я, ты, он, она, оно, мы, вы, они",x:"я=ich, ты=du, он=er, она=sie, оно=es, мы=wir, вы=ihr/Sie, они=sie(pl)",mn:"Вы = formelles Sie (Singular oder Plural)",o:["я/ты/он/она/оно/мы/вы/они","я/ты/он/она/мы/вы/они (ohne оно)","ich/du/er/sie/es/wir/ihr/sie","Kein Unterschied zu Deutsch"],r:["Полный список","Без оно","Немецкие","Нет разницы"],ctx:[{ru:"Он и она — друзья. Мы все учим русский.",de:"Er und sie sind Freunde. Wir alle lernen Russisch."}]},
+  {m:"Склонение личных местоимений",t:"Deklination der Personalpronomen",s:"Personalpronomen",e:"я→меня→мне→меня→мной→мне",x:"я: меня(Gen/Akk), мне(Dat/Präp), мной(Instr)",mn:"я/меня/мне/меня/мной/мне — ты/тебя/тебе/тебя/тобой/тебе",o:["я→меня→мне→мной","я→яго→яму→яй","Keine Deklination","Immer я"],r:["я/меня/мне/мной","я/яго/яму/яй","Без склонения","Всегда я"],ctx:[{ru:"Он дал мне книгу. Я думаю о тебе.",de:"Er gab mir ein Buch. Ich denke an dich."}]},
+  {m:"Притяжательные местоимения",t:"Possessivpronomen",s:"Possessivpronomen",e:"мой/моя/моё/мои",x:"мой(m), моя(f), моё(n), мои(pl) — Endung nach Geschlecht",mn:"мой стол, моя книга, моё окно, мои друзья",o:["Endung nach Geschlecht des Nomens","Immer мой","Endung nach Kasus","Keine Endungen"],r:["По роду существительного","Всегда мой","По падежу","Без окончаний"],ctx:[{ru:"Это моя книга и твой стол.",de:"Das ist mein Buch und dein Tisch."}]},
+  {m:"его / её / их — неизменяемые",t:"его/её/их — unveränderlich",s:"Possessivpronomen",e:"его дом, его книга, его окно — immer его!",x:"его/её/их sind unveränderlich — keine Endungen!",mn:"его дом (sein Haus), его книга (sein Buch), его окно (sein Fenster)",o:["Unveränderlich: immer его/её/их","Mit Endungen wie мой","Nur bei belebten Nomen","Nur Maskulinum"],r:["Неизменяемые","С окончаниями","Только одушевл.","Только муж.р."],ctx:[{ru:"Это его машина и её сумка.",de:"Das ist sein Auto und ihre Tasche."}]},
+  {m:"Указательные местоимения",t:"Demonstrativpronomen",s:"Demonstrativpronomen",e:"этот/эта/это/эти — тот/та/то/те",x:"этот=dieser (nah), тот=jener (fern)",mn:"этот стол (dieser Tisch), та книга (jenes Buch), это окно (dieses Fenster)",o:["этот=dieser(nah), тот=jener(fern)","Kein Unterschied","Immer этот","Immer тот"],r:["этот=близко, тот=далеко","Нет разницы","Всегда этот","Всегда тот"],ctx:[{ru:"Этот фильм лучше того.",de:"Dieser Film ist besser als jener."}]},
+  {m:"Вопросительные местоимения",t:"Fragepronomen",s:"Fragepronomen",e:"кто? что? какой? который? чей?",x:"кто=wer, что=was, какой=welcher/wie, который=welcher(Ordnung), чей=wessen",mn:"Кто это? Что это? Какой фильм? Чья книга?",o:["кто/что/какой/который/чей","nur кто/что","wer/was/welcher","кто/что/где/когда"],r:["кто/что/какой/который/чей","Только кто/что","Немецкие","кто/что/где/когда"],ctx:[{ru:"Кто это? Какой фильм ты смотришь?",de:"Wer ist das? Welchen Film schaust du?"}]},
+  {m:"Неопределённые местоимения",t:"Unbestimmte Pronomen",s:"Unbestimmte Pronomen",e:"кто-то, что-то, кто-нибудь, что-нибудь",x:"-то=bestimmtes Unbekanntes, -нибудь=beliebiges",mn:"кто-то позвонил (jemand hat angerufen) / позвони кому-нибудь (ruf irgendjemandem an)",o:["-то=bestimmtes Unbek., -нибудь=beliebig","Kein Unterschied","Immer -то","Immer -нибудь"],r:["-то/-нибудь по контексту","Нет разницы","Всегда -то","Всегда -нибудь"],ctx:[{ru:"Кто-то звонил. Скажи что-нибудь.",de:"Jemand hat angerufen. Sag irgendetwas."}]},
+  {m:"Отрицательные местоимения",t:"Negative Pronomen",s:"Negative Pronomen",e:"никто, ничто, никакой, ничей",x:"ни- + Fragepronomen = kein/niemand/nichts",mn:"никто (niemand), ничто/ничего (nichts), никакой (kein)",o:["ни-+Fragepronomen=niemand/nichts","не+Pronomen","Ohne Präfix","кто-то/что-то"],r:["никто/ничего/никакой","не+местоимение","Без приставки","кто-то/что-то"],ctx:[{ru:"Никто не знает. Ничего не случилось.",de:"Niemand weiß es. Nichts ist passiert."}]},
+  {m:"Возвратное местоимение СЕБЯ",t:"Reflexivpronomen себя",s:"Reflexivpronomen",e:"себя, себе, собой — sich",x:"себя hat keinen Nominativ — bezieht sich immer auf das Subjekt",mn:"Я вижу себя. Er kauft sich etwas. Думать о себе.",o:["Kein Nominativ, bezieht sich auf Subjekt","Hat Nominativ себ","Nur mit Verben auf -ся","Nur Maskulinum"],r:["Нет им.п., относится к подлежащему","Есть им.п. себ","Только с -ся","Только муж.р."],ctx:[{ru:"Он купил себе машину. Думай о себе.",de:"Er kaufte sich ein Auto. Denk an dich selbst."}]},
+  {m:"Относительное местоимение КОТОРЫЙ",t:"Relativpronomen который",s:"Relativpronomen",e:"который/которая/которое/которые",x:"= der/die/das (Relativsatz). Kasus nach Funktion im Nebensatz",mn:"книга, которую я читаю (das Buch, das ich lese)",o:["Kasus nach Funktion im Nebensatz","Immer Nominativ","Immer Akkusativ","Immer Genitiv"],r:["По функции в придаточном","Всегда им.п.","Всегда вин.п.","Всегда род.п."],ctx:[{ru:"Это книга, которую я читал.",de:"Das ist das Buch, das ich gelesen habe."}]},
+  {m:"Местоимение ВЕСЬ / ВСЯ / ВСЁ / ВСЕ",t:"Pronomen весь — ganz/alle",s:"Sonstige Pronomen",e:"весь день (den ganzen Tag), все люди (alle Menschen)",x:"весь(m)/вся(f)/всё(n)/все(pl) = ganz/alle",mn:"весь день, вся семья, всё время, все друзья",o:["весь(m)/вся(f)/всё(n)/все(pl)","Immer все","Immer весь","весь/вся immer gleich"],r:["весь/вся/всё/все по роду","Всегда все","Всегда весь","Одинаково"],ctx:[{ru:"Весь день я работал. Все пришли.",de:"Den ganzen Tag arbeitete ich. Alle kamen."}]},
+  {m:"Местоимение ДРУГОЙ / САМИ / САМ",t:"Pronomen другой/сам",s:"Sonstige Pronomen",e:"другой=ein anderer, сам=selbst",x:"другой(m)/другая(f)/другое(n)/другие(pl), сам/сама/само/сами",mn:"другой человек (ein anderer Mensch) / Я сам сделал. (Ich habe es selbst gemacht.)",o:["другой=anderer, сам=selbst","другой=fremd, сам=allein","Kein Unterschied","другой=neu, сам=eigen"],r:["другой=другой, сам=сам","Другие значения","Нет разницы","Другой=новый"],ctx:[{ru:"Я сам приготовил. Дай мне другую книгу.",de:"Ich habe selbst gekocht. Gib mir ein anderes Buch."}]},
+],
+grammar_praepositionen:[
+  {m:"В и НА — место и направление",t:"В und НА — Ort und Richtung",s:"Ortsangaben",e:"в школе(Ort) / в школу(Richtung)",x:"в/на + Präpositional=Ort; в/на + Akkusativ=Richtung",mn:"Я в школе. (Ort) / Я иду в школу. (Richtung)",o:["Präp=Ort, Akk=Richtung","Immer Präpositional","Immer Akkusativ","Beliebig"],r:["Пред.=место, вин.=направление","Всегда пред.","Всегда вин.","Произвольно"],ctx:[{ru:"Я на работе. Я иду на работу.",de:"Ich bin bei der Arbeit. Ich gehe zur Arbeit."}]},
+  {m:"ИЗ и С — Herkunft",t:"ИЗ und С — Woher?",s:"Herkunft",e:"из Москвы (aus Moskau) / с работы (von der Arbeit)",x:"из=aus (Inneres), с=von (Oberfläche/Veranstaltung)",mn:"из России (aus Russland) / с концерта (vom Konzert) / с юга (aus dem Süden)",o:["из=aus Inneres, с=von Oberfläche","Immer из","Immer с","Kein Unterschied"],r:["из=изнутри, с=с поверхности","Всегда из","Всегда с","Нет разницы"],ctx:[{ru:"Я из Германии. Он пришёл с работы.",de:"Ich komme aus Deutschland. Er kam von der Arbeit."}]},
+  {m:"К и ОТ — Annäherung/Entfernung",t:"К und ОТ — zu/von",s:"Annäherung",e:"к другу (zum Freund) / от друга (vom Freund)",x:"к + Dativ=Richtung zu, от + Genitiv=Weg von",mn:"идти к врачу (zum Arzt gehen) / далеко от дома (weit vom Haus)",o:["к+Dat=zu, от+Gen=von","к+Gen, от+Dat","Immer Dativ","Immer Genitiv"],r:["к+дат, от+род","к+род, от+дат","Всегда дат.","Всегда род."],ctx:[{ru:"Я иду к врачу. Далеко от дома.",de:"Ich gehe zum Arzt. Weit vom Haus entfernt."}]},
+  {m:"С + творительный — Begleitung",t:"С + Instrumental — mit",s:"Begleitung",e:"с другом (mit dem Freund)",x:"с + Instrumental = mit (Begleitung/Zusammensein)",mn:"с мамой (mit der Mama), с удовольствием (mit Vergnügen), кофе с молоком (Kaffee mit Milch)",o:["с + Instrumental = mit","с + Genitiv","с + Dativ","с + Akkusativ"],r:["с + творит.","с + родит.","с + дат.","с + вин."],ctx:[{ru:"Я иду с другом. Чай с лимоном.",de:"Ich gehe mit dem Freund. Tee mit Zitrone."}]},
+  {m:"О + предложный — über",t:"О + Präpositional — über",s:"Thema",e:"говорить о книге (über das Buch reden)",x:"о + Präpositional = über (Thema)",mn:"думать о тебе (an dich denken), говорить о работе (über die Arbeit reden)",o:["о + Präpositional = über","о + Genitiv","о + Akkusativ","о + Dativ"],r:["о + пред. = о чём","о + род.","о + вин.","о + дат."],ctx:[{ru:"Я думаю о тебе. Расскажи о себе.",de:"Ich denke an dich. Erzähl von dir."}]},
+  {m:"ДЛЯ + родительный — für",t:"ДЛЯ + Genitiv — für",s:"Zweck",e:"для тебя (für dich), для детей (für Kinder)",x:"для + Genitiv = für (Zweck, Bestimmung)",mn:"подарок для мамы (Geschenk für Mama), хорошо для здоровья (gut für die Gesundheit)",o:["для + Genitiv = für","для + Dativ","для + Akkusativ","для + Präpositional"],r:["для + род. = для","для + дат.","для + вин.","для + пред."],ctx:[{ru:"Это подарок для тебя. Хорошо для здоровья.",de:"Das ist ein Geschenk für dich. Gut für die Gesundheit."}]},
+  {m:"ИЗ-ЗА / ИЗ-ПОД — wegen/unter",t:"ИЗ-ЗА und ИЗ-ПОД",s:"Komplexe Präpositionen",e:"из-за тебя (deinetwegen), из-под стола (unter dem Tisch hervor)",x:"из-за+Gen=wegen/hinter hervor, из-под+Gen=unter hervor",mn:"из-за дождя (wegen des Regens), вылез из-под стола (kam unter dem Tisch hervor)",o:["из-за=wegen, из-под=unter hervor","из-за=unter, из-под=wegen","Kein Unterschied","Nur mit Bewegungsverben"],r:["из-за=из-за, из-под=из-под","Наоборот","Нет разницы","Только с движением"],ctx:[{ru:"Из-за дождя я остался дома.",de:"Wegen des Regens blieb ich zu Hause."}]},
+  {m:"ПЕРЕД / ЗА / МЕЖДУ + тв.пад.",t:"ПЕРЕД/ЗА/МЕЖДУ + Instrumental",s:"Position",e:"перед домом (vor dem Haus), за домом (hinter dem Haus)",x:"перед=vor, за=hinter/nach, между=zwischen — alle mit Instrumental",mn:"перед школой (vor der Schule), за углом (hinter der Ecke), между нами (zwischen uns)",o:["Alle mit Instrumental","Mit Dativ","Mit Genitiv","Mit Akkusativ"],r:["Все с тв.пад.","С дат.","С род.","С вин."],ctx:[{ru:"Перед домом стоит машина. За углом — магазин.",de:"Vor dem Haus steht ein Auto. Hinter der Ecke — ein Laden."}]},
+  {m:"ПО + дательный — entlang/gemäß",t:"ПО + Dativ — entlang/nach/gemäß",s:"Verschiedene Bedeutungen",e:"по улице (die Straße entlang), по-русски (auf Russisch)",x:"по=entlang, nach (Fach), auf (Sprache), gemäß",mn:"идти по улице (die Straße entlang), по-немецки (auf Deutsch), по работе (berufsbedingt)",o:["entlang/auf Sprache/gemäß mit Dativ","Immer entlang","Nur Sprachen","Mit Genitiv"],r:["по+дат. (вдоль/по-языку/по делу)","Только вдоль","Только языки","С род."],ctx:[{ru:"Говорить по-русски. Идти по улице.",de:"Auf Russisch sprechen. Die Straße entlanggehen."}]},
+  {m:"ПРИ + предложный — bei/zu Zeiten",t:"ПРИ + Präpositional — bei/unter",s:"Zeitangaben",e:"при Сталине (unter Stalin), при мне (in meiner Gegenwart)",x:"при+Präp=bei/unter (Bedingung, Zeitepoche, Gegenwart)",mn:"при необходимости (bei Bedarf), при СССР (zur Zeit der UdSSR)",o:["bei/unter/zu Zeiten + Präpositional","Mit Dativ","Mit Instrumental","Mit Akkusativ"],r:["при+пред. (при условии/эпохе)","С дат.","С тв.пад.","С вин."],ctx:[{ru:"При необходимости звони мне.",de:"Bei Bedarf ruf mich an."}]},
+  {m:"ЧЕРЕЗ + винительный — durch/in",t:"ЧЕРЕЗ + Akkusativ — durch/in (Zeit)",s:"Zeit und Raum",e:"через час (in einer Stunde), через улицу (die Straße überqueren)",x:"через=in (Zeitraum), durch/über (Raum)",mn:"через час (in einer Stunde), через год (in einem Jahr), через дорогу (über die Straße)",o:["in (Zeitraum)/durch (Raum) + Akkusativ","Mit Genitiv","Mit Dativ","Mit Instrumental"],r:["через+вин. (время/пространство)","С род.","С дат.","С тв.пад."],ctx:[{ru:"Через час буду дома. Перейти через улицу.",de:"In einer Stunde bin ich zu Hause. Die Straße überqueren."}]},
+  {m:"БЕЗ + родительный — ohne",t:"БЕЗ + Genitiv — ohne",s:"Fehlen",e:"без тебя (ohne dich), без денег (ohne Geld)",x:"без + Genitiv = ohne",mn:"кофе без сахара (Kaffee ohne Zucker), без проблем (kein Problem/ohne Probleme)",o:["без + Genitiv = ohne","без + Dativ","без + Akkusativ","без + Instrumental"],r:["без + род. = без","без + дат.","без + вин.","без + тв."],ctx:[{ru:"Кофе без сахара. Без тебя скучно.",de:"Kaffee ohne Zucker. Ohne dich ist es langweilig."}]},
+  {m:"ПОСЛЕ и ДО + родительный",t:"ПОСЛЕ und ДО + Genitiv",s:"Zeitangaben",e:"после работы (nach der Arbeit), до встречи (bis zum Treffen)",x:"после=nach, до=bis/vor — beide + Genitiv",mn:"после обеда (nach dem Mittagessen), до свидания (auf Wiedersehen/bis zum Wiedersehen)",o:["nach/bis mit Genitiv","Mit Dativ","Mit Instrumental","Mit Akkusativ"],r:["после/до + род.","С дат.","С тв.","С вин."],ctx:[{ru:"После работы пойдём в кино. До встречи!",de:"Nach der Arbeit gehen wir ins Kino. Bis zum Wiedersehen!"}]},
 ],
 listening:[
   {m:"Привет!",t:"Hallo!",s:"Begrüßung",e:"Privet!"},
@@ -920,36 +1008,60 @@ reading:[
   {m:"Ja zhivu w Moskwe.",s:"Wohnort lesen",t:"Ich wohne in Moskau.",e:"Ja zhivu w Moskwe.",x:"zhivu = ich wohne",o:["Ich wohne in Moskau.","Ich besuche Moskau.","Ich komme aus Moskau.","Ich liebe Moskau."],r:["\u042f \u0436\u0438\u0432\u0443 \u0432 \u041c\u043e\u0441\u043a\u0432\u0435.","\u042f \u043f\u043e\u0441\u0435\u0449\u0430\u044e \u041c\u043e\u0441\u043a\u0432\u0443.","\u042f \u0438\u0437 \u041c\u043e\u0441\u043a\u0432\u044b.","\u042f \u043b\u044e\u0431\u043b\u044e \u041c\u043e\u0441\u043a\u0432\u0443."]}
 ],
 numbers:[
-  {m:"один",s:"1",t:"eins",e:"1 = один",x:"Maskulin",mn:"Klingt wie 'o-DIN' — ein DIN-A4-Blatt",o:["eins","zwei","drei","vier"],r:["один","два","три","четыре"]},
-  {m:"два",s:"2",t:"zwei",e:"2 = два",x:"Maskulin/Neutrum",mn:"Klingt wie 'dva' — merke: DVD = 2 D's",o:["zwei","eins","drei","vier"],r:["два","один","три","четыре"]},
-  {m:"три",s:"3",t:"drei",e:"3 = три",x:"Alle Geschlechter",mn:"Klingt wie 'tri' — Triathlon = 3 Disziplinen!",o:["drei","zwei","vier","fünf"],r:["три","два","четыре","пять"]},
-  {m:"четыре",s:"4",t:"vier",e:"4 = четыре",x:"Alle Geschlechter",mn:"tsche-TY-re — 4 Silben für die Zahl 4!",o:["vier","drei","fünf","sechs"],r:["четыре","три","пять","шесть"]},
-  {m:"пять",s:"5",t:"fünf",e:"5 = пять",x:"Mit Weichheitszeichen",mn:"pjat' — das weiche Zeichen am Ende!",o:["fünf","vier","sechs","sieben"],r:["пять","четыре","шесть","семь"]},
-  {m:"шесть",s:"6",t:"sechs",e:"6 = шесть",x:"Mit Weichheitszeichen",mn:"schest' — SCHESTalt = 6 Seiten",o:["sechs","fünf","sieben","acht"],r:["шесть","пять","семь","восемь"]},
-  {m:"семь",s:"7",t:"sieben",e:"7 = семь",x:"Mit Weichheitszeichen",mn:"sem' — SEMester = 7 Monate!",o:["sieben","sechs","acht","neun"],r:["семь","шесть","восемь","девять"]},
-  {m:"восемь",s:"8",t:"acht",e:"8 = восемь",x:"Mit Weichheitszeichen",mn:"vo-SEM' — klingt wie 'Wosem'",o:["acht","sieben","neun","zehn"],r:["восемь","семь","девять","десять"]},
-  {m:"девять",s:"9",t:"neun",e:"9 = девять",x:"Mit Weichheitszeichen",mn:"de-WJAT' — klingt wie 'Dewjat'",o:["neun","acht","zehn","elf"],r:["девять","восемь","десять","одиннадцать"]},
-  {m:"десять",s:"10",t:"zehn",e:"10 = десять",x:"Mit Weichheitszeichen",mn:"DE-sjat' — Dezimal hat auch 10 als Basis!",o:["zehn","neun","elf","zwölf"],r:["десять","девять","одиннадцать","двенадцать"]},
-  {m:"одиннадцать",s:"11",t:"elf",e:"11 = одиннадцать",x:"Eins + zehn",mn:"odin-NAD-zat' = eins-auf-zehn (11 = 1 auf 10)",o:["elf","zehn","zwölf","dreizehn"],r:["одиннадцать","десять","двенадцать","тринадцать"]},
-  {m:"двенадцать",s:"12",t:"zwölf",e:"12 = двенадцать",x:"Zwei + zehn",mn:"dvje-NAD-zat' = zwei-auf-zehn",o:["zwölf","elf","dreizehn","vierzehn"],r:["двенадцать","одиннадцать","тринадцать","четырнадцать"]},
-  {m:"двадцать",s:"20",t:"zwanzig",e:"20 = двадцать",x:"Zwei Zehner",mn:"dva-DZAT' = zwei-zehn (20 = 2 x 10)",o:["zwanzig","zehn","dreißig","vierzig"],r:["двадцать","десять","тридцать","сорок"]},
-  {m:"сто",s:"100",t:"hundert",e:"100 = сто",x:"Basis für Hunderter",mn:"STO — kurz und einfach, wie 'Sto'p!",o:["hundert","zwanzig","tausend","zehn"],r:["сто","двадцать","тысяча","десять"]},
-  {m:"сколько?",s:"Wie viel?",t:"Wie viel?",e:"Сколько стоит?",x:"Grundfrage für Zahlen",mn:"SKOL-ka — die wichtigste Frage beim Einkaufen!",o:["Wie viel?","Wie viele?","Wie oft?","Wie lange?"],r:["Сколько?","Сколько раз?","Как долго?","Как часто?"]}
-,
-  {m:"тридцать",s:"30",t:"dreißig",e:"30 = тридцать",x:"Drei Zehner",mn:"tri-DZAT' = drei-zehn (30 = 3 x 10)",o:["dreißig","zwanzig","vierzig","fünfzig"],r:["тридцать","двадцать","сорок","пятьдесят"]},
-  {m:"сорок",s:"40",t:"vierzig",e:"40 = сорок",x:"Ausnahme!",mn:"SO-rok — 40 ist eine Ausnahme! (nicht четыредесят)",o:["vierzig","dreißig","fünfzig","sechzig"],r:["сорок","тридцать","пятьдесят","шестьдесят"]},
-  {m:"пятьдесят",s:"50",t:"fünfzig",e:"50 = пятьдесят",x:"Fünf-zehn",mn:"pjat'-DE-sjat' = fünf-zehn (50 = 5 x 10)",o:["fünfzig","vierzig","sechzig","siebzig"],r:["пятьдесят","сорок","шестьдесят","семьдесят"]},
-  {m:"шестьдесят",s:"60",t:"sechzig",e:"60 = шестьдесят",x:"Sechs-zehn",mn:"schest'-DE-sjat' = sechs-zehn",o:["sechzig","fünfzig","siebzig","achtzig"],r:["шестьдесят","пятьдесят","семьдесят","восемьдесят"]},
-  {m:"семьдесят",s:"70",t:"siebzig",e:"70 = семьдесят",x:"Sieben-zehn",mn:"sem'-DE-sjat' = sieben-zehn",o:["siebzig","sechzig","achtzig","neunzig"],r:["семьдесят","шестьдесят","восемьдесят","девяносто"]},
-  {m:"восемьдесят",s:"80",t:"achtzig",e:"80 = восемьдесят",x:"Acht-zehn",mn:"vosem'-DE-sjat' = acht-zehn",o:["achtzig","siebzig","neunzig","hundert"],r:["восемьдесят","семьдесят","девяносто","сто"]},
-  {m:"девяносто",s:"90",t:"neunzig",e:"90 = девяносто",x:"Ausnahme!",mn:"de-wja-NO-sto — auch eine Ausnahme! (nicht neun-zehn)",o:["neunzig","achtzig","hundert","tausend"],r:["девяносто","восемьдесят","сто","тысяча"]},
-  {m:"тысяча",s:"1000",t:"tausend",e:"1000 = тысяча",x:"Tausend",mn:"TY-sja-tscha — klingt wie 'Tysjacha'",o:["tausend","hundert","Million","Milliarde"],r:["тысяча","сто","миллион","миллиард"]},
-  {m:"первый / первая",s:"erster / erste",t:"erster / erste",e:"первый день",x:"Ordinalzahl",mn:"PJER-wyj — 1. = pervyj (Adjektiv!)",o:["erster / erste","zweiter","dritter","vierter"],r:["первый","второй","третий","четвёртый"]},
-  {m:"второй / вторая",s:"zweiter / zweite",t:"zweiter / zweite",e:"второй этаж",x:"Ordinalzahl",mn:"VTO-roj — 2. = wtoroj (wie Dienstag = wtornik!)",o:["zweiter","erster","dritter","vierter"],r:["второй","первый","третий","четвёртый"]},
-  {m:"много",s:"viel / viele",t:"viel / viele",e:"Очень много.",x:"Mengenangabe",mn:"MNO-go — viel(e), fast wie englisch 'many'",o:["viel / viele","wenig","genug","zu viel"],r:["много","мало","достаточно","слишком много"]},
-  {m:"сколько времени?",s:"Wie spät ist es?",t:"Wie spät ist es?",e:"Сколько времени? Девять.",x:"Uhrzeit-Frage",mn:"SKOL-ko WREM-je-ni? = Wie viel Zeit? = Wie spät ist es?",o:["Wie spät ist es?","Wie viel kostet das?","Wie heißt das?","Wie weit?"],r:["Сколько времени?","Сколько стоит?","Как называется?","Как далеко?"]}
+  {m:"один / одна",t:"eins (m/f)",s:"Grundzahlen 1-10",e:"1",x:"один(m), одна(f), одно(n)",mn:"один стол, одна книга, одно окно",o:["eins","zwei","drei","vier"],r:["один","два","три","четыре"],ctx:[{ru:"Один кофе, пожалуйста.",de:"Einen Kaffee bitte."}]},
+  {m:"два / две",t:"zwei (m+n / f)",s:"Grundzahlen 1-10",e:"2",x:"два(m/n), две(f)",mn:"два стола, две книги",o:["zwei","drei","eins","vier"],r:["два","три","один","четыре"],ctx:[{ru:"Два билета, пожалуйста.",de:"Zwei Tickets bitte."}]},
+  {m:"три",t:"drei",s:"Grundzahlen 1-10",e:"3",x:"nach 3: Genitiv Singular",mn:"три часа, три книги",o:["drei","vier","zwei","fünf"],r:["три","четыре","два","пять"],ctx:[{ru:"Три часа дня.",de:"Drei Uhr nachmittags."}]},
+  {m:"четыре",t:"vier",s:"Grundzahlen 1-10",e:"4",x:"nach 4: Genitiv Singular",mn:"четыре стола",o:["vier","fünf","drei","sechs"],r:["четыре","пять","три","шесть"],ctx:[{ru:"Четыре человека.",de:"Vier Personen."}]},
+  {m:"пять",t:"fünf",s:"Grundzahlen 1-10",e:"5",x:"nach 5+: Genitiv Plural",mn:"пять книг, пять столов",o:["fünf","sechs","vier","sieben"],r:["пять","шесть","четыре","семь"],ctx:[{ru:"Пять минут.",de:"Fünf Minuten."}]},
+  {m:"шесть",t:"sechs",s:"Grundzahlen 1-10",e:"6",o:["sechs","sieben","fünf","acht"],r:["шесть","семь","пять","восемь"],ctx:[{ru:"Шесть часов вечера.",de:"Sechs Uhr abends."}]},
+  {m:"семь",t:"sieben",s:"Grundzahlen 1-10",e:"7",o:["sieben","acht","sechs","neun"],r:["семь","восемь","шесть","девять"],ctx:[{ru:"Семь дней в неделе.",de:"Sieben Tage in der Woche."}]},
+  {m:"восемь",t:"acht",s:"Grundzahlen 1-10",e:"8",o:["acht","neun","sieben","zehn"],r:["восемь","девять","семь","десять"],ctx:[{ru:"Восемь часов утра.",de:"Acht Uhr morgens."}]},
+  {m:"девять",t:"neun",s:"Grundzahlen 1-10",e:"9",o:["neun","zehn","acht","одиннадцать"],r:["девять","десять","восемь","одиннадцать"],ctx:[{ru:"Девять евро.",de:"Neun Euro."}]},
+  {m:"десять",t:"zehn",s:"Grundzahlen 1-10",e:"10",o:["zehn","elf","neun","zwölf"],r:["десять","одиннадцать","девять","двенадцать"],ctx:[{ru:"Десять минут пешком.",de:"Zehn Minuten zu Fuß."}]},
+  {m:"одиннадцать",t:"elf",s:"Zahlen 11-19",e:"11",o:["elf","zwölf","zehn","dreizehn"],r:["одиннадцать","двенадцать","десять","тринадцать"],ctx:[{ru:"Одиннадцать часов.",de:"Elf Uhr."}]},
+  {m:"двенадцать",t:"zwölf",s:"Zahlen 11-19",e:"12",o:["zwölf","dreizehn","elf","vierzehn"],r:["двенадцать","тринадцать","одиннадцать","четырнадцать"],ctx:[{ru:"Двенадцать месяцев в году.",de:"Zwölf Monate im Jahr."}]},
+  {m:"тринадцать",t:"dreizehn",s:"Zahlen 11-19",e:"13",o:["dreizehn","vierzehn","zwölf","fünfzehn"],r:["тринадцать","четырнадцать","двенадцать","пятнадцать"],ctx:[{ru:"Тринадцатое число.",de:"Der dreizehnte."}]},
+  {m:"четырнадцать",t:"vierzehn",s:"Zahlen 11-19",e:"14",o:["vierzehn","fünfzehn","dreizehn","sechzehn"],r:["четырнадцать","пятнадцать","тринадцать","шестнадцать"],ctx:[{ru:"Четырнадцать дней.",de:"Vierzehn Tage."}]},
+  {m:"пятнадцать",t:"fünfzehn",s:"Zahlen 11-19",e:"15",o:["fünfzehn","sechzehn","vierzehn","siebzehn"],r:["пятнадцать","шестнадцать","четырнадцать","семнадцать"],ctx:[{ru:"Пятнадцать минут.",de:"Fünfzehn Minuten."}]},
+  {m:"шестнадцать",t:"sechzehn",s:"Zahlen 11-19",e:"16",o:["sechzehn","siebzehn","fünfzehn","achtzehn"],r:["шестнадцать","семнадцать","пятнадцать","восемнадцать"],ctx:[{ru:"Шестнадцать лет.",de:"Sechzehn Jahre alt."}]},
+  {m:"семнадцать",t:"siebzehn",s:"Zahlen 11-19",e:"17",o:["siebzehn","achtzehn","sechzehn","neunzehn"],r:["семнадцать","восемнадцать","шестнадцать","девятнадцать"],ctx:[{ru:"Семнадцатое июля.",de:"Der siebzehnte Juli."}]},
+  {m:"восемнадцать",t:"achtzehn",s:"Zahlen 11-19",e:"18",o:["achtzehn","neunzehn","siebzehn","zwanzig"],r:["восемнадцать","девятнадцать","семнадцать","двадцать"],ctx:[{ru:"Восемнадцать лет — совершеннолетие.",de:"Achtzehn Jahre — Volljährigkeit."}]},
+  {m:"девятнадцать",t:"neunzehn",s:"Zahlen 11-19",e:"19",o:["neunzehn","zwanzig","achtzehn","einundzwanzig"],r:["девятнадцать","двадцать","восемнадцать","двадцать один"],ctx:[{ru:"Девятнадцатый век.",de:"Das neunzehnte Jahrhundert."}]},
+  {m:"двадцать",t:"zwanzig",s:"Runde Zahlen",e:"20",o:["zwanzig","dreißig","neunzehn","zehn"],r:["двадцать","тридцать","девятнадцать","десять"],ctx:[{ru:"Двадцать евро.",de:"Zwanzig Euro."}]},
+  {m:"двадцать один",t:"einundzwanzig",s:"Zusammengesetzte Zahlen",e:"21",x:"Ziffern einfach aneinanderhängen",mn:"двадцать один, двадцать два, двадцать три...",o:["einundzwanzig","zwanzig","zweiundzwanzig","dreißig"],r:["двадцать один","двадцать","двадцать два","тридцать"],ctx:[{ru:"Двадцать один год.",de:"Einundzwanzig Jahre."}]},
+  {m:"тридцать",t:"dreißig",s:"Runde Zahlen",e:"30",o:["dreißig","zwanzig","vierzig","zehn"],r:["тридцать","двадцать","сорок","десять"],ctx:[{ru:"Тридцать градусов тепла.",de:"Dreißig Grad Wärme."}]},
+  {m:"сорок",t:"vierzig",s:"Runde Zahlen",e:"40",x:"Ausnahme: сорок (nicht четырьдесят!)",mn:"сорок — unregelmäßig!",o:["vierzig","dreißig","fünfzig","zwanzig"],r:["сорок","тридцать","пятьдесят","двадцать"],ctx:[{ru:"Сорок минут.",de:"Vierzig Minuten."}]},
+  {m:"пятьдесят",t:"fünfzig",s:"Runde Zahlen",e:"50",o:["fünfzig","sechzig","vierzig","siebzig"],r:["пятьдесят","шестьдесят","сорок","семьдесят"],ctx:[{ru:"Пятьдесят процентов.",de:"Fünfzig Prozent."}]},
+  {m:"шестьдесят",t:"sechzig",s:"Runde Zahlen",e:"60",o:["sechzig","siebzig","fünfzig","achtzig"],r:["шестьдесят","семьдесят","пятьдесят","восемьдесят"],ctx:[{ru:"Шестьдесят секунд в минуте.",de:"Sechzig Sekunden in einer Minute."}]},
+  {m:"семьдесят",t:"siebzig",s:"Runde Zahlen",e:"70",o:["siebzig","achtzig","sechzig","neunzig"],r:["семьдесят","восемьдесят","шестьдесят","девяносто"],ctx:[{ru:"Семьдесят лет.",de:"Siebzig Jahre."}]},
+  {m:"восемьдесят",t:"achtzig",s:"Runde Zahlen",e:"80",o:["achtzig","neunzig","siebzig","hundert"],r:["восемьдесят","девяносто","семьдесят","сто"],ctx:[{ru:"Восемьдесят километров в час.",de:"Achtzig Kilometer pro Stunde."}]},
+  {m:"девяносто",t:"neunzig",s:"Runde Zahlen",e:"90",x:"Ausnahme: девяносто (nicht девятьдесят!)",mn:"девяносто — unregelmäßig wie сорок!",o:["neunzig","achtzig","hundert","siebzig"],r:["девяносто","восемьдесят","сто","семьдесят"],ctx:[{ru:"Девяносто дней.",de:"Neunzig Tage."}]},
+  {m:"сто",t:"hundert",s:"Große Zahlen",e:"100",o:["hundert","tausend","neunzig","zweihundert"],r:["сто","тысяча","девяносто","двести"],ctx:[{ru:"Сто рублей.",de:"Hundert Rubel."}]},
+  {m:"двести",t:"zweihundert",s:"Große Zahlen",e:"200",x:"200=двести, 300=триста, 400=четыреста",mn:"двести, триста, четыреста, пятьсот...",o:["zweihundert","dreihundert","hundert","vierhundert"],r:["двести","триста","сто","четыреста"],ctx:[{ru:"Двести евро.",de:"Zweihundert Euro."}]},
+  {m:"тысяча",t:"tausend",s:"Große Zahlen",e:"1000",o:["tausend","hundert","zweitausend","zehntausend"],r:["тысяча","сто","две тысячи","десять тысяч"],ctx:[{ru:"Тысяча километров.",de:"Tausend Kilometer."}]},
+  {m:"миллион",t:"Million",s:"Große Zahlen",e:"1 000 000",o:["Million","Milliarde","Tausend","Hundert"],r:["миллион","миллиард","тысяча","сто"],ctx:[{ru:"Миллион рублей.",de:"Eine Million Rubel."}]},
+  {m:"первый / первая",t:"erste/r/s",s:"Ordinalzahlen",e:"1.",x:"первый(m), первая(f), первое(n)",mn:"первый раз (das erste Mal), первая страница (die erste Seite)",o:["erste/r/s","zweite/r/s","dritte/r/s","vierte/r/s"],r:["первый","второй","третий","четвёртый"],ctx:[{ru:"Первый этаж.",de:"Das erste Stockwerk / Erdgeschoss."}]},
+  {m:"второй / вторая",t:"zweite/r/s",s:"Ordinalzahlen",e:"2.",o:["zweite/r/s","erste/r/s","dritte/r/s","vierte/r/s"],r:["второй","первый","третий","четвёртый"],ctx:[{ru:"Второй раз.",de:"Das zweite Mal."}]},
+  {m:"третий / третья",t:"dritte/r/s",s:"Ordinalzahlen",e:"3.",x:"Unregelmäßig: третий/третья/третье",mn:"третий этаж (dritte Etage), третья улица (dritte Straße)",o:["dritte/r/s","zweite/r/s","vierte/r/s","fünfte/r/s"],r:["третий","второй","четвёртый","пятый"],ctx:[{ru:"Третья улица налево.",de:"Die dritte Straße links."}]},
+  {m:"четвёртый / пятый",t:"vierte/r/s / fünfte/r/s",s:"Ordinalzahlen",e:"4. / 5.",o:["4./5.","2./3.","6./7.","8./9."],r:["четвёртый/пятый","второй/третий","шестой/седьмой","восьмой/девятый"],ctx:[{ru:"Четвёртый апреля. Пятый этаж.",de:"Der vierte April. Die fünfte Etage."}]},
+  {m:"Который час?",t:"Wie spät ist es?",s:"Uhrzeit",e:"Kotoryj tschas?",x:"Antwort: час (1 Uhr), два часа (2-4 Uhr), пять часов (5+ Uhr)",mn:"Сейчас два часа. / Сейчас пять часов.",o:["Wie spät ist es?","Wann?","Wie lange?","Um wie viel Uhr?"],r:["Который час?","Когда?","Как долго?","В котором часу?"],ctx:[{ru:"Который час? — Сейчас три часа дня.",de:"Wie spät ist es? — Es ist drei Uhr nachmittags."}]},
+  {m:"В котором часу?",t:"Um wie viel Uhr?",s:"Uhrzeit",e:"W kotorom tschasu?",x:"Präposition в + Präpositional der Zahl",mn:"В три часа. В пять часов. В полдень.",o:["Um wie viel Uhr?","Wie spät?","Wie lange?","Wann?"],r:["В котором часу?","Который час?","Как долго?","Когда?"],ctx:[{ru:"В котором часу поезд? — В девять часов.",de:"Um wie viel Uhr fährt der Zug? — Um neun Uhr."}]},
+  {m:"полдень / полночь",t:"Mittag / Mitternacht",s:"Uhrzeit",e:"12:00 / 0:00",x:"полдень=Mittag (12:00), полночь=Mitternacht (0:00)",mn:"В полдень мы едим. / В полночь наступает Новый год.",o:["Mittag/Mitternacht","Morgen/Abend","Vormittag/Nachmittag","Sonnenaufgang/-untergang"],r:["полдень/полночь","утро/вечер","до обеда/после обеда","рассвет/закат"],ctx:[{ru:"Встреча в полдень.",de:"Treffen um Mittag."}]},
+  {m:"утром / вечером / ночью",t:"morgens / abends / nachts",s:"Tageszeiten",e:"Zeitangaben",x:"утром=morgens, днём=mittags, вечером=abends, ночью=nachts",mn:"Я встаю утром. / Мы ужинаем вечером.",o:["morgens/abends/nachts","früh/spät","vor/nach","heute/gestern"],r:["утром/вечером/ночью","рано/поздно","до/после","сегодня/вчера"],ctx:[{ru:"Утром пью кофе, вечером чай.",de:"Morgens trinke ich Kaffee, abends Tee."}]},
+  {m:"сколько стоит?",t:"Wie viel kostet das?",s:"Geld & Preise",e:"Skolko stoit?",x:"Preis angeben: стоит + Zahl + рублей/евро",mn:"Сколько стоит? — Двадцать евро.",o:["Wie viel kostet das?","Wie viel ist das?","Wie teuer?","Was kostet?"],r:["Сколько стоит?","Сколько это?","Как дорого?","Что стоит?"],ctx:[{ru:"Сколько стоит билет? — Пятьдесят рублей.",de:"Was kostet das Ticket? — Fünfzig Rubel."}]},
+  {m:"рубль / евро / цент",t:"Rubel / Euro / Cent",s:"Geld & Preise",e:"Währungen",x:"1 рубль, 2-4 рубля, 5+ рублей",mn:"один евро, два евро, пять евро",o:["Rubel/Euro/Cent","Pfund/Dollar/Yen","Krone/Franc","Lira/Peso"],r:["рубль/евро/цент","фунт/доллар/иена","крона/франк","лира/песо"],ctx:[{ru:"Это стоит двадцать евро.",de:"Das kostet zwanzig Euro."}]},
+  {m:"дешёво / дорого",t:"billig / teuer",s:"Geld & Preise",e:"Preisbewertung",x:"дёшево=billig, дорого=teuer",mn:"Это слишком дорого. / Очень дёшево!",o:["billig/teuer","günstig/teuer","preiswert/kostspielig","erschwinglich/unerschwinglich"],r:["дёшево/дорого","недорого/дорого","по цене/дорого","доступно/недоступно"],ctx:[{ru:"Это слишком дорого. Есть что-то подешевле?",de:"Das ist zu teuer. Haben Sie etwas Günstigeres?"}]},
+  {m:"скидка / акция",t:"Rabatt / Aktion/Angebot",s:"Geld & Preise",e:"Einkaufen",mn:"Есть скидка? (Gibt es Rabatt?) / Сегодня акция! (Heute Sonderangebot!)",o:["Rabatt/Aktion","Preis/Kosten","Rechnung/Quittung","Kasse/Zahlung"],r:["скидка/акция","цена/стоимость","счёт/чек","касса/оплата"],ctx:[{ru:"Есть скидка на этот товар?",de:"Gibt es Rabatt auf diesen Artikel?"}]},
+  {m:"сдача",t:"Wechselgeld",s:"Geld & Preise",e:"Sdatscha",mn:"Держите сдачу. (Behalten Sie das Wechselgeld.)",o:["Wechselgeld","Trinkgeld","Preis","Rechnung"],r:["сдача","чаевые","цена","счёт"],ctx:[{ru:"Вот ваша сдача — пять евро.",de:"Hier ist Ihr Wechselgeld — fünf Euro."}]},
+  {m:"много / мало / немного",t:"viel / wenig / ein bisschen",s:"Mengenangaben",e:"Mengen",x:"много + Genitiv: много воды (viel Wasser)",mn:"много людей, мало времени, немного денег",o:["viel/wenig/ein bisschen","alle/keine","einige/mehrere","zu viel/zu wenig"],r:["много/мало/немного","все/никто","некоторые/несколько","слишком много/слишком мало"],ctx:[{ru:"Много работы, мало времени.",de:"Viel Arbeit, wenig Zeit."}]},
+  {m:"несколько / пара",t:"einige / ein paar",s:"Mengenangaben",e:"несколько + Genitiv",mn:"несколько минут (einige Minuten), пара часов (ein paar Stunden)",o:["einige/ein paar","viele/wenige","alle/keine","mehr/weniger"],r:["несколько/пара","много/мало","все/никого","больше/меньше"],ctx:[{ru:"Подождите несколько минут.",de:"Warten Sie einige Minuten."}]},
+  {m:"раз / два раза / три раза",t:"einmal / zweimal / dreimal",s:"Häufigkeit",e:"Wie oft?",x:"раз=mal: один раз, два раза, пять раз",mn:"один раз в день (einmal täglich), два раза в неделю (zweimal wöchentlich)",o:["einmal/zweimal/dreimal","täglich/wöchentlich/monatlich","oft/selten","immer/nie"],r:["раз/два раза/три раза","каждый день/неделю/месяц","часто/редко","всегда/никогда"],ctx:[{ru:"Я хожу в спортзал три раза в неделю.",de:"Ich gehe dreimal pro Woche ins Fitnessstudio."}]},
+  {m:"каждый день / каждую неделю",t:"jeden Tag / jede Woche",s:"Häufigkeit",e:"Regelmäßigkeit",mn:"каждый день (jeden Tag), каждую неделю (jede Woche), каждый месяц (jeden Monat)",o:["jeden Tag/jede Woche","einmal/zweimal","oft/selten","manchmal/immer"],r:["каждый день/неделю","раз/два раза","часто/редко","иногда/всегда"],ctx:[{ru:"Я учу русский каждый день.",de:"Ich lerne jeden Tag Russisch."}]},
+  {m:"Сколько тебе лет?",t:"Wie alt bist du?",s:"Alter",e:"Skolko tebe let?",x:"Mне + Zahl + лет/год/года",mn:"Мне двадцать лет. / Ему тридцать пять лет.",o:["Wie alt bist du?","Wann bist du geboren?","Wie lange?","Wie viel?"],r:["Сколько лет?","Когда родился?","Как долго?","Сколько стоит?"],ctx:[{ru:"Сколько тебе лет? — Мне двадцать пять лет.",de:"Wie alt bist du? — Ich bin fünfundzwanzig Jahre alt."}]},
+  {m:"мне ... лет",t:"Ich bin ... Jahre alt",s:"Alter",e:"Mnje ... let",x:"1 год, 2-4 года, 5-20 лет, 21 год, 22 года...",mn:"Мне 21 год. / Мне 22 года. / Мне 25 лет.",o:["Ich bin X Jahre alt","Ich werde X","Ich war X","Ich bin seit X"],r:["Мне X лет","Мне исполнится X","Мне было X","Мне уже X"],ctx:[{ru:"Мне тридцать лет.",de:"Ich bin dreißig Jahre alt."}]},
+  {m:"первое января / второе февраля",t:"der erste Januar / der zweite Februar",s:"Datum",e:"Datumsangaben",x:"Ordinalzahl im Neutrum + Monatsname im Genitiv",mn:"первое января (1. Januar), второе марта (2. März)",o:["Ordinalzahl Neutrum + Genitiv Monat","Kardinalzahl + Nominativ","Ordinalzahl + Nominativ","Nur Monat"],r:["Первое января","Один январь","Первый январь","Январь"],ctx:[{ru:"Сегодня первое июня.",de:"Heute ist der erste Juni."}]},
+  {m:"в этом году / в прошлом году",t:"dieses Jahr / letztes Jahr",s:"Zeitangaben",e:"Jahreszahlen",x:"в + Präpositional: в этом году, в прошлом году, в следующем году",mn:"в этом году (dieses Jahr) / в прошлом году (letztes Jahr) / в следующем году (nächstes Jahr)",o:["dieses/letztes/nächstes Jahr","heute/gestern/morgen","diese/letzte/nächste Woche","diesen/letzten/nächsten Monat"],r:["в этом/прошлом/следующем году","сегодня/вчера/завтра","на этой/прошлой/следующей неделе","в этом/прошлом/следующем месяце"],ctx:[{ru:"В прошлом году я был в России.",de:"Letztes Jahr war ich in Russland."}]},
 ],
-
 colors:[
   {m:"красный",s:"rot (maskulin)",t:"rot",e:"красный цвет",x:"Adjektiv m.",mn:"KRASnyj — der Rote Platz heißt Красная площадь!",o:["rot","blau","grün","gelb"],r:["красный","синий","зелёный","жёлтый"]},
   {m:"синий",s:"blau (maskulin)",t:"blau",e:"синее небо",x:"Adjektiv m.",mn:"SI-nij — klingt wie 'Sinie' — Meer ist blau",o:["blau","rot","grün","lila"],r:["синий","красный","зелёный","фиолетовый"]},
@@ -1028,6 +1140,86 @@ function saveSD(d){_ls('ru_str_'+cu,JSON.stringify(d));}
 function getErrs(){try{return JSON.parse(_lg('ru_errs_'+cu)||'[]');}catch(e){return[];}}
 function saveErrs(e){_ls('ru_errs_'+cu,JSON.stringify(e));}
 
+
+
+function showGrammarMenu(){
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var topics=[
+    {key:'grammar',icon:'&#128209;',title:'Grundgrammatik',desc:'Geschlechter, Satzbau, Haben-Konstruktion',count:C.grammar?C.grammar.length:0},
+    {key:'grammar_faelle',icon:'&#128218;',title:'Fälle & Deklination',desc:'Die 6 russischen Fälle + Adjektive',count:C.grammar_faelle?C.grammar_faelle.length:0},
+    {key:'grammar_verben',icon:'&#9997;️',title:'Verben & Zeitformen',desc:'Konjugation, Vergangenheit, Zukunft',count:C.grammar_verben?C.grammar_verben.length:0},
+    {key:'grammar_pronomen',icon:'&#128100;',title:'Pronomen',desc:'Personal- und Possessivpronomen',count:C.grammar_pronomen?C.grammar_pronomen.length:0},
+    {key:'grammar_praepositionen',icon:'&#128205;',title:'Präpositionen',desc:'Orts- und Zeitpräpositionen',count:C.grammar_praepositionen?C.grammar_praepositionen.length:0},
+  ];
+  var inner='<div class="levelup-box" style="max-width:360px;width:94%;padding:1.5rem 1.2rem;">';
+  inner+='<div style="font-size:1.1rem;font-weight:900;margin-bottom:1rem;color:var(--cyan);">&#128209; Grammatik</div>';
+  topics.forEach(function(t){
+    var dkey=t.key;
+    inner+='<div data-key="'+dkey+'" class="gram-topic-row" '+
+      'style="display:flex;align-items:center;gap:.7rem;padding:.65rem .8rem;margin-bottom:.4rem;'+
+      'background:var(--glass);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;">';
+    inner+='<span style="font-size:1.3rem;">'+t.icon+'</span>';
+    inner+='<div style="flex:1;text-align:left;">';
+    inner+='<div style="font-size:.88rem;font-weight:700;">'+t.title+'</div>';
+    inner+='<div style="font-size:.72rem;color:var(--text3);">'+t.desc+' &mdash; '+t.count+' Karten</div>';
+    inner+='</div>';
+    inner+='<span style="color:var(--cyan);font-size:.9rem;">&#8594;</span>';
+    inner+='</div>';
+  });
+  inner+='<button class="btn gram-cancel-btn" style="width:100%;margin-top:.5rem;background:var(--glass);border-color:var(--border);font-size:.82rem;">Abbrechen</button>';
+  inner+='</div>';
+  ov.innerHTML=inner;
+  document.body.appendChild(ov);
+  var cancelBtn=ov.querySelector('.gram-cancel-btn');
+  if(cancelBtn)cancelBtn.addEventListener('click',function(){ov.remove();});
+  ov.querySelectorAll('.gram-topic-row').forEach(function(row){
+    row.addEventListener('click',function(){
+      var key=this.getAttribute('data-key');
+      ov.remove();
+      startSec(key);
+    });
+    row.addEventListener('mouseover',function(){this.style.borderColor='var(--cyan)';});
+    row.addEventListener('mouseout',function(){this.style.borderColor='var(--border)';});
+  });
+}
+
+function updateLastSession(){
+  try{
+    var ls=JSON.parse(localStorage.getItem('lastSession')||'null');
+    var info=document.getElementById('lastSessionInfo');
+    var btn=document.getElementById('lastSessionBtn');
+    if(!ls||!info||!btn){return;}
+    var secNames={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grundgrammatik',
+      grammar_cases:'Fälle & Deklination',grammar_verbs:'Verben & Zeitformen',
+      grammar_pronouns:'Pronomen',grammar_prepositions:'Präpositionen',
+      listening:'Hören',speaking:'Sprechen',sentences:'Sätze',
+      reading:'Lesen',numbers:'Zahlen',colors:'Farben',
+      weekdays:'Wochentage',custom:'Eigene Vokabeln'};
+    var us=GU();
+    var prog=us[cu]&&us[cu].progress?us[cu].progress[ls.sec]||0:0;
+    var data=C[ls.sec];
+    var total=data?data.length:0;
+    var name=secNames[ls.sec]||ls.sec;
+    var diff=ls.cd?ls.cd.replace('anfaenger','A1').replace('standard','A2').replace('fort','B1').replace('profi','B2'):'';
+    var ago=Math.round((Date.now()-ls.ts)/60000);
+    var agoStr=ago<60?(ago+'min'):Math.round(ago/60)+'h';
+    info.innerHTML='<strong>'+name+'</strong> '+diff+
+      '<br><span style="font-size:.78rem;color:var(--text3);">'+prog+' von '+total+' gelernt &mdash; vor '+agoStr+'</span>';
+    btn.style.display='block';
+  }catch(e){}
+}
+
+function continueLastSession(){
+  try{
+    var ls=JSON.parse(localStorage.getItem('lastSession')||'null');
+    if(ls&&ls.sec){
+      cd=ls.cd||cd;
+      startSec(ls.sec);
+    }
+  }catch(e){}
+}
+
 function updateStreak(){
   const sd=getSD(),today=new Date().toDateString();
   if(sd.last===today)return;
@@ -1081,7 +1273,14 @@ function login(){
   const us=GU();if(!us[u]||us[u].password!==p){alert('Falscher Name oder Passwort!');return;}
   cu=u;cd=us[u].diff||'standard';_ls('ru_cur',u);
   if(!us[cu].stats.totalXp)us[cu].stats.totalXp=us[cu].stats.totalPoints||0;SU(us);
-  if(!us[u].diffSet){renderDiffCards();showSc('scDiff');}else showDash();
+  if(!us[u].onboarded){
+    // Neuer Nutzer oder bestehender ohne Onboarding → Onboarding zeigen
+    showSc('scOnboard');
+  } else if(!us[u].diffSet){
+    renderDiffCards();showSc('scDiff');
+  } else {
+    showDash();
+  }
 }
 function logout(){cu=null;try{localStorage.removeItem('ru_cur');}catch(e){}showSc('scLogin');}
 
@@ -1102,7 +1301,7 @@ function changeDiff(){sd=cd;renderDiffCards();showSc('scDiff');}
 function confirmDiff(){cd=sd;const us=GU();us[cu].diff=cd;us[cu].diffSet=true;SU(us);showDash();}
 
 function showDash(){
-  showSc('scDash');updateStreak();
+  showSc('scDash');updateStreak();setTimeout(checkAchievements,800);
   const us=GU(),d=us[cu];
   document.getElementById('dName').textContent=cu;
   if(!d.stats.totalXp)d.stats.totalXp=d.stats.totalPoints||0;
@@ -1113,7 +1312,8 @@ function showDash(){
   document.getElementById('xpBar').style.width=Math.round((li.cur/li.need)*100)+'%';
   document.getElementById('dPts').textContent=d.stats.totalPoints||0;
   const srs=GS(),now=Date.now();
-  document.getElementById('dRep').textContent=Object.values(srs).filter(v=>v.nr&&v.nr<=now).length;
+  var dueCount=Object.values(srs).filter(function(v){return v.nr&&v.nr<=now;}).length;
+  document.getElementById('dRep').textContent=dueCount;
   const errs=getErrs();document.getElementById('dRetry').textContent=errs.length;
   const strData=getSD();
   document.getElementById('streakNum').textContent=strData.days.length||0;
@@ -1138,11 +1338,11 @@ function showDash(){
   document.getElementById('goalTarget').textContent=goal;
   const msgs=['Los geht\'s! Starte deine erste Runde!','Weiter so, du machst das super!','Halbzeit! Noch die H\xe4lfte!','Fast geschafft!','Tagesziel erreicht! &#127881;'];
   document.getElementById('goalMsg').innerHTML=msgs[Math.min(4,Math.floor(pct/25))];
-  document.getElementById('tCards').textContent=done2;
-  document.getElementById('tWords').textContent=ts.words||0;
-  document.getElementById('tPts').textContent=ts.points||0;
+  // tCards/tWords/tPts entfernt - jetzt lastSession
   const acc=ts.total>0?Math.round((ts.correct/ts.total)*100):0;
   document.getElementById('tAcc').textContent=acc+'%';
+  // Zuletzt stehen geblieben aktualisieren
+  updateLastSession();
   document.getElementById('accBar').style.width=acc+'%';
   document.getElementById('diffE').textContent=cfg.e;
   document.getElementById('diffL').textContent=cfg.l;
@@ -1153,7 +1353,7 @@ function showDash(){
     const doneN=d.progress[sec.id]||0,pctN=Math.min(100,Math.round((doneN/data.length)*100));
     const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
     const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
-    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():()=>startSec(sec.id);
+    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():()=>startSec(sec.id);
     const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
     row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
     pfEl.appendChild(row);
@@ -1169,7 +1369,11 @@ const DIFF_RANGES={
   alphabet:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
   vocabulary:{anfaenger:[0,12],standard:[0,25],fort:[0,40],profi:[0,999]},
   sentences:{anfaenger:[0,5],standard:[0,12],fort:[0,20],profi:[0,999]},
-  grammar:{anfaenger:[0,5],standard:[0,12],fort:[0,20],profi:[0,999]},
+  grammar:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
+  grammar_faelle:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
+  grammar_verben:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
+  grammar_pronomen:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
+  grammar_praepositionen:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
   numbers:{anfaenger:[0,10],standard:[0,16],fort:[0,22],profi:[0,999]},
   colors:{anfaenger:[0,5],standard:[0,8],fort:[0,12],profi:[0,999]},
   weekdays:{anfaenger:[0,7],standard:[0,14],fort:[0,20],profi:[0,999]},
@@ -1191,6 +1395,25 @@ function getDifficultyPool(data,diffKey,sec){
 }
 
 function startSec(sec){
+  // Themen-Vokabeln bei Vokabeln mischen
+  if(sec==='vocabulary'){
+    var us2=GU();
+    if(us2[cu]&&us2[cu].themeVocab&&typeof THEME_VOCAB!=='undefined'){
+      var themeWords=THEME_VOCAB[us2[cu].themeVocab]||[];
+      if(themeWords.length>0){
+        // Themen-Wörter in vocabulary mischen (erste 10)
+        var existing=C['vocabulary']||[];
+        var themeSlice=themeWords.slice(0,10);
+        // Nur hinzufügen wenn noch nicht drin
+        themeSlice.forEach(function(w){
+          if(!existing.some(function(e){return e.m===w.m;})){
+            existing.unshift(w);
+          }
+        });
+        C['vocabulary']=existing;
+      }
+    }
+  }
   if(sec==='custom'){
     const customCards=getCustomCards();
     if(!customCards.length){showCustomScreen();return;}
@@ -1227,11 +1450,13 @@ function startSec(sec){
   }
 
   ci=0;sp=0;sc=0;sw=0;spkIdx=0;
+  // Letzte Session speichern
+  try{var _ls={sec:sec,cd:cd,ts:Date.now()};localStorage.setItem('lastSession',JSON.stringify(_ls));}catch(e){}
   // nextBtn onclick zurücksetzen (könnte vom Alphabet-Quiz überschrieben sein)
   var _nb=document.getElementById('nextBtn');
   if(_nb){_nb.onclick=null;_nb.setAttribute('onclick','nextCard()');_nb.innerHTML='Weiter &#8594;';}
   const from=done+1,to=Math.min(done+bs,data.length);
-  const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grammatik',listening:'H\xf6ren',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',custom:'Eigene Vokabeln'};
+  const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grundgrammatik',grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',listening:'H\xf6ren',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',custom:'Eigene Vokabeln'};
   document.getElementById('lTitle').textContent=(tt[sec]||sec)+' '+cfg.e+' ('+from+'\u2013'+to+'/'+data.length+')';
   if(sec==='speaking'){
     document.getElementById('spkTitle').textContent='Sprechen '+cfg.e;
@@ -1245,7 +1470,7 @@ function loadCard(){
   const item=cb[ci];
   // Gap-Karte: andere Darstellung
   if(item&&item.type==='gap'){loadGapCard(item);return;}
-  const lb={alphabet:'BUCHSTABE',vocabulary:'VOKABEL',grammar:'GRAMMATIK',listening:'H\xd6REN',speaking:'SPRECHEN',sentences:'SATZ',reading:'TEXT',numbers:'ZAHL',colors:'FARBE',weekdays:'WOCHENTAG',custom:'EIGENE'};
+  const lb={alphabet:'BUCHSTABE',vocabulary:'VOKABEL',grammar:'GRAMMATIK',grammar_faelle:'FÄLLE',grammar_verben:'VERBEN',grammar_pronomen:'PRONOMEN',grammar_praepositionen:'PRÄPOS.',listening:'H\xd6REN',speaking:'SPRECHEN',sentences:'SATZ',reading:'TEXT',numbers:'ZAHL',colors:'FARBE',weekdays:'WOCHENTAG',custom:'EIGENE'};
   document.getElementById('cBadge').textContent=lb[cs]||cs.toUpperCase();
   document.getElementById('cMain').textContent=item.m;
   document.getElementById('cSub').textContent='Aussprache: '+item.s;
@@ -1779,6 +2004,311 @@ function levenshteinSim(a,b){
 }
 // ===== ENDE SPRECHEN =====
 
+
+
+
+// ===== ACHIEVEMENTS =====
+const ACHIEVEMENTS=[
+  {id:'first_login',icon:'&#127775;',title:'Erster Schritt',desc:'Zum ersten Mal eingeloggt',xp:10,check:function(us){return us.stats&&(us.stats.totalXp||0)>0;}},
+  {id:'streak3',icon:'&#128293;',title:'Auf Feuer',desc:'3 Tage Streak',xp:20,check:function(us){return (us.stats&&us.stats.streak||0)>=3;}},
+  {id:'streak7',icon:'&#127882;',title:'Woche Stark',desc:'7 Tage Streak',xp:50,check:function(us){return (us.stats&&us.stats.streak||0)>=7;}},
+  {id:'streak30',icon:'&#129351;',title:'Unaufhaltsam',desc:'30 Tage Streak',xp:200,check:function(us){return (us.stats&&us.stats.streak||0)>=30;}},
+  {id:'level5',icon:'&#11088;',title:'Aufsteiger',desc:'Level 5 erreicht',xp:50,check:function(us){return getLvlInfo(us.stats&&us.stats.totalXp||0).lvl>=5;}},
+  {id:'level10',icon:'&#127942;',title:'Meister',desc:'Level 10 erreicht',xp:150,check:function(us){return getLvlInfo(us.stats&&us.stats.totalXp||0).lvl>=10;}},
+  {id:'vocab50',icon:'&#128218;',title:'Wortschatz',desc:'50 Vokabeln gelernt',xp:30,check:function(us){return (us.progress&&us.progress.vocabulary||0)>=50;}},
+  {id:'vocab200',icon:'&#128524;',title:'Vokabel-Profi',desc:'200 Vokabeln gelernt',xp:100,check:function(us){return (us.progress&&us.progress.vocabulary||0)>=200;}},
+  {id:'quiz10',icon:'&#127891;',title:'Quiz-Starter',desc:'10 Quizfragen richtig beantwortet',xp:20,check:function(us){return (us.stats&&us.stats.totalPoints||0)>=10;}},
+  {id:'quiz100',icon:'&#127775;',title:'Quiz-Meister',desc:'100 Quizfragen richtig',xp:75,check:function(us){return (us.stats&&us.stats.totalPoints||0)>=100;}},
+  {id:'alphabet_done',icon:'&#1071;',title:'Alphabet-Kenner',desc:'Alle Buchstaben gelernt',xp:40,check:function(us){return (us.progress&&us.progress.alphabet||0)>=33;}},
+  {id:'speak10',icon:'&#127908;',title:'Sprecher',desc:'10 Wörter nachgesprochen',xp:25,check:function(us){return (us.progress&&us.progress.speaking||0)>=10;}},
+  {id:'perfectquiz',icon:'&#10004;',title:'Perfektionist',desc:'Quiz ohne einen Fehler abgeschlossen',xp:30,check:function(us){return us._perfectQuiz||false;}},
+  {id:'early_bird',icon:'&#127774;',title:'Frühaufsteher',desc:'Vor 8 Uhr morgens gelernt',xp:15,check:function(us){return us._earlyBird||false;}},
+  {id:'night_owl',icon:'&#127762;',title:'Nachteule',desc:'Nach 22 Uhr gelernt',xp:15,check:function(us){return us._nightOwl||false;}},
+  {id:'goal_urlaub',icon:'&#9992;',title:'Reiselustig',desc:'Urlaubs-Vokabeln gelernt',xp:20,check:function(us){return us.themeVocab==='urlaub'&&(us.progress&&us.progress.vocabulary||0)>=5;}},
+  {id:'goal_beruf',icon:'&#128188;',title:'Geschäftsmann',desc:'Berufs-Vokabeln gelernt',xp:20,check:function(us){return us.themeVocab==='beruf'&&(us.progress&&us.progress.vocabulary||0)>=5;}},
+  {id:'srs_10',icon:'&#128260;',title:'Wiederhol-Held',desc:'10 Karten per SRS wiederholt',xp:20,check:function(us){return (us._srsCount||0)>=10;}},
+  {id:'grammar_done',icon:'&#128209;',title:'Grammatiker',desc:'Grundgrammatik abgeschlossen',xp:50,check:function(us){return (us.progress&&us.progress.grammar||0)>=(C.grammar&&C.grammar.length||14);}},
+  {id:'allpaths',icon:'&#127760;',title:'Allrounder',desc:'Alle Lernpfade gestartet',xp:100,check:function(us){var paths=['alphabet','vocabulary','grammar','listening','speaking','sentences'];return paths.every(function(p){return (us.progress&&us.progress[p]||0)>0;});}},
+];
+
+function checkAchievements(){
+  try{
+    var us=GU();if(!us[cu])return;
+    var earned=us[cu].achievements||{};
+    var newOnes=[];
+    // Tageszeit-Achievements
+    var h=new Date().getHours();
+    if(h<8)us[cu]._earlyBird=true;
+    if(h>=22)us[cu]._nightOwl=true;
+    ACHIEVEMENTS.forEach(function(a){
+      if(!earned[a.id]){
+        try{
+          if(a.check(us[cu])){
+            earned[a.id]={ts:Date.now()};
+            newOnes.push(a);
+            us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+a.xp;
+          }
+        }catch(e){}
+      }
+    });
+    us[cu].achievements=earned;
+    SU(us);
+    if(newOnes.length>0){
+      setTimeout(function(){showAchievementPopup(newOnes[0]);},600);
+    }
+  }catch(e){}
+}
+
+function showAchievementPopup(a){
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var html='<div class="levelup-box">';
+  html+='<div style="font-size:2.5rem;margin-bottom:.4rem;">'+a.icon+'</div>';
+  html+='<div style="font-size:.75rem;color:var(--cyan);font-weight:700;letter-spacing:.1em;margin-bottom:.2rem;">ACHIEVEMENT FREIGESCHALTET</div>';
+  html+='<div style="font-size:1.1rem;font-weight:900;margin-bottom:.2rem;">'+a.title+'</div>';
+  html+='<div style="font-size:.82rem;color:var(--text3);margin-bottom:.6rem;">'+a.desc+'</div>';
+  html+='<div style="font-size:1.2rem;font-weight:900;color:var(--cyan);margin-bottom:.8rem;">+'+a.xp+' XP</div>';
+  html+='<button class="btn primary" style="width:100%;" id="achBtn">Super!</button>';
+  html+='</div>';
+  ov.innerHTML=html;
+  document.body.appendChild(ov);
+  document.getElementById('achBtn').onclick=function(){ov.remove();};
+  setTimeout(function(){if(ov.parentNode)ov.remove();},4000);
+}
+
+function showAchievementsScreen(){
+  var us=GU();if(!us[cu])return;
+  var earned=us[cu].achievements||{};
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var html='<div class="levelup-box" style="max-width:400px;width:96%;max-height:80vh;overflow-y:auto;padding:1.2rem;">';
+  html+='<div style="font-size:1rem;font-weight:900;color:var(--cyan);margin-bottom:1rem;">&#127942; Achievements ('+Object.keys(earned).length+'/'+ACHIEVEMENTS.length+')</div>';
+  ACHIEVEMENTS.forEach(function(a){
+    var done=!!earned[a.id];
+    html+='<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem .6rem;margin-bottom:.3rem;background:var(--glass);border:1px solid '+(done?'rgba(0,229,200,.3)':'var(--border)')+';border-radius:var(--r-sm);opacity:'+(done?'1':'.45')+'">';
+    html+='<span style="font-size:1.4rem;">'+a.icon+'</span>';
+    html+='<div style="flex:1;text-align:left;">';
+    html+='<div style="font-size:.82rem;font-weight:700;">'+a.title+'</div>';
+    html+='<div style="font-size:.7rem;color:var(--text3);">'+a.desc+'</div>';
+    html+='</div>';
+    html+='<span style="font-size:.75rem;color:var(--cyan);">+'+a.xp+' XP</span>';
+    html+='</div>';
+  });
+  html+='<button class="btn" style="width:100%;margin-top:.8rem;background:var(--glass);" id="achCloseBtn">Schließen</button>';
+  html+='</div>';
+  ov.innerHTML=html;
+  document.body.appendChild(ov);
+  document.getElementById('achCloseBtn').onclick=function(){ov.remove();};
+}
+// ===== ENDE ACHIEVEMENTS =====
+
+// ===== ONBOARDING =====
+var _onbGoal=null,_onbLevel=null,_onbMins=null;
+
+function selectGoal(el){
+  document.querySelectorAll('#goalCards .onb-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  _onbGoal=el.getAttribute('data-goal');
+  document.getElementById('onbBtn1').disabled=false;
+}
+
+function selectLevel(el){
+  document.querySelectorAll('#onbStep2 .onb-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  _onbLevel=el.getAttribute('data-level');
+  document.getElementById('onbBtn2').disabled=false;
+}
+
+function selectMins(el){
+  document.querySelectorAll('#onbStep3 .onb-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');
+  _onbMins=parseInt(el.getAttribute('data-mins'));
+  document.getElementById('onbBtn3').disabled=false;
+}
+
+function onbNext1(){
+  document.getElementById('onbStep1').style.display='none';
+  document.getElementById('onbStep2').style.display='block';
+}
+
+function onbNext2(){
+  document.getElementById('onbStep2').style.display='none';
+  document.getElementById('onbStep3').style.display='block';
+}
+
+function finishOnboarding(){
+  var us=GU();
+  if(!us[cu])return;
+  // Ziel und Level speichern
+  us[cu].goal=_onbGoal||'allgemein';
+  us[cu].onboarded=true;
+  // Level setzen
+  var lvl=_onbLevel||'anfaenger';
+  us[cu].diff=lvl;
+  cd=lvl;
+  // Tagesziel nach Zeit
+  var mins=_onbMins||10;
+  var goalMap={5:5,10:10,20:20,30:30};
+  us[cu].dailyMins=mins;
+  // Themen-Vokabeln zu vocabulary hinzufügen
+  if(typeof THEME_VOCAB!=='undefined'&&THEME_VOCAB[_onbGoal]){
+    us[cu].themeVocab=_onbGoal;
+  }
+  SU(us);
+  // Willkommens-Popup
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var goalNames={urlaub:'Urlaub & Reisen',beruf:'Beruf & Business',familie:'Familie & Freunde',
+    kultur:'Kultur & Interesse',studium:'Studium',allgemein:'Allgemein'};
+  var html='<div class="levelup-box">';
+  html+='<div style="font-size:2.5rem;margin-bottom:.5rem;">&#127775;</div>';
+  html+='<div style="font-weight:900;font-size:1.1rem;margin-bottom:.3rem;">Alles bereit!</div>';
+  html+='<div style="font-size:.82rem;color:var(--text3);margin-bottom:1rem;">Ziel: <strong>'+
+    (goalNames[_onbGoal]||'Allgemein')+'</strong><br>Level: <strong>'+lvl.charAt(0).toUpperCase()+lvl.slice(1)+'</strong></div>';
+  html+='<button class="btn primary" style="width:100%;" id="onbFinBtn">Los geht\'s! &#127919;</button>';
+  html+='</div>';
+  ov.innerHTML=html;
+  document.body.appendChild(ov);
+  document.getElementById('onbFinBtn').onclick=function(){
+    ov.remove();
+    us[cu].diffSet=true;SU(us);
+    showDash();
+  };
+}
+
+function checkOnboarding(){
+  var us=GU();
+  if(us[cu]&&!us[cu].onboarded){
+    showSc('scOnboard');
+    return true;
+  }
+  return false;
+}
+// ===== ENDE ONBOARDING =====
+
+// ===== THEMEN-VOKABELN =====
+const THEME_VOCAB={
+  urlaub:[
+    {m:"аэропорт",t:"Flughafen",s:"Reise",e:"Aeroport"},
+    {m:"паспорт",t:"Pass",s:"Reise",e:"Pasport"},
+    {m:"билет",t:"Ticket/Fahrkarte",s:"Reise",e:"Biljét"},
+    {m:"гостиница",t:"Hotel",s:"Reise",e:"Gostinitsa"},
+    {m:"номер",t:"Zimmer/Nummer",s:"Reise",e:"Nomer"},
+    {m:"пляж",t:"Strand",s:"Reise",e:"Pljash"},
+    {m:"музей",t:"Museum",s:"Reise",e:"Musej"},
+    {m:"экскурсия",t:"Ausflug/Führung",s:"Reise",e:"Ekskursija"},
+    {m:"карта",t:"Karte/Landkarte",s:"Reise",e:"Karta"},
+    {m:"такси",t:"Taxi",s:"Reise",e:"Taksi"},
+    {m:"метро",t:"U-Bahn",s:"Reise",e:"Metro"},
+    {m:"вокзал",t:"Bahnhof",s:"Reise",e:"Woksal"},
+    {m:"поезд",t:"Zug",s:"Reise",e:"Pojest"},
+    {m:"самолёт",t:"Flugzeug",s:"Reise",e:"Samoljot"},
+    {m:"чемодан",t:"Koffer",s:"Reise",e:"Tschemodán"},
+    {m:"виза",t:"Visum",s:"Reise",e:"Wisa"},
+    {m:"обмен валюты",t:"Geldwechsel",s:"Reise",e:"Obmen waluty"},
+    {m:"ресторан",t:"Restaurant",s:"Reise",e:"Restoran"},
+    {m:"меню",t:"Speisekarte",s:"Reise",e:"Menju"},
+    {m:"счёт",t:"Rechnung",s:"Reise",e:"Stschjot"},
+    {m:"Где находится...?",t:"Wo befindet sich...?",s:"Reise",e:"Gde nachoditsja?"},
+    {m:"Сколько стоит номер?",t:"Was kostet das Zimmer?",s:"Reise",e:"Skolko stoit nomer?"},
+    {m:"Я хотел бы заселиться.",t:"Ich möchte einchecken.",s:"Reise",e:"Ja chotjel by sasselitsja."},
+    {m:"Где ближайшая остановка?",t:"Wo ist die nächste Haltestelle?",s:"Reise",e:"Gde blischaischaja ostanowka?"},
+    {m:"Один билет до..., пожалуйста.",t:"Ein Ticket nach..., bitte.",s:"Reise",e:"Odin bilet do..., poshalujsta."},
+  ],
+  beruf:[
+    {m:"офис",t:"Büro",s:"Beruf",e:"Ofis"},
+    {m:"коллега",t:"Kollege",s:"Beruf",e:"Kolljega"},
+    {m:"встреча",t:"Meeting/Treffen",s:"Beruf",e:"Wstretscha"},
+    {m:"переговоры",t:"Verhandlungen",s:"Beruf",e:"Peregowory"},
+    {m:"контракт",t:"Vertrag",s:"Beruf",e:"Kontrakt"},
+    {m:"клиент",t:"Kunde",s:"Beruf",e:"Klijent"},
+    {m:"презентация",t:"Präsentation",s:"Beruf",e:"Presjentatsija"},
+    {m:"компания",t:"Unternehmen",s:"Beruf",e:"Kompanija"},
+    {m:"зарплата",t:"Gehalt",s:"Beruf",e:"Sarplata"},
+    {m:"отпуск",t:"Urlaub",s:"Beruf",e:"Otpusk"},
+    {m:"командировка",t:"Dienstreise",s:"Beruf",e:"Komandirowka"},
+    {m:"электронная почта",t:"E-Mail",s:"Beruf",e:"Elektronnaja potschta"},
+    {m:"совещание",t:"Besprechung",s:"Beruf",e:"Soweschtschanije"},
+    {m:"срок",t:"Frist/Deadline",s:"Beruf",e:"Srok"},
+    {m:"отчёт",t:"Bericht",s:"Beruf",e:"Otschjot"},
+    {m:"Добро пожаловать в нашу компанию.",t:"Willkommen in unserem Unternehmen.",s:"Beruf",e:"Dobro poshalowat w naschu kompaniju."},
+    {m:"Когда следующая встреча?",t:"Wann ist das nächste Meeting?",s:"Beruf",e:"Kogda sledujuschaja wstretscha?"},
+    {m:"Пришлите мне отчёт по почте.",t:"Schicken Sie mir den Bericht per E-Mail.",s:"Beruf",e:"Prischschlitje mnje otschjot po pochtje."},
+    {m:"Мы заключили контракт.",t:"Wir haben einen Vertrag abgeschlossen.",s:"Beruf",e:"My sakljutschili kontrakt."},
+    {m:"Я в командировке.",t:"Ich bin auf Dienstreise.",s:"Beruf",e:"Ja w komandirowke."},
+  ],
+  familie:[
+    {m:"муж",t:"Ehemann",s:"Familie",e:"Musch"},
+    {m:"жена",t:"Ehefrau",s:"Familie",e:"Schena"},
+    {m:"сын",t:"Sohn",s:"Familie",e:"Syn"},
+    {m:"дочь",t:"Tochter",s:"Familie",e:"Dotsch"},
+    {m:"бабушка",t:"Großmutter/Oma",s:"Familie",e:"Babuschka"},
+    {m:"дедушка",t:"Großvater/Opa",s:"Familie",e:"Deduschka"},
+    {m:"брат",t:"Bruder",s:"Familie",e:"Brat"},
+    {m:"сестра",t:"Schwester",s:"Familie",e:"Sjestra"},
+    {m:"тётя",t:"Tante",s:"Familie",e:"Tjotja"},
+    {m:"дядя",t:"Onkel",s:"Familie",e:"Djadja"},
+    {m:"племянник",t:"Neffe",s:"Familie",e:"Plemnjannik"},
+    {m:"племянница",t:"Nichte",s:"Familie",e:"Plemnjannitsa"},
+    {m:"свекровь",t:"Schwiegermutter",s:"Familie",e:"Swekrow"},
+    {m:"тесть",t:"Schwiegervater",s:"Familie",e:"Test"},
+    {m:"Познакомься с моей семьёй.",t:"Lern meine Familie kennen.",s:"Familie",e:"Posnakomsa s mojej semjjoj."},
+    {m:"Как зовут твоих родителей?",t:"Wie heißen deine Eltern?",s:"Familie",e:"Kak sowut twojich roditelej?"},
+    {m:"У меня двое детей.",t:"Ich habe zwei Kinder.",s:"Familie",e:"U menja dwoje detej."},
+    {m:"Мы женаты уже десять лет.",t:"Wir sind seit zehn Jahren verheiratet.",s:"Familie",e:"My schenaty usche desjat let."},
+    {m:"Приходи к нам в гости!",t:"Komm uns besuchen!",s:"Familie",e:"Prichodi k nam w gosti!"},
+  ],
+  kultur:[
+    {m:"театр",t:"Theater",s:"Kultur",e:"Tjeatr"},
+    {m:"опера",t:"Oper",s:"Kultur",e:"Opera"},
+    {m:"балет",t:"Ballett",s:"Kultur",e:"Balet"},
+    {m:"выставка",t:"Ausstellung",s:"Kultur",e:"Wystawka"},
+    {m:"картина",t:"Gemälde/Bild",s:"Kultur",e:"Kartina"},
+    {m:"скульптура",t:"Skulptur",s:"Kultur",e:"Skulptura"},
+    {m:"литература",t:"Literatur",s:"Kultur",e:"Literatura"},
+    {m:"поэзия",t:"Poesie/Lyrik",s:"Kultur",e:"Poesija"},
+    {m:"народная музыка",t:"Volksmusik",s:"Kultur",e:"Narodnaja musyka"},
+    {m:"традиция",t:"Tradition",s:"Kultur",e:"Traditsija"},
+    {m:"праздник",t:"Feiertag/Fest",s:"Kultur",e:"Prasdnik"},
+    {m:"Масленица",t:"Butterwoche (russ. Karneval)",s:"Kultur",e:"Masleniza"},
+    {m:"Новый год",t:"Neujahr",s:"Kultur",e:"Nowy god"},
+    {m:"Пасха",t:"Ostern",s:"Kultur",e:"Pascha"},
+    {m:"Мне очень нравится русская культура.",t:"Mir gefällt die russische Kultur sehr.",s:"Kultur",e:"Mnje otschenj nrawitsja russkaja kultura."},
+    {m:"Я читаю русскую литературу.",t:"Ich lese russische Literatur.",s:"Kultur",e:"Ja tschitaju russkuju literaturu."},
+  ],
+  studium:[
+    {m:"университет",t:"Universität",s:"Studium",e:"Unversitet"},
+    {m:"факультет",t:"Fakultät",s:"Studium",e:"Fakultet"},
+    {m:"лекция",t:"Vorlesung",s:"Studium",e:"Lektsija"},
+    {m:"семинар",t:"Seminar",s:"Studium",e:"Seminar"},
+    {m:"экзамен",t:"Prüfung",s:"Studium",e:"Eksmen"},
+    {m:"зачёт",t:"Schein/Testat",s:"Studium",e:"Satschjot"},
+    {m:"диплом",t:"Diplom/Abschluss",s:"Studium",e:"Diplom"},
+    {m:"научный руководитель",t:"Betreuer/Doktorvater",s:"Studium",e:"Nautschny rukowoditjel"},
+    {m:"стипендия",t:"Stipendium",s:"Studium",e:"Stipendija"},
+    {m:"общежитие",t:"Wohnheim",s:"Studium",e:"Obschtschewitije"},
+    {m:"Я учусь на третьем курсе.",t:"Ich studiere im dritten Jahr.",s:"Studium",e:"Ja utschusjana tretjem kurse."},
+    {m:"Когда у тебя экзамен?",t:"Wann hast du deine Prüfung?",s:"Studium",e:"Kogda u tebja eksmen?"},
+  ],
+  allgemein:[
+    {m:"погода",t:"Wetter",s:"Alltag",e:"Pogoda"},
+    {m:"магазин",t:"Geschäft/Laden",s:"Alltag",e:"Magasin"},
+    {m:"супермаркет",t:"Supermarkt",s:"Alltag",e:"Supermarket"},
+    {m:"аптека",t:"Apotheke",s:"Alltag",e:"Apteka"},
+    {m:"банк",t:"Bank",s:"Alltag",e:"Bank"},
+    {m:"почта",t:"Post",s:"Alltag",e:"Potschta"},
+    {m:"больница",t:"Krankenhaus",s:"Alltag",e:"Bolnitsa"},
+    {m:"врач",t:"Arzt",s:"Alltag",e:"Wrach"},
+    {m:"полиция",t:"Polizei",s:"Alltag",e:"Polizija"},
+    {m:"пожарная служба",t:"Feuerwehr",s:"Alltag",e:"Poscharnaja sluschba"},
+    {m:"Как пройти до...?",t:"Wie komme ich zu...?",s:"Alltag",e:"Kak projti do...?"},
+    {m:"Вы говорите по-немецки?",t:"Sprechen Sie Deutsch?",s:"Alltag",e:"Wy goworite po-njemezki?"},
+    {m:"Мне нужна помощь.",t:"Ich brauche Hilfe.",s:"Alltag",e:"Mnje nuschna pomosch."},
+    {m:"Позвоните в скорую помощь!",t:"Rufen Sie den Krankenwagen!",s:"Alltag",e:"Poswontje w skoruju pomosch!"},
+  ]
+};
+// ===== ENDE THEMEN =====
+
 function initMic(){
   if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window))return;
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -1831,7 +2361,7 @@ function startQuiz(){
   } else {
     document.getElementById('modeTabs').style.display='flex';
     document.getElementById('listenQuiz').style.display='none';
-    const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grammatik',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',listening:'H\xf6ren',custom:'Eigene Vokabeln'};
+    const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grundgrammatik',grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',listening:'H\xf6ren',custom:'Eigene Vokabeln'};
     document.getElementById('qTitle').textContent=(tt[cs]||'')+' Quiz '+cfg.e;
     document.getElementById('qPts').textContent=0;bldKB('qIn','kyr');
     // Dialog-Tab nur bei Vokabeln/Grammatik/etc., nicht beim Alphabet
@@ -1942,11 +2472,67 @@ function checkListen(){
 }
 
 function updSRS(key,ok){
-  const srs=GS(),cfg=DC[cd];if(!srs[key])srs[key]={iv:1,ef:2.5,nr:0};const s=srs[key];
-  if(ok){s.iv=Math.round(s.iv*(s.ef||2.5)*cfg.srsM);s.ef=Math.max(1.3,(s.ef||2.5)+0.1);}
-  else{s.iv=1;s.ef=Math.max(1.3,(s.ef||2.5)-.2);}
-  s.nr=Date.now()+(s.iv*24*60*60*1000);SS(srs);
+  const srs=GS();
+  if(!srs[key])srs[key]={iv:1,ef:2.5,nr:0,reps:0};
+  const s=srs[key];
+  if(ok){
+    s.reps=(s.reps||0)+1;
+    // SM2-Algorithmus: 1→3→7→14→30 Tage
+    if(s.reps===1)s.iv=1;
+    else if(s.reps===2)s.iv=3;
+    else s.iv=Math.round(s.iv*(s.ef||2.5));
+    s.iv=Math.min(s.iv,90); // Max 90 Tage
+    s.ef=Math.min(2.5,Math.max(1.3,(s.ef||2.5)+0.1));
+  } else {
+    s.reps=0;s.iv=1;
+    s.ef=Math.max(1.3,(s.ef||2.5)-.2);
+  }
+  s.nr=Date.now()+(s.iv*24*60*60*1000);
+  SS(srs);
 }
+
+function getSRSDueCount(){
+  var srs=GS(),now=Date.now(),count=0;
+  Object.values(srs).forEach(function(s){if(s.nr&&s.nr<=now)count++;});
+  return count;
+}
+
+function getSRSDueItems(sec){
+  var srs=GS(),now=Date.now(),due=[];
+  Object.entries(srs).forEach(function(kv){
+    var k=kv[0],s=kv[1];
+    if(s.nr&&s.nr<=now&&k.startsWith(sec+':')){
+      var idx=parseInt(k.split(':')[1]);
+      if(C[sec]&&C[sec][idx])due.push({item:C[sec][idx],key:k,idx:idx});
+    }
+  });
+  return due;
+}
+
+function startSRSSession(){
+  // Alle fälligen Karten aus allen Sektionen sammeln
+  var srs=GS(),now=Date.now(),due=[];
+  Object.entries(srs).forEach(function(kv){
+    var k=kv[0],s=kv[1];
+    if(s.nr&&s.nr<=now){
+      var parts=k.split(':');
+      var sec=parts[0],idx=parseInt(parts[1]);
+      if(C[sec]&&C[sec][idx])due.push({item:C[sec][idx],key:k,sec:sec,idx:idx});
+    }
+  });
+  if(!due.length){alert('Keine Karten zur Wiederholung!');return;}
+  // Shuffle und in cb laden
+  due.sort(function(){return Math.random()-.5;});
+  cb=due.slice(0,Math.min(20,due.length)).map(function(d){return d.item;});
+  cs='vocabulary';cd=cd||'standard';
+  ci=0;sp=0;sc=0;sw=0;
+  var nb=document.getElementById('nextBtn');
+  if(nb){nb.onclick=null;nb.setAttribute('onclick','nextCard()');nb.innerHTML='Weiter &#8594;';}
+  document.getElementById('lTitle').textContent='&#128260; Wiederholung ('+cb.length+' Karten)';
+  showSc('scLearn');loadCard();
+}
+
+
 
 
 function finishQ(){
@@ -1969,7 +2555,9 @@ function finishQ(){
   const dl=C[cs]?C[cs].length:0,td=us[cu].progress[cs]||0;
   document.getElementById('rInfo').textContent=dl>0?'Gesamt: '+td+' Karten \xb7 '+dl+' verf\xfcgbar \xb7 N\xe4chste: '+(td%dl+1)+'\u2013'+Math.min(td%dl+DC[cd].bs,dl):'';
   const errs=getErrs();document.getElementById('retryCount').textContent=errs.length;document.getElementById('retryBtn').style.display=errs.length>0?'block':'none';
+  if(acc>=90){var _uq=GU();if(_uq[cu])_uq[cu]._perfectQuiz=true;SU(_uq);}
   showSc('scResult');if(acc>=90)showConfetti();
+  setTimeout(checkAchievements,500);
   }catch(e){console.error('finishQ:',e);showDash();}
 }
 
