@@ -2458,7 +2458,10 @@ function startDailyStep(){
   var idx=-1;
   for(var i=0;i<p.steps.length;i++){if(!p.steps[i].done){idx=i;break;}}
   if(idx<0)return;
-  p.launched=idx;saveDailyPlan(p);
+  p.launched=idx;
+  // XP-Stand merken: der Schritt zählt nur als erledigt, wenn dabei XP verdient wurden
+  var us0=GU();p.launchXp=(us0[cu]&&us0[cu].stats?us0[cu].stats.totalXp:0)||0;
+  saveDailyPlan(p);
   var st=p.steps[idx];
   if(st.type==='wh'){startSRSSession();return;}
   if(st.type==='neu'){
@@ -2573,10 +2576,14 @@ function showDash(){
   document.getElementById('diffE').textContent=cfg.e;
   document.getElementById('diffL').textContent=cfg.l;
   const pfEl=document.getElementById('pfad');pfEl.innerHTML='';
-  // Tages-Session: R\u00fcckkehr vom gestarteten Schritt erkennen \u2192 abhaken
+  // Tages-Session: R\u00fcckkehr vom gestarteten Schritt erkennen.
+  // Abgehakt wird nur, wenn dabei XP verdient wurden \u2014 sonst bleibt der Schritt offen.
   var dsP=getDailyPlan();
   if(dsP&&dsP.launched!=null){
-    dsP.steps[dsP.launched].done=true;dsP.launched=null;saveDailyPlan(dsP);
+    var xpJetzt=(d.stats&&d.stats.totalXp)||0;
+    var geschafft=xpJetzt>(dsP.launchXp||0);
+    if(geschafft)dsP.steps[dsP.launched].done=true;
+    dsP.launched=null;saveDailyPlan(dsP);
     if(dsP.steps.every(function(s){return s.done;})){
       if(!dsP.celebrated){dsP.celebrated=true;saveDailyPlan(dsP);setTimeout(showDailyDone,400);}
     } else if(!dsP.dismissed){
@@ -3413,9 +3420,14 @@ function checkAQ(btn){
   }
 
   if(chosen===cur.answer){
-    if(!isRetry)bumpLetterStat(cur.answer,true);
+    var aqXp=0;
+    if(!isRetry){
+      bumpLetterStat(cur.answer,true);
+      // Alphabet-Lückensätze geben jetzt auch XP (vorher: gar keine)
+      aqXp=3;var usx=GU();if(usx[cu]){usx[cu].stats.totalXp=(usx[cu].stats.totalXp||0)+aqXp;SU(usx);}
+    }
     btn.style.background='rgba(34,197,94,0.25)';btn.style.borderColor='#22c55e';btn.style.color='#22c55e';
-    if(fb)fb.innerHTML='<span style="color:#22c55e;">&#10003; Richtig!</span>';
+    if(fb)fb.innerHTML='<span style="color:#22c55e;">&#10003; Richtig!'+(aqXp?' +'+aqXp+' XP':'')+'</span>';
     spk(cur.full);
     var wb=document.getElementById('aqWeiterBtn');
     if(wb){wb.style.display='block';wb.onclick=function(){aqGapIdx++;loadAQGap();};}
