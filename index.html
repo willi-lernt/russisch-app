@@ -1830,6 +1830,36 @@ function registerVocabThemes(){
       {m:'четвёртый',t:'vierte/r/s',s:'Ordinalzahlen',e:'tschetwjortyj',mn:'wie четыре (vier) mit -tyj-Endung',o:['vierte/r/s','fünfte/r/s','vierzig','vier'],r:['четвёртый','пятый','сорок','четыре'],ctx:[{ru:'Это четвёртый этаж.',de:'Das ist der vierte Stock.'}]},
       {m:'пятый',t:'fünfte/r/s',s:'Ordinalzahlen',e:'pjatyj',mn:'wie пять (fünf) mit -yj-Endung',o:['fünfte/r/s','vierte/r/s','fünfzig','fünf'],r:['пятый','четвёртый','пятьдесят','пять'],ctx:[{ru:'Сегодня пятый день.',de:'Heute ist der fünfte Tag.'}]});
   }
+  // Farben: голубой (Russisch hat zwei Blaus!), hell-/dunkel-Präfixe,
+  // drei Genus-Formen und Beispielsätze ergänzen
+  if(C['colors']&&!C['colors'].some(function(c){return c.m==='голубой';})){
+    C['colors'].splice(2,0,{m:'голубой',t:'hellblau',s:'hellblau (maskulin)',e:'голубое небо',mn:'galuboj — Russisch hat ZWEI Blaus: голубой (hell) und синий (dunkel) sind eigene Farben!',o:['hellblau','dunkelblau','grau','grün'],r:['голубой','синий','серый','зелёный']});
+    C['colors'].push(
+      {m:'светло-',t:'hell-',s:'Vorsilbe für helle Töne',e:'светло-зелёный = hellgrün',mn:'swetlo — von свет (Licht): licht-/hell-',o:['hell-','dunkel-','bunt','blass'],r:['светло-','тёмно-','яркий','бледный']},
+      {m:'тёмно-',t:'dunkel-',s:'Vorsilbe für dunkle Töne',e:'тёмно-синий = dunkelblau',mn:'tjomno — von тьма (Dunkelheit): dunkel-',o:['dunkel-','hell-','schwarz','grau'],r:['тёмно-','светло-','чёрный','серый']});
+  }
+  var COLOR_FORMS={'красный':'красный · красная · красное','синий':'синий · синяя · синее','голубой':'голубой · голубая · голубое','зелёный':'зелёный · зелёная · зелёное','жёлтый':'жёлтый · жёлтая · жёлтое','чёрный':'чёрный · чёрная · чёрное','белый':'белый · белая · белое','серый':'серый · серая · серое','оранжевый':'оранжевый · оранжевая · оранжевое','розовый':'розовый · розовая · розовое','фиолетовый':'фиолетовый · фиолетовая · фиолетовое','коричневый':'коричневый · коричневая · коричневое'};
+  var COLOR_CTX={
+    'красный':{ru:'Красная машина стоит у дома.',de:'Das rote Auto steht am Haus.'},
+    'синий':{ru:'Синее море очень красивое.',de:'Das blaue Meer ist sehr schön.'},
+    'голубой':{ru:'Голубое небо над нами.',de:'Der hellblaue Himmel über uns.'},
+    'зелёный':{ru:'Зелёная трава растёт в парке.',de:'Das grüne Gras wächst im Park.'},
+    'жёлтый':{ru:'Жёлтое солнце светит ярко.',de:'Die gelbe Sonne scheint hell.'},
+    'чёрный':{ru:'Чёрная кошка сидит на окне.',de:'Die schwarze Katze sitzt am Fenster.'},
+    'белый':{ru:'Белый снег лежит на улице.',de:'Der weiße Schnee liegt auf der Straße.'},
+    'серый':{ru:'Серое небо — будет дождь.',de:'Grauer Himmel — es wird regnen.'},
+    'оранжевый':{ru:'Оранжевый апельсин лежит на столе.',de:'Die orange Apfelsine liegt auf dem Tisch.'},
+    'розовый':{ru:'Розовые цветы растут в саду.',de:'Rosa Blumen wachsen im Garten.'},
+    'фиолетовый':{ru:'Фиолетовое платье очень красивое.',de:'Das lila Kleid ist sehr schön.'},
+    'коричневый':{ru:'Коричневый медведь живёт в лесу.',de:'Der braune Bär lebt im Wald.'},
+    'цвет':{ru:'Какой твой любимый цвет?',de:'Welche ist deine Lieblingsfarbe?'},
+    'светло-':{ru:'У меня светло-синяя куртка.',de:'Ich habe eine hellblaue Jacke.'},
+    'тёмно-':{ru:'Тёмно-красное вино в бокале.',de:'Dunkelroter Wein im Glas.'}
+  };
+  (C['colors']||[]).forEach(function(c){
+    if(COLOR_FORMS[c.m])c.frm=COLOR_FORMS[c.m];
+    if(!c.ctx&&COLOR_CTX[c.m])c.ctx=[COLOR_CTX[c.m]];
+  });
 }
 // Menü-Einträge inkl. dynamisch erkannter Top-Pakete
 function getVocabTopics(){
@@ -2061,6 +2091,87 @@ function startNumberDrill(){
     });
   }
   render();
+}
+
+// ── FARBEN-TRAINER ────────────────────────────────────────────────
+const COLOR_HEX={'красный':'#e53935','синий':'#1565c0','голубой':'#4fc3f7','зелёный':'#43a047','жёлтый':'#fdd835','чёрный':'#15151a','белый':'#fafafa','серый':'#9e9e9e','оранжевый':'#fb8c00','розовый':'#f48fb1','фиолетовый':'#8e24aa','коричневый':'#795548'};
+function startColorTrainer(){
+  var colors=(C['colors']||[]).filter(function(c){return COLOR_HEX[c.m];});
+  if(colors.length<4){alert('Zu wenige Farben!');return;}
+  var qs=[];
+  for(var i=0;i<10;i++){
+    var target=colors[Math.floor(Math.random()*colors.length)];
+    var others=colors.filter(function(c){return c.m!==target.m;}).sort(function(){return Math.random()-.5;}).slice(0,3);
+    qs.push({t:target,opts:[target].concat(others).sort(function(){return Math.random()-.5;}),typ:Math.floor(Math.random()*2)});
+  }
+  var qi7=0,score=0;
+  var ov=document.createElement('div');ov.className='levelup-overlay';document.body.appendChild(ov);
+  function swatch(m,size,extra){
+    return '<span style="display:inline-block;width:'+size+'px;height:'+size+'px;border-radius:50%;background:'+COLOR_HEX[m]+';border:2px solid rgba(255,255,255,.25);vertical-align:middle;'+(extra||'')+'"></span>';
+  }
+  function render(){
+    if(qi7>=qs.length){
+      var xp=score*2;
+      var us=GU();if(us[cu]){us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+xp;SU(us);}
+      ov.innerHTML='<div class="levelup-box"><div style="font-size:2rem;margin-bottom:.4rem;">'+(score>=8?'&#127881;':'&#127912;')+'</div><div style="font-weight:800;font-size:1.1rem;margin-bottom:.3rem;">'+score+' von '+qs.length+' richtig!</div><div style="font-size:.85rem;color:var(--cyan);margin-bottom:1rem;">+'+xp+' XP</div><button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="ctAgain">&#127912; Nochmal</button><button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);" id="ctDone">Fertig</button></div>';
+      ov.querySelector('#ctAgain').onclick=function(){ov.remove();startColorTrainer();};
+      ov.querySelector('#ctDone').onclick=function(){ov.remove();showDash();};
+      return;
+    }
+    var q=qs[qi7];
+    var head='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;"><span style="font-size:.75rem;color:var(--text3);">&#127912; Farben-Trainer &middot; '+(qi7+1)+'/'+qs.length+'</span><button id="ctExit" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.05rem;font-family:inherit;padding:0 .2rem;">&#10005;</button></div>';
+    if(q.typ===0){
+      // Farbfeld sehen → russisches Wort wählen
+      var btns=q.opts.map(function(o){return '<button class="ct-opt" data-m="'+o.m+'" style="display:block;width:100%;margin-bottom:.45rem;padding:.65rem;font-size:1rem;font-weight:700;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;color:var(--text);font-family:inherit;">'+o.m+'</button>';}).join('');
+      ov.innerHTML='<div class="levelup-box" style="max-width:330px;width:92%;">'+head+
+        '<div style="font-size:.95rem;font-weight:700;margin-bottom:.7rem;">Welche Farbe ist das?</div>'+
+        '<div style="text-align:center;margin-bottom:.9rem;">'+swatch(q.t.m,90)+'</div>'+btns+
+        '<div id="ctFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;text-align:center;margin-top:.3rem;"></div></div>';
+    } else {
+      // 🔊 Wort hören → Farbfeld antippen
+      var fields=q.opts.map(function(o){return '<button class="ct-opt" data-m="'+o.m+'" style="padding:.5rem;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;">'+swatch(o.m,56)+'</button>';}).join('');
+      ov.innerHTML='<div class="levelup-box" style="max-width:330px;width:92%;">'+head+
+        '<div style="font-size:.95rem;font-weight:700;margin-bottom:.7rem;">&#128266; Welche Farbe h&ouml;rst du?</div>'+
+        '<div style="text-align:center;margin-bottom:.8rem;"><button class="btn sm" id="ctReplay">&#128266; Nochmal anh&ouml;ren</button></div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem;">'+fields+'</div>'+
+        '<div id="ctFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;text-align:center;"></div></div>';
+      ov.querySelector('#ctReplay').onclick=function(){spk(q.t.m);};
+      setTimeout(function(){spk(q.t.m);},300);
+    }
+    ov.querySelector('#ctExit').onclick=function(){ov.remove();};
+    ov.querySelectorAll('.ct-opt').forEach(function(b){
+      b.onclick=function(){
+        var ok=b.getAttribute('data-m')===q.t.m;
+        var fb=ov.querySelector('#ctFb');
+        ov.querySelectorAll('.ct-opt').forEach(function(x){x.disabled=true;if(x.getAttribute('data-m')===q.t.m){x.style.borderColor='#22c55e';x.style.color='#22c55e';}});
+        if(ok){score++;fb.style.color='#22c55e';fb.textContent='✓ '+q.t.m+' = '+q.t.t;}
+        else{b.style.borderColor='#ef4444';b.style.color='#ef4444';fb.style.color='#ef4444';fb.textContent='✗ Richtig: '+q.t.m+' = '+q.t.t;}
+        if(q.typ===0)spk(q.t.m);
+        setTimeout(function(){qi7++;render();},ok?900:1800);
+      };
+    });
+  }
+  render();
+}
+
+function showColorsMenu(){
+  var us=GU();
+  var data=getDifficultyPool(C['colors']||[],cd,'colors');
+  var done=us[cu]&&us[cu].progress?Math.min(us[cu].progress['colors']||0,data.length):0;
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var inner='<div class="levelup-box" style="max-width:360px;width:94%;padding:1.5rem 1.2rem;">';
+  inner+='<div style="font-size:1.1rem;font-weight:900;margin-bottom:.3rem;color:var(--cyan);">&#127912; Farben</div>';
+  inner+='<div style="font-size:.75rem;color:var(--text3);margin-bottom:1rem;">'+done+' / '+data.length+' Karten gelernt</div>';
+  inner+='<button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="colLearn">&#9654; Karten lernen</button>';
+  inner+='<button class="btn" style="width:100%;margin-bottom:.8rem;border-color:rgba(0,229,200,.35);color:var(--cyan);" id="colTrainer">&#127912; Farben-Trainer (mit Farbfeldern)</button>';
+  inner+='<button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);font-size:.82rem;" id="colCancel">Abbrechen</button>';
+  inner+='</div>';
+  ov.innerHTML=inner;
+  document.body.appendChild(ov);
+  ov.querySelector('#colLearn').onclick=function(){ov.remove();startSec('colors');};
+  ov.querySelector('#colTrainer').onclick=function(){ov.remove();startColorTrainer();};
+  ov.querySelector('#colCancel').onclick=function(){ov.remove();};
 }
 
 function showNumbersMenu(){
@@ -2337,7 +2448,7 @@ function showDash(){
     const doneN=d.progress[sec.id]||0,pctN=data.length?Math.min(100,Math.round((doneN/data.length)*100)):0;
     const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
     const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
-    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():sec.id==='vocabulary'?()=>showVocabMenu():sec.id==='numbers'?()=>showNumbersMenu():()=>startSec(sec.id);
+    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():sec.id==='vocabulary'?()=>showVocabMenu():sec.id==='numbers'?()=>showNumbersMenu():sec.id==='colors'?()=>showColorsMenu():()=>startSec(sec.id);
     const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
     row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
     pfEl.appendChild(row);
@@ -2359,7 +2470,7 @@ const DIFF_RANGES={
   grammar_pronomen:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
   grammar_praepositionen:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
   numbers:{anfaenger:[0,10],standard:[0,32],fort:[0,46],profi:[0,999]},
-  colors:{anfaenger:[0,5],standard:[0,8],fort:[0,12],profi:[0,999]},
+  colors:{anfaenger:[0,6],standard:[0,9],fort:[0,999],profi:[0,999]},
   weekdays:{anfaenger:[0,7],standard:[0,14],fort:[0,20],profi:[0,999]},
   speaking:{anfaenger:[0,5],standard:[0,12],fort:[0,20],profi:[0,999]},
   reading:{anfaenger:[0,3],standard:[0,8],fort:[0,15],profi:[0,999]},
@@ -2451,7 +2562,8 @@ function loadCard(){
     document.getElementById('cSub').textContent='Aussprache: '+item.e;
     document.getElementById('cEx').textContent=item.s||'';
   } else {
-    document.getElementById('cSub').textContent=item.s||'';
+    // frm = Genus-Formen (z. B. „красный · красная · красное" bei Farben)
+    document.getElementById('cSub').textContent=item.frm||item.s||'';
     document.getElementById('cEx').textContent=item.e||'';
   }
   document.getElementById('cTrans').textContent='= '+item.t;
@@ -2732,10 +2844,10 @@ function showTimeUp(mins){
 function prefetchAudio(){
   try{
     if(!navigator.onLine)return;
-    if(_lg('ru_audio_prefetched')==='v5')return;
+    if(_lg('ru_audio_prefetched')==='v6')return;
     fetch(AUDIO_BASE+'manifest.json').then(r=>r.json()).then(async files=>{
       for(let i=0;i<files.length;i++){try{await fetch(AUDIO_BASE+files[i]);}catch(e){return;}}
-      _ls('ru_audio_prefetched','v5');
+      _ls('ru_audio_prefetched','v6');
     }).catch(()=>{});
   }catch(e){}
 }

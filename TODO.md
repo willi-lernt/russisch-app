@@ -31,7 +31,8 @@ Stand: 11.06.2026
   - [ ] Sätze (25 — Modus wählbar machen statt Zufall)
   - [ ] Lesen (nur 3 Texte!) & Mini-Geschichten (nur 3) — Inhalt ausbauen
   - [x] Zahlen komplett überarbeitet (12.06.2026): Zahlen-Menü mit Zahlen-Trainer (🔊 hören→Ziffernfeld + Ziffer→Wort, Level-abhängig bis 20/100/1000, Audio für alle Zahlen 1–100 + Hunderter, zusammengesetzte >100 aus Teil-Clips), Hör-Verwechsler (12/20…19/90), Level-Bereiche neu (Uhrzeit/Geld nicht mehr Profi-exklusiv), Eselsbrücken fürs -надцать-Muster, Doppelkarte четвёртый/пятый getrennt
-  - [ ] Farben (12) / Wochentage (23)
+  - [x] Farben komplett überarbeitet (12.06.2026): Farben-Trainer mit echten Farbfeldern (Feld→Wort + Hören→Feld), голубой ergänzt (zwei Blaus!), светло-/тёмно--Präfixe, alle 3 Genus-Formen auf Lernkarten, 15 Beispielsätze mit Audio, Level-Bereiche angepasst
+  - [ ] Wochentage (23)
   - [ ] Eigene Listen (`???`-Platzhalter in Quiz-Vorschlägen ersetzen)
 
 ## Erledigt (11.06.2026) — Offline-Audio
