@@ -22,7 +22,8 @@ Stand: 11.06.2026
   - [x] Alphabet: aktives Lese-Quiz (hören→Wort / Wort→Bedeutung, 10 Fragen), Handschrift-Vorschau auf Lernkarte (kursiv), Meisterschafts-Sterne pro Buchstabe (1=gelernt, 2=wiederholt, 3=≥85% Trefferquote)
   - [x] Tracing/Nachzeichnen bewusst gestrichen (Entscheidung 12.06.2026)
   - [x] Vokabeln Bugfixes (12.06.2026): Themen-Wörter verdrängten die Grundlagen aus dem Anfänger-Pool (jetzt nach den 10 Kern-Basics eingefügt, richtige Reihenfolge); Themen-Karten ohne Antwortoptionen (werden jetzt generiert); Lernkarte zeigte Kategorie als „Aussprache" (jetzt echte Transliteration); Hilfe zeigt Aussprache wenn keine Eselsbrücke da
-  - [ ] Vokabeln ausbauen: mehr Inhalt (47 + 106 Themen-Karten ist zu wenig für Bezahl-App); Themen-Karten brauchen ctx/mn; SRS-fällige Karten in neue Runden mischen; Distraktoren nach Wortart filtern (Wort vs. Satz)
+  - [x] Vokabeln: Themen-Menü gebaut (12.06.2026) — alle 7 Bereiche wählbar (Grundwortschatz 47 + Urlaub 25, Beruf 20, Familie 19, Kultur 16, Studium 12, Alltag 14 = 153 Karten), eigener Fortschritt pro Thema, Onboarding-Ziel als „⭐ Dein Ziel" markiert, alte 10-Wörter-Einmischung entfernt
+  - [ ] Vokabeln ausbauen: mehr Inhalt (Top-500-Grundwortschatz); Themen-Karten brauchen ctx/mn; Wort-Paare-Spiel; Betonungszeichen; SRS-fällige Karten in neue Runden mischen; Distraktoren nach Wortart filtern (Wort vs. Satz)
   - [ ] Grammatik (65 Karten in 5 Themen — Quiz-Form überdenken, Übersetze-die-Regel passt nicht)
   - [ ] Hören (78 — audio-first machen, Lernkarten zeigen das Wort als Text)
   - [ ] Sprechen (73 — braucht Internet für Spracherkennung! Offline-Hinweis nötig)

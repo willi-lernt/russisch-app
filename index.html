@@ -1238,6 +1238,68 @@ function saveErrs(e){_ls('ru_errs_'+cu,JSON.stringify(e));}
 
 
 
+// ── VOKABEL-THEMEN ────────────────────────────────────────────────
+const VOCAB_TOPICS=[
+  {key:'vocabulary',icon:'&#128172;',title:'Grundwortschatz',desc:'Die wichtigsten W\xf6rter & S\xe4tze'},
+  {key:'vocab_urlaub',icon:'&#9992;&#65039;',title:'Urlaub & Reisen',desc:'Flughafen, Hotel, unterwegs'},
+  {key:'vocab_beruf',icon:'&#128188;',title:'Beruf & Business',desc:'B\xfcro, Meetings, Kollegen'},
+  {key:'vocab_familie',icon:'&#128106;',title:'Familie & Freunde',desc:'Verwandte und Beziehungen'},
+  {key:'vocab_kultur',icon:'&#127963;&#65039;',title:'Kultur',desc:'Theater, Musik, Traditionen'},
+  {key:'vocab_studium',icon:'&#127979;',title:'Studium',desc:'Universit\xe4t und Pr\xfcfungen'},
+  {key:'vocab_allgemein',icon:'&#10024;',title:'Alltag',desc:'N\xfctzliches f\xfcr jeden Tag'}
+];
+
+// Themen-Vokabeln als eigene Sektionen registrieren (vocab_urlaub usw.)
+// und fehlende Antwortoptionen aus thematisch passenden Distraktoren generieren
+function registerVocabThemes(){
+  if(typeof THEME_VOCAB==='undefined')return;
+  for(var k in THEME_VOCAB){
+    var list=THEME_VOCAB[k];
+    var pool=list.concat(C['vocabulary']||[]);
+    list.forEach(function(w){
+      if(!w.o){
+        var others=pool.filter(function(d){return d.t!==w.t;}).sort(function(){return Math.random()-.5;}).slice(0,3);
+        w.o=[w.t].concat(others.map(function(d){return d.t;}));
+        w.r=[w.m].concat(others.map(function(d){return d.m;}));
+      }
+    });
+    C['vocab_'+k]=list;
+  }
+}
+
+function showVocabMenu(){
+  var us=GU();
+  var goalKey=us[cu]&&(us[cu].themeVocab||us[cu].goal)?'vocab_'+(us[cu].themeVocab||us[cu].goal):null;
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var inner='<div class="levelup-box" style="max-width:380px;width:94%;padding:1.5rem 1.2rem;max-height:85vh;overflow-y:auto;">';
+  inner+='<div style="font-size:1.1rem;font-weight:900;margin-bottom:1rem;color:var(--cyan);">&#128172; Vokabeln</div>';
+  VOCAB_TOPICS.forEach(function(t){
+    var data=C[t.key]||[];
+    var done=us[cu]&&us[cu].progress?Math.min(us[cu].progress[t.key]||0,data.length):0;
+    var isGoal=t.key===goalKey;
+    inner+='<div data-key="'+t.key+'" class="vocab-topic-row" style="display:flex;align-items:center;gap:.7rem;padding:.65rem .8rem;margin-bottom:.4rem;background:var(--glass);border:1px solid '+(isGoal?'rgba(0,229,200,.45)':'var(--border)')+';border-radius:var(--r-sm);cursor:pointer;">';
+    inner+='<span style="font-size:1.3rem;">'+t.icon+'</span>';
+    inner+='<div style="flex:1;text-align:left;">';
+    inner+='<div style="font-size:.88rem;font-weight:700;">'+t.title+(isGoal?' <span style="font-size:.6rem;background:rgba(0,229,200,.15);color:var(--cyan);border:1px solid rgba(0,229,200,.3);padding:.08rem .35rem;border-radius:20px;vertical-align:middle;">&#11088; Dein Ziel</span>':'')+'</div>';
+    inner+='<div style="font-size:.72rem;color:var(--text3);">'+t.desc+' &mdash; '+done+' / '+data.length+' gelernt</div>';
+    inner+='</div>';
+    inner+='<span style="color:var(--cyan);font-size:.9rem;">&#8594;</span>';
+    inner+='</div>';
+  });
+  inner+='<button class="btn vocab-cancel-btn" style="width:100%;margin-top:.5rem;background:var(--glass);border-color:var(--border);font-size:.82rem;">Abbrechen</button>';
+  inner+='</div>';
+  ov.innerHTML=inner;
+  document.body.appendChild(ov);
+  var cBtn=ov.querySelector('.vocab-cancel-btn');
+  if(cBtn)cBtn.addEventListener('click',function(){ov.remove();});
+  ov.querySelectorAll('.vocab-topic-row').forEach(function(row){
+    row.addEventListener('click',function(){var key=this.getAttribute('data-key');ov.remove();startSec(key);});
+    row.addEventListener('mouseover',function(){this.style.borderColor='var(--cyan)';});
+    row.addEventListener('mouseout',function(){this.style.borderColor=this.getAttribute('data-key')===goalKey?'rgba(0,229,200,.45)':'var(--border)';});
+  });
+}
+
 function showGrammarMenu(){
   var ov=document.createElement('div');
   ov.className='levelup-overlay';
@@ -1286,7 +1348,10 @@ function updateLastSession(){
     var info=document.getElementById('lastSessionInfo');
     var btn=document.getElementById('lastSessionBtn');
     if(!ls||!info||!btn){return;}
-    var secNames={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grundgrammatik',
+    var secNames={alphabet:'Alphabet',vocabulary:'Vokabeln',
+      vocab_urlaub:'Urlaub & Reisen',vocab_beruf:'Beruf & Business',vocab_familie:'Familie & Freunde',
+      vocab_kultur:'Kultur',vocab_studium:'Studium',vocab_allgemein:'Alltag',
+      grammar:'Grundgrammatik',
       grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',
       grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',
       listening:'Hören',speaking:'Sprechen',sentences:'Sätze',
@@ -1347,6 +1412,7 @@ function updateStreak(){
 function showSc(id){document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('active');s.style.display='';});var el=document.getElementById(id);el.style.display='';el.classList.add('active');}
 
 function init(){
+  registerVocabThemes();
   const u=_lg('ru_cur');
   if(u){const us=GU();if(us[u]){cu=u;cd=us[u].diff||'standard';showDash();return;}}
   showSc('scLogin');
@@ -1449,7 +1515,7 @@ function showDash(){
     const doneN=d.progress[sec.id]||0,pctN=data.length?Math.min(100,Math.round((doneN/data.length)*100)):0;
     const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
     const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
-    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():()=>startSec(sec.id);
+    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():sec.id==='vocabulary'?()=>showVocabMenu():()=>startSec(sec.id);
     const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
     row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
     pfEl.appendChild(row);
@@ -1491,32 +1557,7 @@ function getDifficultyPool(data,diffKey,sec){
 }
 
 function startSec(sec){
-  // Themen-Vokabeln bei Vokabeln mischen
-  if(sec==='vocabulary'){
-    var us2=GU();
-    if(us2[cu]&&us2[cu].themeVocab&&typeof THEME_VOCAB!=='undefined'){
-      var themeWords=THEME_VOCAB[us2[cu].themeVocab]||[];
-      if(themeWords.length>0){
-        var existing=C['vocabulary']||[];
-        var themeSlice=themeWords.slice(0,10);
-        // Themen-Karten haben keine o/r-Felder — Antwortoptionen beim Einfügen generieren
-        var distractorPool=themeWords.concat(existing);
-        var toInsert=[];
-        themeSlice.forEach(function(w){
-          if(existing.some(function(e){return e.m===w.m;}))return;
-          if(!w.o){
-            var others=distractorPool.filter(function(d){return d.t!==w.t;}).sort(function(){return Math.random()-.5;}).slice(0,3);
-            w.o=[w.t].concat(others.map(function(d){return d.t;}));
-            w.r=[w.m].concat(others.map(function(d){return d.m;}));
-          }
-          toInsert.push(w);
-        });
-        // Nach den 10 Kern-Grundlagen einfügen (nicht davor!) — Anfänger lernen zuerst Hallo/Danke/Ja/Nein
-        if(toInsert.length){existing.splice.apply(existing,[Math.min(10,existing.length),0].concat(toInsert));}
-        C['vocabulary']=existing;
-      }
-    }
-  }
+  // Themen-Vokabeln sind eigene Sektionen (vocab_urlaub usw.) — siehe showVocabMenu
   if(sec==='custom'){
     const customCards=getCustomCards();
     if(!customCards.length){showCustomScreen();return;}
@@ -1560,7 +1601,7 @@ function startSec(sec){
   var _nb=document.getElementById('nextBtn');
   if(_nb){_nb.onclick=null;_nb.setAttribute('onclick','nextCard()');_nb.innerHTML='Weiter &#8594;';}
   const from=done+1,to=Math.min(done+bs,data.length);
-  const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grundgrammatik',grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',listening:'H\xf6ren',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',custom:'Eigene Vokabeln'};
+  const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',vocab_urlaub:'Urlaub & Reisen',vocab_beruf:'Beruf & Business',vocab_familie:'Familie & Freunde',vocab_kultur:'Kultur',vocab_studium:'Studium',vocab_allgemein:'Alltag',grammar:'Grundgrammatik',grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',listening:'H\xf6ren',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',custom:'Eigene Vokabeln'};
   document.getElementById('lTitle').textContent=(tt[sec]||sec)+' '+cfg.e+' ('+from+'\u2013'+to+'/'+data.length+')';
   if(sec==='speaking'){
     document.getElementById('spkTitle').textContent='Sprechen '+cfg.e;
@@ -1577,14 +1618,14 @@ function loadCard(){
   const item=cb[ci];
   // Gap-Karte: andere Darstellung
   if(item&&item.type==='gap'){loadGapCard(item);return;}
-  const lb={alphabet:'BUCHSTABE',vocabulary:'VOKABEL',grammar:'GRAMMATIK',grammar_faelle:'FÄLLE',grammar_verben:'VERBEN',grammar_pronomen:'PRONOMEN',grammar_praepositionen:'PRÄPOS.',listening:'H\xd6REN',speaking:'SPRECHEN',sentences:'SATZ',reading:'TEXT',numbers:'ZAHL',colors:'FARBE',weekdays:'WOCHENTAG',custom:'EIGENE'};
+  const lb={alphabet:'BUCHSTABE',vocabulary:'VOKABEL',vocab_urlaub:'URLAUB',vocab_beruf:'BERUF',vocab_familie:'FAMILIE',vocab_kultur:'KULTUR',vocab_studium:'STUDIUM',vocab_allgemein:'ALLTAG',grammar:'GRAMMATIK',grammar_faelle:'FÄLLE',grammar_verben:'VERBEN',grammar_pronomen:'PRONOMEN',grammar_praepositionen:'PRÄPOS.',listening:'H\xd6REN',speaking:'SPRECHEN',sentences:'SATZ',reading:'TEXT',numbers:'ZAHL',colors:'FARBE',weekdays:'WOCHENTAG',custom:'EIGENE'};
   document.getElementById('cBadge').textContent=lb[cs]||cs.toUpperCase();
   document.getElementById('cMain').textContent=item.m;
   // s ist nur beim Alphabet die Aussprache — sonst Kategorie/Info; Transliteration steckt in e
   if(cs==='alphabet'){
     document.getElementById('cSub').textContent='Aussprache: '+item.s;
     document.getElementById('cEx').textContent=item.e||'';
-  } else if({vocabulary:1,listening:1,speaking:1,sentences:1}[cs]&&item.e&&/^[A-Za-z]/.test(item.e)){
+  } else if(({vocabulary:1,listening:1,speaking:1,sentences:1}[cs]||(cs&&cs.indexOf('vocab_')===0))&&item.e&&/^[A-Za-z]/.test(item.e)){
     document.getElementById('cSub').textContent='Aussprache: '+item.e;
     document.getElementById('cEx').textContent=item.s||'';
   } else {
@@ -2699,8 +2740,8 @@ const ACHIEVEMENTS=[
   {id:'perfectquiz',icon:'&#10004;',title:'Perfektionist',desc:'Quiz ohne einen Fehler abgeschlossen',xp:30,check:function(us){return us._perfectQuiz||false;}},
   {id:'early_bird',icon:'&#127774;',title:'Frühaufsteher',desc:'Vor 8 Uhr morgens gelernt',xp:15,check:function(us){return us._earlyBird||false;}},
   {id:'night_owl',icon:'&#127762;',title:'Nachteule',desc:'Nach 22 Uhr gelernt',xp:15,check:function(us){return us._nightOwl||false;}},
-  {id:'goal_urlaub',icon:'&#9992;',title:'Reiselustig',desc:'Urlaubs-Vokabeln gelernt',xp:20,check:function(us){return us.themeVocab==='urlaub'&&(us.progress&&us.progress.vocabulary||0)>=5;}},
-  {id:'goal_beruf',icon:'&#128188;',title:'Geschäftsmann',desc:'Berufs-Vokabeln gelernt',xp:20,check:function(us){return us.themeVocab==='beruf'&&(us.progress&&us.progress.vocabulary||0)>=5;}},
+  {id:'goal_urlaub',icon:'&#9992;',title:'Reiselustig',desc:'Urlaubs-Vokabeln gelernt',xp:20,check:function(us){return (us.progress&&us.progress['vocab_urlaub']||0)>=5;}},
+  {id:'goal_beruf',icon:'&#128188;',title:'Geschäftsmann',desc:'Berufs-Vokabeln gelernt',xp:20,check:function(us){return (us.progress&&us.progress['vocab_beruf']||0)>=5;}},
   {id:'srs_10',icon:'&#128260;',title:'Wiederhol-Held',desc:'10 Karten per SRS wiederholt',xp:20,check:function(us){return (us._srsCount||0)>=10;}},
   {id:'grammar_done',icon:'&#128209;',title:'Grammatiker',desc:'Grundgrammatik abgeschlossen',xp:50,check:function(us){return (us.progress&&us.progress.grammar||0)>=(C.grammar&&C.grammar.length||14);}},
   {id:'allpaths',icon:'&#127760;',title:'Allrounder',desc:'Alle Lernpfade gestartet',xp:100,check:function(us){var paths=['alphabet','vocabulary','grammar','listening','speaking','sentences'];return paths.every(function(p){return (us.progress&&us.progress[p]||0)>0;});}},
@@ -3052,7 +3093,7 @@ function startQuiz(){
   } else {
     document.getElementById('modeTabs').style.display='flex';
     document.getElementById('listenQuiz').style.display='none';
-    const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grundgrammatik',grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',listening:'H\xf6ren',custom:'Eigene Vokabeln'};
+    const tt={alphabet:'Alphabet',vocabulary:'Vokabeln',vocab_urlaub:'Urlaub & Reisen',vocab_beruf:'Beruf & Business',vocab_familie:'Familie & Freunde',vocab_kultur:'Kultur',vocab_studium:'Studium',vocab_allgemein:'Alltag',grammar:'Grundgrammatik',grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',speaking:'Sprechen',sentences:'S\xe4tze',reading:'Lesen',numbers:'Zahlen',colors:'Farben',weekdays:'Wochentage & Monate',listening:'H\xf6ren',custom:'Eigene Vokabeln'};
     document.getElementById('qTitle').textContent=(tt[cs]||'')+' Quiz '+cfg.e;
     document.getElementById('qPts').textContent=0;bldKB('qIn','kyr');
     // Dialog-Tab nur bei Vokabeln/Grammatik/etc., nicht beim Alphabet
