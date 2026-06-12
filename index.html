@@ -753,38 +753,39 @@ function getLvlInfo(xp){let l=1,x=xp;while(x>=xpForLevel(l)){x-=xpForLevel(l);l+
 const C={
 alphabet:[
   {m:"\u0410",s:"a",t:"a",e:"Anna",x:"Vokal",mn:"Zelt-Form \u2014 klingt wie 'a' in Apfel",o:["a","o","e","u"],r:["\u0410","\u041e","\u0415","\u0423"],ctx:[{ru:"\u042d\u0442\u043e \u0410\u043d\u043d\u0430.",de:"Das ist Anna."}]},
-  {m:"\u0411",s:"b",t:"b",e:"Boris",x:"Konsonant",mn:"Wie eine '6' \u2014 klingt wie 'b' in Ball",o:["b","p","v","d"],r:["\u0411","\u041f","\u0412","\u0414"],ctx:[{ru:"\u0411\u043e\u0440\u0438\u0441 \u2014 \u043c\u043e\u0439 \u0434\u0440\u0443\u0433.",de:"Boris ist mein Freund."}]},
-  {m:"\u0412",s:"w",t:"w",e:"Wera",x:"Konsonant",mn:"Sieht wie 'B' \u2014 klingt wie 'w' in Wasser",o:["w","v","b","f"],r:["\u0412","\u0424","\u0411","\u041f"],ctx:[{ru:"\u0412\u043e\u0434\u0430 \u0445\u043e\u043b\u043e\u0434\u043d\u0430\u044f.",de:"Das Wasser ist kalt."}]},
-  {m:"\u0413",s:"g",t:"g",e:"Galina",x:"Konsonant",mn:"Wie ein Haken (\u0413) \u2014 klingt wie 'g' in gut",o:["g","k","h","d"],r:["\u0413","\u041a","\u0425","\u0414"],ctx:[{ru:"\u0413\u043e\u0440\u043e\u0434 \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",de:"Die Stadt ist gro\xdf."}]},
-  {m:"\u0414",s:"d",t:"d",e:"Dmitrij",x:"Konsonant",mn:"Haus mit Dach \u2014 klingt wie 'd' in Dach",o:["d","t","b","g"],r:["\u0414","\u0422","\u0411","\u0413"],ctx:[{ru:"\u0414\u043e\u043c \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",de:"Das Haus ist gro\xdf."}]},
-  {m:"\u0415",s:"je",t:"je",e:"Jelena",x:"Vokal",mn:"Wie 'E' \u2014 klingt wie 'je' am Wortanfang",o:["je","e","ja","jo"],r:["\u0415","\u042d","\u042f","\u0401"],ctx:[{ru:"\u0415\u043b\u0435\u043d\u0430 \u0443\u0447\u0438\u0442\u0435\u043b\u044c.",de:"Jelena ist Lehrerin."}]},
-  {m:"\u0401",s:"jo",t:"jo",e:"Jozh (Igel)",x:"Vokal \u2014 immer betont!",mn:"Zwei Punkte oben \u2014 klingt wie 'jo', IMMER betont!",o:["jo","je","ju","ja"],r:["\u0401","\u0415","\u042e","\u042f"],ctx:[{ru:"\u0401\u0436 \u0436\u0438\u0432\u0451\u0442 \u0432 \u043b\u0435\u0441\u0443.",de:"Der Igel lebt im Wald."}]},
-  {m:"\u0416",s:"sch (stimmhaft)",t:"sch",e:"Zhara (Hitze)",x:"Konsonant",mn:"K\xe4fer von oben \u2014 stimmhaftes Sch",o:["sch","sh","ch","zh"],r:["\u0416","\u0428","\u0429","\u0427"],ctx:[{ru:"\u0416\u0430\u0440\u043a\u043e \u043b\u0435\u0442\u043e\u043c.",de:"Im Sommer ist es hei\xdf."}]},
-  {m:"\u0417",s:"s (stimmhaft)",t:"s",e:"Soja",x:"Konsonant",mn:"Wie eine '3' \u2014 stimmhaftes S",o:["s","z","ts","sch"],r:["\u0417","\u0421","\u0426","\u0428"],ctx:[{ru:"\u0417\u0434\u0435\u0441\u044c \u043e\u0447\u0435\u043d\u044c \u0445\u043e\u043b\u043e\u0434\u043d\u043e.",de:"Hier ist es sehr kalt."}]},
-  {m:"\u0418",s:"i",t:"i",e:"Iwan",x:"Vokal",mn:"Wie 'N' mit Strich \u2014 klingt wie 'i' in Igel",o:["i","j","y","ie"],r:["\u0418","\u0419","\u042b","\u042d"],ctx:[{ru:"\u0418\u0432\u0430\u043d \u0438\u0434\u0451\u0442 \u0432 \u0448\u043a\u043e\u043b\u0443.",de:"Iwan geht zur Schule."}]},
-  {m:"\u0419",s:"j (kurz)",t:"j",e:"Yoga",x:"Halbvokal",mn:"Wie \u0418 mit Bogen \u2014 kurzes 'j' wie in ja",o:["j","i","y","je"],r:["\u0419","\u0418","\u042b","\u0415"],ctx:[{ru:"\u0419\u043e\u0433\u0430 \u043f\u043e\u043b\u0435\u0437\u043d\u0430.",de:"Yoga ist gesund."}]},
   {m:"\u041a",s:"k",t:"k",e:"Katja",x:"Konsonant",mn:"Wie ein 'K' \u2014 klingt genau wie 'k' in Katze",o:["k","g","h","kh"],r:["\u041a","\u0413","\u0425","\u0427"],ctx:[{ru:"\u041a\u043e\u0448\u043a\u0430 \u0441\u043f\u0438\u0442.",de:"Die Katze schl\xe4ft."}]},
-  {m:"\u041b",s:"l",t:"l",e:"Lena",x:"Konsonant",mn:"Wie Lambda \u2014 klingt wie 'l' in Lampe",o:["l","r","n","m"],r:["\u041b","\u0420","\u041d","\u041c"],ctx:[{ru:"\u041b\u0435\u043d\u0430 \u0447\u0438\u0442\u0430\u0435\u0442 \u043a\u043d\u0438\u0433\u0443.",de:"Lena liest ein Buch."}]},
   {m:"\u041c",s:"m",t:"m",e:"Moskau",x:"Konsonant",mn:"Wie 'M' \u2014 klingt wie 'm' in Mama",o:["m","n","b","w"],r:["\u041c","\u041d","\u0411","\u0412"],ctx:[{ru:"\u041c\u0430\u043c\u0430 \u0434\u043e\u043c\u0430.",de:"Mama ist zu Hause."}]},
-  {m:"\u041d",s:"n",t:"n",e:"Natascha",x:"Konsonant",mn:"Wie 'H' quer \u2014 klingt wie 'n' in Nacht",o:["n","m","h","ng"],r:["\u041d","\u041c","\u0425","\u0413"],ctx:[{ru:"\u041d\u0430\u0442\u0430\u0448\u0430 \u043f\u043e\u0451\u0442.",de:"Natascha singt."}]},
   {m:"\u041e",s:"o",t:"o",e:"Oleg",x:"Vokal",mn:"Runder Kreis \u2014 klingt wie 'o' in Oma",o:["o","a","u","e"],r:["\u041e","\u0410","\u0423","\u042d"],ctx:[{ru:"\u041e\u043d \u0438\u0434\u0451\u0442 \u0434\u043e\u043c\u043e\u0439.",de:"Er geht nach Hause."}]},
-  {m:"\u041f",s:"p",t:"p",e:"Pawel",x:"Konsonant",mn:"Wie ein Tor (\u041f) \u2014 klingt wie 'p' in Papa",o:["p","b","f","t"],r:["\u041f","\u0411","\u0424","\u0422"],ctx:[{ru:"\u041f\u0430\u043f\u0430 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442.",de:"Papa arbeitet."}]},
+  {m:"\u0422",s:"t",t:"t",e:"Tanja",x:"Konsonant",mn:"Wie 'T' \u2014 klingt genau wie 't' in Tisch",o:["t","d","p","k"],r:["\u0422","\u0414","\u041f","\u041a"],ctx:[{ru:"\u0422\u0430\u043c \u0435\u0441\u0442\u044c \u043c\u0430\u0433\u0430\u0437\u0438\u043d.",de:"Dort ist ein Laden."}]},
+  {m:"\u0415",s:"je",t:"je",e:"Jelena",x:"Vokal",mn:"Wie 'E' \u2014 klingt wie 'je' am Wortanfang",o:["je","e","ja","jo"],r:["\u0415","\u042d","\u042f","\u0401"],ctx:[{ru:"\u0415\u043b\u0435\u043d\u0430 \u0443\u0447\u0438\u0442\u0435\u043b\u044c.",de:"Jelena ist Lehrerin."}]},
+  {m:"\u0412",s:"w",t:"w",e:"Wera",x:"Konsonant",mn:"Sieht wie 'B' \u2014 klingt wie 'w' in Wasser",o:["w","v","b","f"],r:["\u0412","\u0424","\u0411","\u041f"],ctx:[{ru:"\u0412\u043e\u0434\u0430 \u0445\u043e\u043b\u043e\u0434\u043d\u0430\u044f.",de:"Das Wasser ist kalt."}]},
+  {m:"\u041d",s:"n",t:"n",e:"Natascha",x:"Konsonant",mn:"Wie 'H' quer \u2014 klingt wie 'n' in Nacht",o:["n","m","h","ng"],r:["\u041d","\u041c","\u0425","\u0413"],ctx:[{ru:"\u041d\u0430\u0442\u0430\u0448\u0430 \u043f\u043e\u0451\u0442.",de:"Natascha singt."}]},
   {m:"\u0420",s:"r (gerollt!)",t:"r",e:"Russland",x:"Zungenspitzen-R!",mn:"Sieht aus wie 'P' \u2014 GEROLLTES Zungenspitzen-R!",o:["r","l","w","rr"],r:["\u0420","\u041b","\u0412","\u041d"],ctx:[{ru:"\u0420\u0435\u043a\u0430 \u0448\u0438\u0440\u043e\u043a\u0430\u044f.",de:"Der Fluss ist breit."}]},
   {m:"\u0421",s:"ss",t:"ss",e:"Sascha",x:"Stimmlos",mn:"Wie ein 'C' \u2014 stimmloses SS wie in Wasser",o:["ss","sch","s","z"],r:["\u0421","\u0428","\u0417","\u0426"],ctx:[{ru:"\u0421\u0430\u0448\u0430 \u0435\u0441\u0442 \u0441\u0443\u043f.",de:"Sascha isst Suppe."}]},
-  {m:"\u0422",s:"t",t:"t",e:"Tanja",x:"Konsonant",mn:"Wie 'T' \u2014 klingt genau wie 't' in Tisch",o:["t","d","p","k"],r:["\u0422","\u0414","\u041f","\u041a"],ctx:[{ru:"\u0422\u0430\u043c \u0435\u0441\u0442\u044c \u043c\u0430\u0433\u0430\u0437\u0438\u043d.",de:"Dort ist ein Laden."}]},
   {m:"\u0423",s:"u",t:"u",e:"Uljana",x:"Vokal",mn:"Wie 'Y' \u2014 klingt wie 'u' in Uhr",o:["u","o","i","ue"],r:["\u0423","\u041e","\u0418","\u042e"],ctx:[{ru:"\u0423 \u043c\u0435\u043d\u044f \u0435\u0441\u0442\u044c \u043a\u043e\u0448\u043a\u0430.",de:"Ich habe eine Katze."}]},
-  {m:"\u0424",s:"f",t:"f",e:"Fjodor",x:"Konsonant",mn:"Wie \u03a6 mit Bauch \u2014 klingt wie 'f' in Feuer",o:["f","v","p","b"],r:["\u0424","\u0412","\u041f","\u0411"],ctx:[{ru:"\u0424\u0438\u043b\u044c\u043c \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u044b\u0439.",de:"Der Film ist interessant."}]},
   {m:"\u0425",s:"ch (wie Bach)",t:"ch",e:"Charkiw",x:"Wie deutsches ch",mn:"Wie 'X' \u2014 klingt wie 'ch' in Bach",o:["ch","h","k","g"],r:["\u0425","\u0413","\u041a","\u0427"],ctx:[{ru:"\u0425\u043b\u0435\u0431 \u0441\u0432\u0435\u0436\u0438\u0439.",de:"Das Brot ist frisch."}]},
+  {m:"\u0418",s:"i",t:"i",e:"Iwan",x:"Vokal",mn:"Wie 'N' mit Strich \u2014 klingt wie 'i' in Igel",o:["i","j","y","ie"],r:["\u0418","\u0419","\u042b","\u042d"],ctx:[{ru:"\u0418\u0432\u0430\u043d \u0438\u0434\u0451\u0442 \u0432 \u0448\u043a\u043e\u043b\u0443.",de:"Iwan geht zur Schule."}]},
+  {m:"\u041b",s:"l",t:"l",e:"Lena",x:"Konsonant",mn:"Wie Lambda \u2014 klingt wie 'l' in Lampe",o:["l","r","n","m"],r:["\u041b","\u0420","\u041d","\u041c"],ctx:[{ru:"\u041b\u0435\u043d\u0430 \u0447\u0438\u0442\u0430\u0435\u0442 \u043a\u043d\u0438\u0433\u0443.",de:"Lena liest ein Buch."}]},
+  {m:"\u041f",s:"p",t:"p",e:"Pawel",x:"Konsonant",mn:"Wie ein Tor (\u041f) \u2014 klingt wie 'p' in Papa",o:["p","b","f","t"],r:["\u041f","\u0411","\u0424","\u0422"],ctx:[{ru:"\u041f\u0430\u043f\u0430 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442.",de:"Papa arbeitet."}]},
+  {m:"\u0414",s:"d",t:"d",e:"Dmitrij",x:"Konsonant",mn:"Haus mit Dach \u2014 klingt wie 'd' in Dach",o:["d","t","b","g"],r:["\u0414","\u0422","\u0411","\u0413"],ctx:[{ru:"\u0414\u043e\u043c \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",de:"Das Haus ist gro\xdf."}]},
+  {m:"\u0417",s:"s (stimmhaft)",t:"s",e:"Soja",x:"Konsonant",mn:"Wie eine '3' \u2014 stimmhaftes S",o:["s","z","ts","sch"],r:["\u0417","\u0421","\u0426","\u0428"],ctx:[{ru:"\u0417\u0434\u0435\u0441\u044c \u043e\u0447\u0435\u043d\u044c \u0445\u043e\u043b\u043e\u0434\u043d\u043e.",de:"Hier ist es sehr kalt."}]},
+  {m:"\u0411",s:"b",t:"b",e:"Boris",x:"Konsonant",mn:"Wie eine '6' \u2014 klingt wie 'b' in Ball",o:["b","p","v","d"],r:["\u0411","\u041f","\u0412","\u0414"],ctx:[{ru:"\u0411\u043e\u0440\u0438\u0441 \u2014 \u043c\u043e\u0439 \u0434\u0440\u0443\u0433.",de:"Boris ist mein Freund."}]},
+  {m:"\u0413",s:"g",t:"g",e:"Galina",x:"Konsonant",mn:"Wie ein Haken (\u0413) \u2014 klingt wie 'g' in gut",o:["g","k","h","d"],r:["\u0413","\u041a","\u0425","\u0414"],ctx:[{ru:"\u0413\u043e\u0440\u043e\u0434 \u0431\u043e\u043b\u044c\u0448\u043e\u0439.",de:"Die Stadt ist gro\xdf."}]},
+  {m:"\u0416",s:"sch (stimmhaft)",t:"sch",e:"Zhara (Hitze)",x:"Konsonant",mn:"K\xe4fer von oben \u2014 stimmhaftes Sch",o:["sch","sh","ch","zh"],r:["\u0416","\u0428","\u0429","\u0427"],ctx:[{ru:"\u0416\u0430\u0440\u043a\u043e \u043b\u0435\u0442\u043e\u043c.",de:"Im Sommer ist es hei\xdf."}]},
+  {m:"\u0419",s:"j (kurz)",t:"j",e:"Yoga",x:"Halbvokal",mn:"Wie \u0418 mit Bogen \u2014 kurzes 'j' wie in ja",o:["j","i","y","je"],r:["\u0419","\u0418","\u042b","\u0415"],ctx:[{ru:"\u0419\u043e\u0433\u0430 \u043f\u043e\u043b\u0435\u0437\u043d\u0430.",de:"Yoga ist gesund."}]},
+  {m:"\u0424",s:"f",t:"f",e:"Fjodor",x:"Konsonant",mn:"Wie \u03a6 mit Bauch \u2014 klingt wie 'f' in Feuer",o:["f","v","p","b"],r:["\u0424","\u0412","\u041f","\u0411"],ctx:[{ru:"\u0424\u0438\u043b\u044c\u043c \u0438\u043d\u0442\u0435\u0440\u0435\u0441\u043d\u044b\u0439.",de:"Der Film ist interessant."}]},
+  {m:"\u042d",s:"e (offen, ohne J)",t:"e",e:"Eto (Das ist)",x:"Offenes E",mn:"Wie 'E' verkehrt \u2014 offenes E ohne j davor",o:["e","je","a","ae"],r:["\u042d","\u0415","\u0410","\u042f"],ctx:[{ru:"\u042d\u0442\u043e \u043c\u043e\u044f \u043a\u043d\u0438\u0433\u0430.",de:"Das ist mein Buch."}]},
+  {m:"\u042e",s:"ju",t:"ju",e:"Julja (Julia)",x:"Vokal",mn:"Wie \u0418+\u041e zusammen \u2014 klingt wie 'ju' in Julia",o:["ju","u","jo","je"],r:["\u042e","\u0423","\u0401","\u0415"],ctx:[{ru:"\u042e\u043b\u044f \u0442\u0430\u043d\u0446\u0443\u0435\u0442.",de:"Julia tanzt."}]},
+  {m:"\u042f",s:"ja",t:"ja",e:"Jabloko (Apfel)",x:"Auch: Ich!",mn:"Gespiegeltes 'R' \u2014 klingt wie 'ja', bedeutet auch 'Ich'!",o:["ja","a","je","jo"],r:["\u042f","\u0410","\u0415","\u0401"],ctx:[{ru:"\u042f \u0443\u0447\u0443 \u0440\u0443\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u043a.",de:"Ich lerne Russisch."}]},
   {m:"\u0426",s:"ts",t:"ts",e:"Zirkus",x:"Wie ts in Pizza",mn:"Hat Schleppe rechts unten \u2014 klingt wie 'ts' in Pizza",o:["ts","s","sch","tsch"],r:["\u0426","\u0421","\u0428","\u0427"],ctx:[{ru:"\u0426\u0432\u0435\u0442\u044b \u043a\u0440\u0430\u0441\u0438\u0432\u044b\u0435.",de:"Die Blumen sind sch\xf6n."}]},
   {m:"\u0427",s:"tsch",t:"tsch",e:"Tschaj (Tee)",x:"Wie tsch in Tsch\xfcss",mn:"Wie eine '4' (\u0427\u0435\u0442\u044b\u0440\u0435=4) \u2014 klingt wie 'tsch' in Tsch\xfcss",o:["tsch","sch","ts","ch"],r:["\u0427","\u0428","\u0426","\u0425"],ctx:[{ru:"\u0427\u0430\u0439 \u0433\u043e\u0440\u044f\u0447\u0438\u0439.",de:"Der Tee ist hei\xdf."}]},
   {m:"\u0428",s:"sch (stimmlos)",t:"sch",e:"Scharf (Schal)",x:"Zunge weiter hinten",mn:"Krone oder Zinnen \u2014 klingt wie 'sch' in Schule",o:["sch","s","zh","ch"],r:["\u0428","\u0421","\u0416","\u0425"],ctx:[{ru:"\u0428\u043a\u043e\u043b\u0430 \u0440\u044f\u0434\u043e\u043c.",de:"Die Schule ist daneben."}]},
+  {m:"\u0401",s:"jo",t:"jo",e:"Jozh (Igel)",x:"Vokal \u2014 immer betont!",mn:"Zwei Punkte oben \u2014 klingt wie 'jo', IMMER betont!",o:["jo","je","ju","ja"],r:["\u0401","\u0415","\u042e","\u042f"],ctx:[{ru:"\u0401\u0436 \u0436\u0438\u0432\u0451\u0442 \u0432 \u043b\u0435\u0441\u0443.",de:"Der Igel lebt im Wald."}]},
   {m:"\u0429",s:"schtsch (weich)",t:"schtsch",e:"Schtschij (Suppe)",x:"Weiches Zischen",mn:"Wie \u0428 mit Schleppe \u2014 weiches schtsch, Zunge flach",o:["schtsch","sch","tsch","sh"],r:["\u0429","\u0428","\u0427","\u0416"],ctx:[{ru:"\u0429\u0438 \u2014 \u0440\u0443\u0441\u0441\u043a\u0438\u0439 \u0441\u0443\u043f.",de:"Schtschij ist eine russische Suppe."}]},
-  {m:"\u042a",s:"(Hartzeichen)",t:"(Hartzeichen)",e:"Objekt",x:"Trennzeichen \u2014 kein Laut",mn:"Das harte Zeichen \u2014 macht Pause zwischen Konsonant und Vokal",o:["(Hartzeichen)","a","e","h"],r:["\u042a","\u042c","\u042d","\u042b"],ctx:[{ru:"\u041e\u0431\u044a\u0435\u043a\u0442 \u043d\u0430 \u0441\u0442\u043e\u043b\u0435.",de:"Das Objekt liegt auf dem Tisch."}]},
   {m:"\u042b",s:"verdunkeltes i",t:"y",e:"Ty (Du)",x:"Typisch russisch!",mn:"Wie \u0418 mit Strich links \u2014 i mit Zunge ganz hinten",o:["y","i","u","ue"],r:["\u042b","\u0418","\u0423","\u042d"],ctx:[{ru:"\u0422\u044b \u0433\u043e\u0432\u043e\u0440\u0438\u0448\u044c \u043f\u043e-\u0440\u0443\u0441\u0441\u043a\u0438.",de:"Du sprichst Russisch."}]},
   {m:"\u042c",s:"(Weichheitszeichen)",t:"(Weichheitszeichen)",e:"Mat (Mutter)",x:"Erweicht vorherigen Buchstaben",mn:"Das weiche Zeichen \u2014 macht Konsonant davor weich, selbst kein Laut",o:["(Weichheitszeichen)","Vokal","Pause","Verdopplung"],r:["\u042c","\u042a","\u042d","\u042b"],ctx:[{ru:"\u041c\u0430\u0442\u044c \u0434\u043e\u043c\u0430.",de:"Mutter ist zu Hause."}]},
-  {m:"\u042d",s:"e (offen, ohne J)",t:"e",e:"Eto (Das ist)",x:"Offenes E",mn:"Wie 'E' verkehrt \u2014 offenes E ohne j davor",o:["e","je","a","ae"],r:["\u042d","\u0415","\u0410","\u042f"],ctx:[{ru:"\u042d\u0442\u043e \u043c\u043e\u044f \u043a\u043d\u0438\u0433\u0430.",de:"Das ist mein Buch."}]},
-  {m:"\u042e",s:"ju",t:"ju",e:"Julja (Julia)",x:"Vokal",mn:"Wie \u0418+\u041e zusammen \u2014 klingt wie 'ju' in Julia",o:["ju","u","jo","je"],r:["\u042e","\u0423","\u0401","\u0415"],ctx:[{ru:"\u042e\u043b\u044f \u0442\u0430\u043d\u0446\u0443\u0435\u0442.",de:"Julia tanzt."}]},
-  {m:"\u042f",s:"ja",t:"ja",e:"Jabloko (Apfel)",x:"Auch: Ich!",mn:"Gespiegeltes 'R' \u2014 klingt wie 'ja', bedeutet auch 'Ich'!",o:["ja","a","je","jo"],r:["\u042f","\u0410","\u0415","\u0401"],ctx:[{ru:"\u042f \u0443\u0447\u0443 \u0440\u0443\u0441\u0441\u043a\u0438\u0439 \u044f\u0437\u044b\u043a.",de:"Ich lerne Russisch."}]}
+  {m:"\u042a",s:"(Hartzeichen)",t:"(Hartzeichen)",e:"Objekt",x:"Trennzeichen \u2014 kein Laut",mn:"Das harte Zeichen \u2014 macht Pause zwischen Konsonant und Vokal",o:["(Hartzeichen)","a","e","h"],r:["\u042a","\u042c","\u042d","\u042b"],ctx:[{ru:"\u041e\u0431\u044a\u0435\u043a\u0442 \u043d\u0430 \u0441\u0442\u043e\u043b\u0435.",de:"Das Objekt liegt auf dem Tisch."}]}
+
 ],
 vocabulary:[
   {m:"\u041f\u0440\u0438\u0432\u0435\u0442",s:"informell",t:"Hallo",e:"Privet!",x:"Informell",mn:"pri-WET \u2014 Betonung auf 2. Silbe",o:["Hallo","Tsch\xfcss","Danke","Bitte"],r:["\u041f\u0440\u0438\u0432\u0435\u0442","\u041f\u043e\u043a\u0430","\u0421\u043f\u0430\u0441\u0438\u0431\u043e","\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430"],ctx:[{ru:"\u041f\u0440\u0438\u0432\u0435\u0442! \u041a\u0430\u043a \u0434\u0435\u043b\u0430?",de:"Hallo! Wie geht's?"}]},
@@ -1448,7 +1449,7 @@ function showDash(){
     const doneN=d.progress[sec.id]||0,pctN=data.length?Math.min(100,Math.round((doneN/data.length)*100)):0;
     const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
     const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
-    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():()=>startSec(sec.id);
+    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():()=>startSec(sec.id);
     const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
     row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
     pfEl.appendChild(row);
@@ -1808,10 +1809,10 @@ function _spkSys(t){
 function prefetchAudio(){
   try{
     if(!navigator.onLine)return;
-    if(_lg('ru_audio_prefetched')==='v1')return;
+    if(_lg('ru_audio_prefetched')==='v2')return;
     fetch(AUDIO_BASE+'manifest.json').then(r=>r.json()).then(async files=>{
       for(let i=0;i<files.length;i++){try{await fetch(AUDIO_BASE+files[i]);}catch(e){return;}}
-      _ls('ru_audio_prefetched','v1');
+      _ls('ru_audio_prefetched','v2');
     }).catch(()=>{});
   }catch(e){}
 }
@@ -1821,12 +1822,150 @@ function prefetchAudio(){
 // ===== ALPHABET QUIZ =====
 let aqLetters=[],aqIdx=0,aqGapIdx=0;
 
-function startAlphabetQuiz2(letters){
+// Buchstaben-Gruppen der Lern-Reihenfolge (Rest = Gruppe 3 "Neue Form")
+const AQ_GROUPS={'А':1,'К':1,'М':1,'О':1,'Т':1,'Е':1,'В':2,'Н':2,'Р':2,'С':2,'У':2,'Х':2,'Щ':4,'Ы':4,'Ь':4,'Ъ':4};
+const AQ_GROUP_LABELS={1:'&#10003; Wie im Deutschen',2:'&#9888; Falscher Freund!',3:'&#10024; Neue Form',4:'&#11088; Besonderheit'};
+let _aqReview=false;
+
+function startAlphabetQuiz2(letters,review){
+  _aqReview=!!review;
   aqLetters=letters.filter(function(c){return !c.type;});
   aqIdx=0;aqGapIdx=0;
   window._aqCurrent=null;
   if(!aqLetters.length){showAlphabetFinish();return;}
   loadAQ();
+}
+
+// Buchstaben-Übersicht: gelernte Buchstaben einzeln wiederholen
+function showAlphabetMenu(){
+  var us=GU();
+  var done=us[cu]&&us[cu].progress?us[cu].progress['alphabet']||0:0;
+  if(done<=0){startSec('alphabet');return;}
+  var letters=C.alphabet||[];
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var inner='<div class="levelup-box" style="max-width:380px;width:94%;padding:1.3rem 1.1rem;max-height:85vh;overflow-y:auto;">';
+  inner+='<div style="font-size:1.1rem;font-weight:900;margin-bottom:.3rem;color:var(--cyan);">&#1071; Alphabet</div>';
+  inner+='<div style="font-size:.75rem;color:var(--text3);margin-bottom:.9rem;">'+Math.min(done,letters.length)+' von '+letters.length+' gelernt &mdash; tippe einen gelernten Buchstaben zum Wiederholen</div>';
+  if(done<letters.length){
+    inner+='<button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="aqMenuWeiter">&#9654; Weiter lernen ('+(Math.min(done,letters.length)+1)+'&ndash;'+Math.min(done+DC[cd].bs,letters.length)+')</button>';
+  }
+  var drillPairs=getUnlockedPairs();
+  if(drillPairs.length){
+    inner+='<button class="btn" style="width:100%;margin-bottom:.8rem;border-color:rgba(251,191,36,.4);color:#fbbf24;" id="aqMenuDrill">&#9889; Verwechsler-Training ('+drillPairs.map(function(p){return p[0]+'/'+p[1];}).join(' &middot; ')+')</button>';
+  }
+  inner+='<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem;margin-bottom:.8rem;">';
+  letters.forEach(function(it,i){
+    var learned=i<done;
+    if(learned){
+      inner+='<button class="aq-pick" data-idx="'+i+'" style="padding:.45rem .1rem;background:rgba(0,229,200,.08);border:1px solid rgba(0,229,200,.35);border-radius:var(--r-sm);cursor:pointer;font-family:inherit;color:var(--text);"><span style="font-size:1.05rem;font-weight:800;">'+it.m+'</span> <span style="font-size:.8rem;color:var(--text3);">'+it.m.toLowerCase()+'</span></button>';
+    } else {
+      inner+='<div style="padding:.45rem .1rem;background:var(--glass);border:1px solid var(--border);border-radius:var(--r-sm);opacity:.35;text-align:center;"><span style="font-size:1.05rem;font-weight:800;">'+it.m+'</span></div>';
+    }
+  });
+  inner+='</div>';
+  inner+='<button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);font-size:.82rem;" id="aqMenuCancel">Abbrechen</button>';
+  inner+='</div>';
+  ov.innerHTML=inner;
+  document.body.appendChild(ov);
+  var wBtn=ov.querySelector('#aqMenuWeiter');
+  if(wBtn)wBtn.onclick=function(){ov.remove();startSec('alphabet');};
+  var dBtn=ov.querySelector('#aqMenuDrill');
+  if(dBtn)dBtn.onclick=function(){ov.remove();startDrill();};
+  var cBtn=ov.querySelector('#aqMenuCancel');
+  if(cBtn)cBtn.onclick=function(){ov.remove();};
+  ov.querySelectorAll('.aq-pick').forEach(function(b){
+    b.onclick=function(){
+      var idx=parseInt(this.getAttribute('data-idx'));
+      ov.remove();
+      if(C.alphabet[idx]){cs='alphabet';startAlphabetQuiz2([C.alphabet[idx]],true);}
+    };
+  });
+}
+
+// Lese-Belohnung: echte Wörter, die nur aus bereits gelernten Buchstaben bestehen
+const READ_WORDS=[
+  {w:'мама',de:'Mama'},{w:'кот',de:'Kater'},{w:'там',de:'dort'},{w:'мак',de:'Mohn'},{w:'тема',de:'Thema'},{w:'томат',de:'Tomate'},
+  {w:'сок',de:'Saft'},{w:'нос',de:'Nase'},{w:'рот',de:'Mund'},{w:'сон',de:'Schlaf'},{w:'утро',de:'Morgen'},{w:'ухо',de:'Ohr'},
+  {w:'хор',de:'Chor'},{w:'море',de:'Meer'},{w:'метро',de:'Metro'},{w:'сахар',de:'Zucker'},{w:'наука',de:'Wissenschaft'},
+  {w:'ракета',de:'Rakete'},{w:'восток',de:'Osten'},{w:'муха',de:'Fliege'},{w:'весна',de:'Frühling'},{w:'сестра',de:'Schwester'},
+  {w:'дом',de:'Haus'},{w:'вода',de:'Wasser'},{w:'папа',de:'Papa'},{w:'хлеб',de:'Brot'},{w:'молоко',de:'Milch'},{w:'школа',de:'Schule'},
+  {w:'книга',de:'Buch'},{w:'собака',de:'Hund'},{w:'друг',de:'Freund'},{w:'лимон',de:'Zitrone'},{w:'чай',de:'Tee'},{w:'шапка',de:'Mütze'},
+  {w:'яблоко',de:'Apfel'},{w:'это',de:'das (ist)'},{w:'кофе',de:'Kaffee'},{w:'спасибо',de:'Danke'},{w:'привет',de:'Hallo'},{w:'хорошо',de:'gut'},
+  {w:'щи',de:'Kohlsuppe'},{w:'борщ',de:'Borschtsch'},{w:'ты',de:'du'},{w:'мы',de:'wir'},{w:'сын',de:'Sohn'},{w:'рыба',de:'Fisch'},
+  {w:'мать',de:'Mutter'},{w:'соль',de:'Salz'},{w:'день',de:'Tag'}
+];
+function getLearnedLetterSet(){
+  var us=GU();var done=us[cu]&&us[cu].progress?us[cu].progress['alphabet']||0:0;
+  var lset={};(C['alphabet']||[]).slice(0,done).forEach(function(it){lset[it.m]=1;});
+  return lset;
+}
+function getReadableWords(){
+  var lset=getLearnedLetterSet();
+  var pos={};(C['alphabet']||[]).forEach(function(it,i){pos[it.m]=i;});
+  return READ_WORDS.filter(function(w){
+    return w.w.toUpperCase().split('').every(function(ch){return lset[ch]||!/[А-ЯЁ]/.test(ch);});
+  }).map(function(w){
+    var mx=0;w.w.toUpperCase().split('').forEach(function(ch){if(pos[ch]!==undefined&&pos[ch]>mx)mx=pos[ch];});
+    return {w:w.w,de:w.de,mx:mx};
+  }).sort(function(a,b){return b.mx-a.mx;});
+}
+
+// Verwechslungs-Drill: ähnlich aussehende Buchstaben-Paare blitzschnell unterscheiden
+const DRILL_PAIRS=[['П','Л'],['Ш','Щ'],['И','Й'],['Ь','Ъ'],['Б','В'],['Е','Ё']];
+function getUnlockedPairs(){
+  var lset=getLearnedLetterSet();
+  return DRILL_PAIRS.filter(function(p){return lset[p[0]]&&lset[p[1]];});
+}
+function startDrill(){
+  var pairs=getUnlockedPairs();if(!pairs.length)return;
+  var byLetter={};(C['alphabet']||[]).forEach(function(it){byLetter[it.m]=it;});
+  var qs=[];
+  for(var i=0;i<10;i++){
+    var pair=pairs[Math.floor(Math.random()*pairs.length)];
+    var target=pair[Math.floor(Math.random()*2)];
+    var typ=Math.floor(Math.random()*3);
+    // Hör-Fragen für die stummen Zeichen Ь/Ъ vermeiden
+    if(typ===2&&(pair.indexOf('Ь')>=0||pair.indexOf('Ъ')>=0))typ=Math.floor(Math.random()*2);
+    qs.push({pair:pair.slice().sort(function(){return Math.random()-.5;}),target:target,typ:typ});
+  }
+  var qi2=0,score=0;
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  document.body.appendChild(ov);
+  function render(){
+    if(qi2>=qs.length){
+      var xp=score*2;
+      var us=GU();if(us[cu]){us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+xp;SU(us);}
+      ov.innerHTML='<div class="levelup-box"><div style="font-size:2rem;margin-bottom:.4rem;">'+(score>=8?'&#127881;':'&#128170;')+'</div><div style="font-weight:800;font-size:1.1rem;margin-bottom:.3rem;">'+score+' von '+qs.length+' richtig!</div><div style="font-size:.85rem;color:var(--cyan);margin-bottom:1rem;">+'+xp+' XP</div><button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="drillAgain">&#9889; Nochmal</button><button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);" id="drillDone">Fertig</button></div>';
+      ov.querySelector('#drillAgain').onclick=function(){ov.remove();startDrill();};
+      ov.querySelector('#drillDone').onclick=function(){ov.remove();showDash();};
+      return;
+    }
+    var q=qs[qi2],it=byLetter[q.target];
+    var frage;
+    if(q.typ===0){frage='Welcher Buchstabe klingt wie <span style="color:var(--cyan);">&bdquo;'+it.t+'&ldquo;</span>?';}
+    else if(q.typ===1){frage='Wie sieht <span style="color:var(--cyan);">&bdquo;'+it.t+'&ldquo;</span> aus? (Tipp: '+(it.e||'')+')';}
+    else{frage='&#128266; Welchen Buchstaben h&ouml;rst du?';}
+    var btns=q.pair.map(function(L){
+      return '<button class="drill-opt" data-l="'+L+'" style="flex:1;padding:1rem .5rem;font-size:2rem;font-weight:900;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;color:var(--text);font-family:inherit;">'+L+' <span style="font-size:1.1rem;color:var(--text3);">'+L.toLowerCase()+'</span></button>';
+    }).join('');
+    ov.innerHTML='<div class="levelup-box" style="max-width:340px;width:92%;"><div style="font-size:.75rem;color:var(--text3);margin-bottom:.6rem;">&#9889; Verwechsler-Training &middot; '+(qi2+1)+'/'+qs.length+'</div><div style="font-size:.95rem;font-weight:700;margin-bottom:1rem;min-height:2.4rem;">'+frage+'</div><div style="display:flex;gap:.6rem;margin-bottom:.6rem;">'+btns+'</div><div id="drillFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;"></div></div>';
+    if(q.typ===2)setTimeout(function(){spk(q.target);},250);
+    ov.querySelectorAll('.drill-opt').forEach(function(b){
+      b.onclick=function(){
+        var gewaehlt=this.getAttribute('data-l');
+        var richtig=gewaehlt===q.target;
+        ov.querySelectorAll('.drill-opt').forEach(function(x){x.disabled=true;
+          if(x.getAttribute('data-l')===q.target){x.style.borderColor='#22c55e';x.style.color='#22c55e';}});
+        var fb=ov.querySelector('#drillFb');
+        if(richtig){score++;fb.style.color='#22c55e';fb.textContent='✓ Richtig!';}
+        else{this.style.borderColor='#ef4444';this.style.color='#ef4444';fb.style.color='#ef4444';fb.textContent='✗ '+q.target+' = '+it.t;}
+        setTimeout(function(){qi2++;render();},richtig?600:1400);
+      };
+    });
+  }
+  render();
 }
 
 function loadAQ(){
@@ -1850,12 +1989,14 @@ function loadAQ(){
 
 function showAQLearnCard(letter){
   // scLearn befüllen und anzeigen
-  document.getElementById('cBadge').textContent='BUCHSTABE '+(aqIdx+1)+'/'+aqLetters.length;
-  document.getElementById('cMain').textContent=letter.m;
+  document.getElementById('cBadge').textContent=_aqReview?'WIEDERHOLUNG':'BUCHSTABE '+(aqIdx+1)+'/'+aqLetters.length;
+  // Groß- UND Kleinbuchstabe zeigen (б sieht ganz anders aus als Б!)
+  document.getElementById('cMain').textContent=letter.m+' '+letter.m.toLowerCase();
   document.getElementById('cSub').textContent='Aussprache: '+letter.s;
   document.getElementById('cTrans').textContent='= '+letter.t;
   document.getElementById('cEx').textContent=letter.e||'';
-  document.getElementById('cExtra').textContent=letter.x||'';
+  var grp=AQ_GROUP_LABELS[AQ_GROUPS[letter.m]||3];
+  document.getElementById('cExtra').innerHTML=(letter.x?letter.x+' &middot; ':'')+grp;
   document.getElementById('lProg').textContent='Buchstabe '+(aqIdx+1)+' von '+aqLetters.length;
   var mn=document.getElementById('cMn');
   if(letter.mn){mn.textContent=letter.mn;mn.style.display='block';}else{mn.style.display='none';}
@@ -1888,7 +2029,8 @@ function loadAQGap(){
   if(!letter){showAlphabetFinish();return;}
   if(aqGapIdx>=letter._gaps.length){
     var us=GU();
-    us[cu].progress['alphabet']=(us[cu].progress['alphabet']||0)+1;
+    // Wiederholung einzelner Buchstaben zählt nicht als neuer Fortschritt
+    if(!_aqReview){us[cu].progress['alphabet']=(us[cu].progress['alphabet']||0)+1;}
     us[cu]['gapRound_'+letter.m]=(us[cu]['gapRound_'+letter.m]||0)+1;
     SU(us);
     aqIdx++;
@@ -1903,7 +2045,7 @@ function loadAQGap(){
 
   showSc('scAlphaQuiz');
   document.getElementById('aqProgressLabel').textContent='Buchstabe '+(aqIdx+1)+'/'+aqLetters.length+' — Lücke '+(aqGapIdx+1)+'/2';
-  document.getElementById('aqLetter').textContent=letter.m;
+  document.getElementById('aqLetter').textContent=letter.m+' '+letter.m.toLowerCase();
   document.getElementById('aqSentence').innerHTML=gap.s.replace(/___/g,'<span style="color:var(--cyan);font-weight:900;border-bottom:2px solid var(--cyan);padding:0 .3rem;min-width:1.2em;display:inline-block;text-align:center;">?</span>');
   document.getElementById('aqTranslation').textContent=gap.t;
   document.getElementById('aqFeedback').innerHTML='';
@@ -2006,6 +2148,16 @@ function aqGoBack(){
 }
 
 function showAlphabetFinish(){
+  if(_aqReview){
+    _aqReview=false;
+    var rov=document.createElement('div');
+    rov.className='levelup-overlay';
+    rov.innerHTML='<div class="levelup-box"><div style="font-size:2rem;margin-bottom:.5rem;">&#10003;</div><div style="font-weight:800;font-size:1.1rem;margin-bottom:.9rem;">Buchstabe wiederholt!</div><button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="aqRevMore">&#1071; Weiteren Buchstaben w&auml;hlen</button><button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);" id="aqRevHome">&#127968; Zum Lernpfad</button></div>';
+    document.body.appendChild(rov);
+    rov.querySelector('#aqRevMore').onclick=function(){rov.remove();showAlphabetMenu();};
+    rov.querySelector('#aqRevHome').onclick=function(){rov.remove();showDash();};
+    return;
+  }
   try{
     var us=GU();
     var done=us[cu].progress['alphabet']||0;
@@ -2013,10 +2165,21 @@ function showAlphabetFinish(){
     var hasMore=done<pool.length;
     var ov=document.createElement('div');
     ov.className='levelup-overlay';
-    var inner='<div class="levelup-box">';
+    var inner='<div class="levelup-box" style="max-height:85vh;overflow-y:auto;">';
     inner+='<div style="font-size:2rem;margin-bottom:.5rem;">&#127881;</div>';
     inner+='<div style="font-weight:800;font-size:1.2rem;margin-bottom:.3rem;">Gut gemacht!</div>';
     inner+='<div style="font-size:.82rem;color:var(--text3);margin-bottom:1.2rem;">'+done+' von '+pool.length+' Buchstaben gelernt</div>';
+    // Lese-Belohnung: Wörter, die mit den gelernten Buchstaben lesbar sind (neueste zuerst)
+    var lesbar=getReadableWords();
+    if(lesbar.length){
+      inner+='<div style="text-align:left;background:rgba(0,229,200,.06);border:1px solid rgba(0,229,200,.2);border-radius:var(--r-sm);padding:.7rem .8rem;margin-bottom:1.1rem;">';
+      inner+='<div style="font-size:.75rem;font-weight:700;color:var(--cyan);margin-bottom:.45rem;">&#128214; Du kannst jetzt echte W&ouml;rter lesen &mdash; versuch es, dann tippe zum Anh&ouml;ren:</div>';
+      inner+='<div style="display:flex;flex-wrap:wrap;gap:.35rem;">';
+      lesbar.slice(0,8).forEach(function(w){
+        inner+='<button class="read-word" data-w="'+w.w+'" style="background:var(--glass2);border:1px solid var(--border);border-radius:20px;padding:.3rem .6rem;cursor:pointer;font-family:inherit;color:var(--text);font-size:.85rem;"><strong>'+w.w+'</strong> <span style="font-size:.72rem;color:var(--text3);">'+w.de+'</span> &#128266;</button>';
+      });
+      inner+='</div></div>';
+    }
     inner+='<button class="btn" style="width:100%;margin-bottom:.5rem;background:var(--glass);border-color:var(--border);" id="aqHomeBtn">&#127968; Weiter zum Lernpfad</button>';
     if(hasMore){
       inner+='<button class="btn primary" style="width:100%;" id="aqNextBtn">&#128214; Neue Buchstaben lernen</button>';
@@ -2027,6 +2190,7 @@ function showAlphabetFinish(){
     inner+='</div>';
     ov.innerHTML=inner;
     document.body.appendChild(ov);
+    ov.querySelectorAll('.read-word').forEach(function(b){b.onclick=function(){spk(this.getAttribute('data-w'));};});
     var homeBtn=document.getElementById('aqHomeBtn');
     if(homeBtn)homeBtn.onclick=function(){ov.remove();showDash();};
     var nextBtn=document.getElementById('aqNextBtn');

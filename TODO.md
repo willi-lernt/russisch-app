@@ -16,7 +16,8 @@ Stand: 11.06.2026
 
 ## Aktuell in Arbeit
 - [ ] Alle Lernpfade gemeinsam durchgehen und verbessern
-  - [ ] Alphabet (33 Karten — stärkster Pfad)
+  - [x] Alphabet: didaktische Lern-Reihenfolge (Wie im Deutschen → Falsche Freunde → Neue Formen → Besonderheiten), Kleinbuchstaben auf Karten, Buchstaben-Auswahlmenü zum Wiederholen einzelner gelernter Buchstaben (ohne Fortschritts-Verfälschung)
+  - [x] Alphabet: Lese-Belohnung (49 Wörter, schalten sich mit gelernten Buchstaben frei, mit Audio) + Verwechsler-Training (6 Paare, 10 Schnellfragen, 3 Fragetypen, +2 XP pro Treffer)
   - [ ] Vokabeln (47 Karten — Inhalt ausbauen)
   - [ ] Grammatik (65 Karten in 5 Themen — Quiz-Form überdenken, Übersetze-die-Regel passt nicht)
   - [ ] Hören (78 — audio-first machen, Lernkarten zeigen das Wort als Text)

@@ -23,7 +23,7 @@ const sandbox = {
 sandbox.window.speechSynthesis = undefined;
 vm.createContext(sandbox);
 // const/let im Script werden nicht global — Daten am Ende explizit exportieren
-const exportCode = ';globalThis.__EXPORT={C:typeof C!=="undefined"?C:{},GAP_DATA:typeof GAP_DATA!=="undefined"?GAP_DATA:{},STORIES:typeof STORIES!=="undefined"?STORIES:[],DLG:typeof DLG!=="undefined"?DLG:[],THEME_VOCAB:typeof THEME_VOCAB!=="undefined"?THEME_VOCAB:{}};';
+const exportCode = ';globalThis.__EXPORT={C:typeof C!=="undefined"?C:{},GAP_DATA:typeof GAP_DATA!=="undefined"?GAP_DATA:{},STORIES:typeof STORIES!=="undefined"?STORIES:[],DLG:typeof DLG!=="undefined"?DLG:[],THEME_VOCAB:typeof THEME_VOCAB!=="undefined"?THEME_VOCAB:{},READ_WORDS:typeof READ_WORDS!=="undefined"?READ_WORDS:[]};';
 vm.runInContext(m[1] + exportCode, sandbox);
 const X = sandbox.__EXPORT || {};
 
@@ -36,6 +36,7 @@ for (const l in GAP) ['s1', 's2', 's3', 's4'].forEach(k => { if (GAP[l][k] && GA
 (X.DLG || []).forEach(d => { if (d.ai) texts.add(d.ai.trim()); });
 const TV = X.THEME_VOCAB || {};
 for (const t in TV) TV[t].forEach(it => { if (it.m) texts.add(it.m.trim()); });
+(X.READ_WORDS || []).forEach(w => { if (w.w) texts.add(w.w.trim()); });
 
 const arr = [...texts].filter(t => t.length > 0);
 fs.writeFileSync(path.join(__dirname, 'texts.json'), JSON.stringify(arr, null, 1), 'utf8');
