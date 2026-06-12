@@ -1491,7 +1491,8 @@ function showDash(){
     calEl.appendChild(day);
   }
   const ts=GT();const cfg=DC[cd];
-  const goal=cfg.goal,done2=ts.cards||0;
+  // Tagesziel: im Onboarding gewählte Zeit (5/10/20/30 min ≙ Karten) — sonst Level-Standard
+  const goal=({5:5,10:10,20:20,30:30})[d.dailyMins]||cfg.goal,done2=ts.cards||0;
   const pct=Math.min(100,Math.round((done2/goal)*100));
   const circ=163,off=circ-(circ*(pct/100));
   document.getElementById('goalRing').style.strokeDashoffset=off;
