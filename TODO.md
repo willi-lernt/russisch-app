@@ -14,6 +14,13 @@ Stand: 11.06.2026
 - [x] 715-KB-Base64-Manifest aus dem `<head>` entfernt → index.html von 1,12 MB auf ~0,4 MB
 - [x] Fortschritt: Richtig/Falsch zählt nur korrekte Antworten; Dashboard zeigt Fortschritt gegen den Level-Pool
 
+## Erledigt (12.06.2026) — Roter-Faden-Update
+- [x] „▶ Hier weitermachen"-Karte oben im Lernpfad: empfiehlt genau einen nächsten Schritt (fällige Wiederholungen ab 5 → Alphabet bis fertig → erster unfertiger Pfad in Reihenfolge)
+- [x] Sanfte Voraussetzungen statt Level-Sperren: Pfade immer anklickbar, bei fehlender Empfehlung gedimmt mit „💡 Tipp: erst X lernen" (SEC_REQS)
+- [x] Dashboard in 4 Gruppen: Grundlagen / Wortschatz / Fertigkeiten / Deine Welt
+- [x] Level umgedeutet zum „Hilfe-Level" (steuert nur noch Hilfen/Versuche/Rundengröße/XP — keine Freischaltung mehr); Hören & Sprechen damit ab Tag 1 zugänglich
+- [ ] Später: Tages-Session als Standardeinstieg („Heute für dich: 5 neue + 3 Wiederholungen + 1 Hörübung") — der eigentliche Duolingo-Faden
+
 ## Aktuell in Arbeit
 - [ ] Alle Lernpfade gemeinsam durchgehen und verbessern
   - [x] Alphabet: didaktische Lern-Reihenfolge (Wie im Deutschen → Falsche Freunde → Neue Formen → Besonderheiten), Kleinbuchstaben auf Karten, Buchstaben-Auswahlmenü zum Wiederholen einzelner gelernter Buchstaben (ohne Fortschritts-Verfälschung)

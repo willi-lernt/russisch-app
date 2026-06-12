@@ -260,8 +260,8 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 <div id="scDiff" class="sc">
 <div style="text-align:center;margin-bottom:1.4rem;padding-top:.5rem;">
 <div style="font-size:2rem;margin-bottom:.35rem;">&#127919;</div>
-<h1 style="font-size:1.35rem;font-weight:800;margin-bottom:.22rem;">Level w&#228;hlen</h1>
-<p style="font-size:.83rem;color:var(--text3);">W&#228;hle das passende Level f&#252;r dich</p>
+<h1 style="font-size:1.35rem;font-weight:800;margin-bottom:.22rem;">Hilfe-Level w&#228;hlen</h1>
+<p style="font-size:.83rem;color:var(--text3);">Wie viel Unterst&#252;tzung m&#246;chtest du beim &#220;ben? (Alle Lernpfade stehen dir immer offen)</p>
 </div>
 <div id="diffCards"></div>
 <button class="btn primary" style="width:100%;margin-top:.72rem;padding:.82rem;" onclick="confirmDiff()">Best&#228;tigen &#10003;</button>
@@ -2380,10 +2380,10 @@ function logout(){cu=null;try{localStorage.removeItem('ru_cur');}catch(e){}showS
 
 function renderDiffCards(){
   const w=document.getElementById('diffCards');w.innerHTML='';
-  [{k:'anfaenger',e:'&#127807;',n:'Anf\xe4nger',p:'Viele Hilfen \xb7 3 Versuche \xb7 Ziel: 5/Tag',b:'A1',bc:'green'},
-   {k:'standard',e:'&#128216;',n:'Standard',p:'Normale Hilfe \xb7 2 Versuche \xb7 Ziel: 10/Tag',b:'A2',bc:'blue'},
-   {k:'fort',e:'&#128293;',n:'Fortgeschritten',p:'Weniger Hilfe \xb7 2 Versuche \xb7 Ziel: 15/Tag',b:'B1',bc:'orange'},
-   {k:'profi',e:'&#9889;',n:'Profi',p:'Keine Hilfe \xb7 1 Versuch \xb7 Ziel: 20/Tag',b:'B2+',bc:'red'}
+  [{k:'anfaenger',e:'&#127807;',n:'Anf\xe4nger',p:'Viele Hilfen \xb7 3 Versuche \xb7 kleine Runden',b:'A1',bc:'green'},
+   {k:'standard',e:'&#128216;',n:'Standard',p:'Vorschl\xe4ge & Hilfen \xb7 2 Versuche',b:'A2',bc:'blue'},
+   {k:'fort',e:'&#128293;',n:'Fortgeschritten',p:'Weniger Hilfe \xb7 2 Versuche \xb7 mehr XP',b:'B1',bc:'orange'},
+   {k:'profi',e:'&#9889;',n:'Profi',p:'Keine Hilfe \xb7 1 Versuch \xb7 max. XP',b:'B2+',bc:'red'}
   ].forEach(it=>{
     const d=document.createElement('div');d.className='diff-card glass'+(sd===it.k?' sel':'');d.id='diff-'+it.k;
     d.innerHTML='<div class="di">'+it.e+'</div><div class="dt"><h3>'+it.n+'</h3><p>'+it.p+'</p></div><span class="badge '+it.bc+'">'+it.b+'</span>';
@@ -2393,6 +2393,48 @@ function renderDiffCards(){
 }
 function changeDiff(){sd=cd;renderDiffCards();showSc('scDiff');}
 function confirmDiff(){cd=sd;const us=GU();us[cu].diff=cd;us[cu].diffSet=true;SU(us);showDash();}
+
+// ── ROTER FADEN ───────────────────────────────────────────────────
+// Sanfte Voraussetzungen: Empfehlung statt harter Level-Sperre
+const SEC_REQS={
+  vocabulary:{sec:'alphabet',n:12,label:'12 Buchstaben lernen'},
+  numbers:{sec:'alphabet',n:12,label:'12 Buchstaben lernen'},
+  colors:{sec:'alphabet',n:12,label:'12 Buchstaben lernen'},
+  weekdays:{sec:'alphabet',n:12,label:'12 Buchstaben lernen'},
+  listening:{sec:'alphabet',n:6,label:'6 Buchstaben lernen'},
+  grammar:{sec:'vocabulary',n:10,label:'10 Vokabeln lernen'},
+  speaking:{sec:'vocabulary',n:10,label:'10 Vokabeln lernen'},
+  sentences:{sec:'vocabulary',n:15,label:'15 Vokabeln lernen'},
+  reading:{sec:'vocabulary',n:25,label:'25 Vokabeln lernen'}
+};
+function getSecRecommendation(secId,d){
+  var rq=SEC_REQS[secId];if(!rq)return null;
+  return ((d.progress&&d.progress[rq.sec])||0)>=rq.n?null:rq.label;
+}
+// Der eine empfohlene nächste Schritt für „Hier weitermachen"
+function getNextStep(d,srs,now){
+  try{
+    var due=0;for(var k in srs){if(srs[k].nr&&srs[k].nr<=now)due++;}
+    if(due>=5)return {icon:'&#128260;',text:due+' Karten sind zur Wiederholung fällig — erst festigen!',action:function(){startSRSSession();}};
+    var aDone=(d.progress&&d.progress['alphabet'])||0;
+    var aLen=(C['alphabet']||[]).length;
+    if(aDone<aLen)return {icon:'&#1071;',text:aDone>0?('Alphabet: Buchstabe '+(aDone+1)+' von '+aLen+' wartet auf dich'):'Starte mit dem Alphabet — die Basis für alles!',action:function(){showAlphabetMenu();}};
+    var order=['vocabulary','numbers','colors','weekdays','grammar','listening','speaking','sentences','reading'];
+    for(var i=0;i<order.length;i++){
+      var id=order[i];
+      if(getSecRecommendation(id,d))continue;
+      var pool=getDifficultyPool(C[id]||[],cd,id);
+      var done=(d.progress&&d.progress[id])||0;
+      if(pool.length&&done<pool.length){
+        var sec=SECS.find(function(s){return s.id===id;});
+        return {icon:sec?sec.icon:'&#9654;',text:(sec?sec.title.replace(/^\d+\.\s*/,''):id)+': '+done+' / '+pool.length+' gelernt — weiter geht\'s!',action:(function(sid){return function(){
+          if(sid==='vocabulary')showVocabMenu();else if(sid==='numbers')showNumbersMenu();else if(sid==='colors')showColorsMenu();else if(sid==='grammar')showGrammarMenu();else startSec(sid);
+        };})(id)};
+      }
+    }
+    return null;
+  }catch(e){return null;}
+}
 
 function showDash(){
   showSc('scDash');updateStreak();setTimeout(checkAchievements,800);
@@ -2442,16 +2484,41 @@ function showDash(){
   document.getElementById('diffE').textContent=cfg.e;
   document.getElementById('diffL').textContent=cfg.l;
   const pfEl=document.getElementById('pfad');pfEl.innerHTML='';
-  SECS.forEach(sec=>{
-    const lk=!cfg.sec.includes(sec.id);
-    const data=sec.id==='custom'?getCustomCards():getDifficultyPool(C[sec.id],cd,sec.id);
-    const doneN=d.progress[sec.id]||0,pctN=data.length?Math.min(100,Math.round((doneN/data.length)*100)):0;
-    const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
-    const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
-    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():sec.id==='vocabulary'?()=>showVocabMenu():sec.id==='numbers'?()=>showNumbersMenu():sec.id==='colors'?()=>showColorsMenu():()=>startSec(sec.id);
-    const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
-    row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
-    pfEl.appendChild(row);
+  // \u25b6 Hier weitermachen \u2014 der eine empfohlene n\u00e4chste Schritt
+  const next=getNextStep(d,srs,now);
+  if(next){
+    const nx=document.createElement('div');
+    nx.className='pfad-row glass';
+    nx.style.cssText='border-color:rgba(0,229,200,.5);background:rgba(0,229,200,.06);margin-bottom:.6rem;';
+    nx.onclick=next.action;
+    nx.innerHTML='<div class="pfad-icon">'+next.icon+'</div><div class="pfad-info"><h3 style="color:var(--cyan);">&#9654; Hier weitermachen</h3><p>'+next.text+'</p></div><div class="pfad-arr">&#9654;</div>';
+    pfEl.appendChild(nx);
+  }
+  const PFAD_GROUPS=[
+    {title:'&#128292; Grundlagen',ids:['alphabet']},
+    {title:'&#128218; Wortschatz',ids:['vocabulary','numbers','colors','weekdays']},
+    {title:'&#128736;&#65039; Fertigkeiten',ids:['grammar','listening','speaking','sentences','reading']},
+    {title:'&#11088; Deine Welt',ids:['custom']}
+  ];
+  PFAD_GROUPS.forEach(grp=>{
+    const h=document.createElement('div');
+    h.style.cssText='font-size:.7rem;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:.85rem 0 .4rem;';
+    h.innerHTML=grp.title;
+    pfEl.appendChild(h);
+    grp.ids.forEach(id=>{
+      const sec=SECS.find(s=>s.id===id);if(!sec)return;
+      const data=sec.id==='custom'?getCustomCards():getDifficultyPool(C[sec.id],cd,sec.id);
+      const doneN=d.progress[sec.id]||0,pctN=data.length?Math.min(100,Math.round((doneN/data.length)*100)):0;
+      const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
+      // Sanfte Voraussetzung: gedimmt + Tipp, aber immer anklickbar
+      const rec=getSecRecommendation(sec.id,d);
+      const row=document.createElement('div');row.className='pfad-row glass';
+      if(rec)row.style.opacity='.55';
+      row.onclick=sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():sec.id==='vocabulary'?()=>showVocabMenu():sec.id==='numbers'?()=>showNumbersMenu():sec.id==='colors'?()=>showColorsMenu():()=>startSec(sec.id);
+      const nF=data.length?doneN%data.length+1:1,nT=data.length?Math.min(doneN%data.length+cfg.bs,data.length):0;
+      row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+pctN+'%"></div></div><div class="prog-lbl">'+(rec?'&#128161; Tipp: erst '+rec:doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(doneN>0?'&#8635;':'&#9654;')+'</div>';
+      pfEl.appendChild(row);
+    });
   });
   const sb=document.createElement('div');sb.style.marginTop='.75rem';
   sb.innerHTML='<button class="btn ghost" style="width:100%;padding:.72rem;" onclick="showStory()">&#128218; Mini-Geschichten lesen</button>';
