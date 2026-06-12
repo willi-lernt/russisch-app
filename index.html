@@ -1497,15 +1497,22 @@ function startSec(sec){
     if(us2[cu]&&us2[cu].themeVocab&&typeof THEME_VOCAB!=='undefined'){
       var themeWords=THEME_VOCAB[us2[cu].themeVocab]||[];
       if(themeWords.length>0){
-        // Themen-Wörter in vocabulary mischen (erste 10)
         var existing=C['vocabulary']||[];
         var themeSlice=themeWords.slice(0,10);
-        // Nur hinzufügen wenn noch nicht drin
+        // Themen-Karten haben keine o/r-Felder — Antwortoptionen beim Einfügen generieren
+        var distractorPool=themeWords.concat(existing);
+        var toInsert=[];
         themeSlice.forEach(function(w){
-          if(!existing.some(function(e){return e.m===w.m;})){
-            existing.unshift(w);
+          if(existing.some(function(e){return e.m===w.m;}))return;
+          if(!w.o){
+            var others=distractorPool.filter(function(d){return d.t!==w.t;}).sort(function(){return Math.random()-.5;}).slice(0,3);
+            w.o=[w.t].concat(others.map(function(d){return d.t;}));
+            w.r=[w.m].concat(others.map(function(d){return d.m;}));
           }
+          toInsert.push(w);
         });
+        // Nach den 10 Kern-Grundlagen einfügen (nicht davor!) — Anfänger lernen zuerst Hallo/Danke/Ja/Nein
+        if(toInsert.length){existing.splice.apply(existing,[Math.min(10,existing.length),0].concat(toInsert));}
         C['vocabulary']=existing;
       }
     }
@@ -1573,9 +1580,18 @@ function loadCard(){
   const lb={alphabet:'BUCHSTABE',vocabulary:'VOKABEL',grammar:'GRAMMATIK',grammar_faelle:'FÄLLE',grammar_verben:'VERBEN',grammar_pronomen:'PRONOMEN',grammar_praepositionen:'PRÄPOS.',listening:'H\xd6REN',speaking:'SPRECHEN',sentences:'SATZ',reading:'TEXT',numbers:'ZAHL',colors:'FARBE',weekdays:'WOCHENTAG',custom:'EIGENE'};
   document.getElementById('cBadge').textContent=lb[cs]||cs.toUpperCase();
   document.getElementById('cMain').textContent=item.m;
-  document.getElementById('cSub').textContent='Aussprache: '+item.s;
+  // s ist nur beim Alphabet die Aussprache — sonst Kategorie/Info; Transliteration steckt in e
+  if(cs==='alphabet'){
+    document.getElementById('cSub').textContent='Aussprache: '+item.s;
+    document.getElementById('cEx').textContent=item.e||'';
+  } else if({vocabulary:1,listening:1,speaking:1,sentences:1}[cs]&&item.e&&/^[A-Za-z]/.test(item.e)){
+    document.getElementById('cSub').textContent='Aussprache: '+item.e;
+    document.getElementById('cEx').textContent=item.s||'';
+  } else {
+    document.getElementById('cSub').textContent=item.s||'';
+    document.getElementById('cEx').textContent=item.e||'';
+  }
   document.getElementById('cTrans').textContent='= '+item.t;
-  document.getElementById('cEx').textContent=item.e;
   document.getElementById('cExtra').textContent=item.x||'';
   document.getElementById('lProg').textContent=(ci+1)+' von '+cb.length;
   const mn=document.getElementById('cMn');
@@ -3076,7 +3092,7 @@ function loadQ(){
   inp.focus();
 }
 
-function showHint(){const item=cb[qi];document.getElementById('hintBox').innerHTML='<strong>Tipp:</strong> '+item.s+(item.mn?' \u2014 '+item.mn:'');document.getElementById('hintBox').style.display='block';}
+function showHint(){const item=cb[qi];document.getElementById('hintBox').innerHTML='<strong>Tipp:</strong> '+item.s+(item.mn?' \u2014 '+item.mn:(item.e?' \u00b7 gesprochen: \u201e'+item.e+'\u201c':''));document.getElementById('hintBox').style.display='block';}
 function showSol(){const item=cb[qi];document.getElementById('solBox').innerHTML='<strong>L\xf6sung:</strong> '+(qm==='ru-de'?item.t:item.m);document.getElementById('solBox').style.display='block';}
 function skipQ(){at=0;qi++;loadQ();}
 
