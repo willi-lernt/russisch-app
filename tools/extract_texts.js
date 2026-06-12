@@ -29,7 +29,11 @@ const X = sandbox.__EXPORT || {};
 
 const texts = new Set();
 const C = X.C || {};
-for (const sec in C) (C[sec] || []).forEach(it => { if (it.m) texts.add(it.m.trim()); });
+for (const sec in C) (C[sec] || []).forEach(it => {
+  if (it.m) texts.add(it.m.trim());
+  // Beispielsätze (ctx) sind jetzt antippbar → brauchen Audio
+  (it.ctx || []).forEach(s => { if (s.ru) texts.add(s.ru.trim()); });
+});
 const GAP = X.GAP_DATA || {};
 for (const l in GAP) ['s1', 's2', 's3', 's4'].forEach(k => { if (GAP[l][k] && GAP[l][k].full) texts.add(GAP[l][k].full.trim()); });
 (X.STORIES || []).forEach(st => texts.add(st.text.map(p => p.ru).join('').trim()));
