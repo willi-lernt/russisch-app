@@ -1,0 +1,6 @@
+# Claude-Code-Arbeitsdateien
+.claude/
+
+# Python
+__pycache__/
+*.pyc
