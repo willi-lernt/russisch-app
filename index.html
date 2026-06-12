@@ -2436,6 +2436,95 @@ function getNextStep(d,srs,now){
   }catch(e){return null;}
 }
 
+// ── TAGES-SESSION ─────────────────────────────────────────────────
+// „Dein Lerntag in einem Klick": Wiederholungen → neue Karten → Spiel,
+// dosiert nach der Onboarding-Zeit (dailyMins)
+function getDailyPlan(){try{var t=new Date().toDateString();var p=JSON.parse(_lg('ru_daily_'+cu)||'{}');return p.date===t?p:null;}catch(e){return null;}}
+function saveDailyPlan(p){_ls('ru_daily_'+cu,JSON.stringify(p));}
+function buildDailyPlan(){
+  var us=GU(),d=us[cu]||{};
+  var mins=d.dailyMins||10;
+  var srs=GS(),now=Date.now(),due=0;
+  for(var k in srs){if(srs[k].nr&&srs[k].nr<=now)due++;}
+  var steps=[];
+  if(due>0)steps.push({type:'wh',label:'&#128260; '+Math.min(due,20)+' Wiederholungen'});
+  var neuRunden=mins>=30?3:mins>=20?2:1;
+  for(var i=0;i<neuRunden;i++)steps.push({type:'neu',label:'&#128214; Neue Karten lernen'});
+  if(mins>=10)steps.push({type:'spiel',label:'&#127918; Spiel-Runde'});
+  return {date:new Date().toDateString(),steps:steps.map(function(s){return {type:s.type,label:s.label,done:false};}),launched:null,dismissed:false,celebrated:false};
+}
+function startDailyStep(){
+  var p=getDailyPlan();if(!p)return;
+  var idx=-1;
+  for(var i=0;i<p.steps.length;i++){if(!p.steps[i].done){idx=i;break;}}
+  if(idx<0)return;
+  p.launched=idx;saveDailyPlan(p);
+  var st=p.steps[idx];
+  if(st.type==='wh'){startSRSSession();return;}
+  if(st.type==='neu'){
+    var us=GU(),d=us[cu];
+    if(((d.progress&&d.progress['alphabet'])||0)<(C['alphabet']||[]).length){startSec('alphabet');return;}
+    var order=['vocabulary','numbers','colors','weekdays','grammar','listening','speaking','sentences','reading'];
+    for(var j=0;j<order.length;j++){
+      var id=order[j];
+      if(getSecRecommendation(id,d))continue;
+      var pool=getDifficultyPool(C[id]||[],cd,id);
+      if(pool.length&&((d.progress&&d.progress[id])||0)<pool.length){startSec(id);return;}
+    }
+    startSec('vocabulary');return;
+  }
+  // Spiel-Runde: täglich rotierend aus den freigeschalteten Spielen
+  var day=Math.floor(Date.now()/86400000);
+  var games=[startPairsGame];
+  if(getReadableWords().length>=4)games.push(startReadQuiz);
+  if(getUnlockedPairs().length)games.push(startDrill);
+  var us2=GU();
+  if(((us2[cu].progress&&us2[cu].progress['numbers'])||0)>0)games.push(startNumberTrainer);
+  if(((us2[cu].progress&&us2[cu].progress['colors'])||0)>0)games.push(startColorTrainer);
+  games[day%games.length]();
+}
+function showDailySession(){
+  var p=getDailyPlan();
+  if(!p){p=buildDailyPlan();saveDailyPlan(p);}
+  p.dismissed=false;saveDailyPlan(p);
+  var us=GU();var mins=(us[cu]&&us[cu].dailyMins)||10;
+  var nextIdx=-1;
+  for(var i=0;i<p.steps.length;i++){if(!p.steps[i].done){nextIdx=i;break;}}
+  var ov=document.createElement('div');ov.className='levelup-overlay';
+  var inner='<div class="levelup-box" style="max-width:340px;width:94%;">';
+  inner+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;"><span style="font-size:1.05rem;font-weight:900;color:var(--cyan);">&#128640; Deine Tages-Session</span><button id="dsExit" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.05rem;font-family:inherit;padding:0 .2rem;">&#10005;</button></div>';
+  inner+='<div style="font-size:.75rem;color:var(--text3);margin-bottom:.9rem;text-align:left;">F&uuml;r dich zusammengestellt &middot; ca. '+mins+' Minuten</div>';
+  p.steps.forEach(function(s,i){
+    var stat=s.done?'&#9989;':(i===nextIdx?'&#9654;':'&#8943;');
+    var col=s.done?'#22c55e':(i===nextIdx?'var(--cyan)':'var(--text3)');
+    inner+='<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem .65rem;margin-bottom:.35rem;background:var(--glass);border:1px solid '+(i===nextIdx?'rgba(0,229,200,.4)':'var(--border)')+';border-radius:var(--r-sm);text-align:left;">';
+    inner+='<span style="font-size:.95rem;">'+stat+'</span><span style="flex:1;font-size:.85rem;font-weight:600;color:'+col+';'+(s.done?'text-decoration:line-through;opacity:.7;':'')+'">'+s.label+'</span></div>';
+  });
+  if(nextIdx>=0){
+    inner+='<button class="btn primary" style="width:100%;margin-top:.6rem;" id="dsStart">Schritt '+(nextIdx+1)+' starten &#9654;</button>';
+  } else {
+    inner+='<div style="color:#22c55e;font-weight:700;margin-top:.6rem;">&#127881; Alles geschafft f&uuml;r heute!</div>';
+  }
+  inner+='<button class="btn" style="width:100%;margin-top:.5rem;background:var(--glass);border-color:var(--border);font-size:.8rem;" id="dsLater">Sp&auml;ter</button>';
+  inner+='</div>';
+  ov.innerHTML=inner;
+  document.body.appendChild(ov);
+  ov.querySelector('#dsExit').onclick=ov.querySelector('#dsLater').onclick=function(){
+    var p2=getDailyPlan();if(p2){p2.dismissed=true;saveDailyPlan(p2);}
+    ov.remove();
+  };
+  var sBtn=ov.querySelector('#dsStart');
+  if(sBtn)sBtn.onclick=function(){ov.remove();startDailyStep();};
+}
+function showDailyDone(){
+  var ts=GT();
+  var acc=ts.total>0?Math.round((ts.correct/ts.total)*100):0;
+  var ov=document.createElement('div');ov.className='levelup-overlay';
+  ov.innerHTML='<div class="levelup-box"><div style="font-size:2.4rem;margin-bottom:.4rem;">&#127881;</div><div style="font-weight:900;font-size:1.15rem;margin-bottom:.25rem;">Tages-Session geschafft!</div><div style="font-size:.8rem;color:var(--text3);margin-bottom:1rem;">Deine Bilanz heute:</div><div style="display:flex;gap:.5rem;margin-bottom:1.1rem;"><div class="glass" style="flex:1;padding:.6rem .3rem;border-radius:var(--r-sm);"><div style="font-size:1.2rem;font-weight:900;color:var(--cyan);">'+(ts.cards||0)+'</div><div style="font-size:.65rem;color:var(--text3);">Karten</div></div><div class="glass" style="flex:1;padding:.6rem .3rem;border-radius:var(--r-sm);"><div style="font-size:1.2rem;font-weight:900;color:#22c55e;">'+acc+'%</div><div style="font-size:.65rem;color:var(--text3);">Genauigkeit</div></div><div class="glass" style="flex:1;padding:.6rem .3rem;border-radius:var(--r-sm);"><div style="font-size:1.2rem;font-weight:900;color:#fbbf24;">'+(ts.points||0)+'</div><div style="font-size:.65rem;color:var(--text3);">Punkte</div></div></div><button class="btn primary" style="width:100%;" id="ddOk">&#128640; Stark!</button></div>';
+  document.body.appendChild(ov);
+  ov.querySelector('#ddOk').onclick=function(){ov.remove();};
+}
+
 function showDash(){
   showSc('scDash');updateStreak();setTimeout(checkAchievements,800);
   const us=GU(),d=us[cu];
@@ -2484,15 +2573,44 @@ function showDash(){
   document.getElementById('diffE').textContent=cfg.e;
   document.getElementById('diffL').textContent=cfg.l;
   const pfEl=document.getElementById('pfad');pfEl.innerHTML='';
-  // \u25b6 Hier weitermachen \u2014 der eine empfohlene n\u00e4chste Schritt
-  const next=getNextStep(d,srs,now);
-  if(next){
+  // Tages-Session: R\u00fcckkehr vom gestarteten Schritt erkennen \u2192 abhaken
+  var dsP=getDailyPlan();
+  if(dsP&&dsP.launched!=null){
+    dsP.steps[dsP.launched].done=true;dsP.launched=null;saveDailyPlan(dsP);
+    if(dsP.steps.every(function(s){return s.done;})){
+      if(!dsP.celebrated){dsP.celebrated=true;saveDailyPlan(dsP);setTimeout(showDailyDone,400);}
+    } else if(!dsP.dismissed){
+      setTimeout(showDailySession,350);
+    }
+  }
+  var dsDone=dsP&&dsP.steps.length>0&&dsP.steps.every(function(s){return s.done;});
+  if(!dsDone){
+    // \ud83d\ude80 Tages-Session als Hauptkarte
+    var dsSteps=dsP?dsP.steps.filter(function(s){return s.done;}).length+'/'+dsP.steps.length:null;
+    var dsNext=dsP?(dsP.steps.find(function(s){return !s.done;})||{}).label:null;
     const nx=document.createElement('div');
     nx.className='pfad-row glass';
     nx.style.cssText='border-color:rgba(0,229,200,.5);background:rgba(0,229,200,.06);margin-bottom:.6rem;';
-    nx.onclick=next.action;
-    nx.innerHTML='<div class="pfad-icon">'+next.icon+'</div><div class="pfad-info"><h3 style="color:var(--cyan);">&#9654; Hier weitermachen</h3><p>'+next.text+'</p></div><div class="pfad-arr">&#9654;</div>';
+    nx.onclick=function(){showDailySession();};
+    nx.innerHTML='<div class="pfad-icon">&#128640;</div><div class="pfad-info"><h3 style="color:var(--cyan);">&#128640; Tages-Session'+(dsSteps?' ('+dsSteps+')':'')+'</h3><p>'+(dsNext?'Weiter mit: '+dsNext:'Dein Lerntag in einem Klick &mdash; f&uuml;r dich zusammengestellt')+'</p></div><div class="pfad-arr">&#9654;</div>';
     pfEl.appendChild(nx);
+  } else {
+    // Session geschafft \u2192 Erfolgskarte + freies Weiterlernen
+    const okC=document.createElement('div');
+    okC.className='pfad-row glass';
+    okC.style.cssText='border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.05);margin-bottom:.6rem;';
+    okC.onclick=function(){showDailySession();};
+    okC.innerHTML='<div class="pfad-icon">&#9989;</div><div class="pfad-info"><h3 style="color:#22c55e;">Tages-Session geschafft!</h3><p>Lust auf mehr? Unten geht es frei weiter.</p></div><div class="pfad-arr">&#127881;</div>';
+    pfEl.appendChild(okC);
+    const next=getNextStep(d,srs,now);
+    if(next){
+      const nx2=document.createElement('div');
+      nx2.className='pfad-row glass';
+      nx2.style.cssText='border-color:rgba(0,229,200,.35);margin-bottom:.6rem;';
+      nx2.onclick=next.action;
+      nx2.innerHTML='<div class="pfad-icon">'+next.icon+'</div><div class="pfad-info"><h3 style="color:var(--cyan);">&#9654; Hier weitermachen</h3><p>'+next.text+'</p></div><div class="pfad-arr">&#9654;</div>';
+      pfEl.appendChild(nx2);
+    }
   }
   const PFAD_GROUPS=[
     {title:'&#128292; Grundlagen',ids:['alphabet']},
@@ -4331,7 +4449,7 @@ function startSRSSession(){
   ci=0;sp=0;sc=0;sw=0;sxp=0;
   var nb=document.getElementById('nextBtn');
   if(nb){nb.onclick=null;nb.setAttribute('onclick','nextCard()');nb.innerHTML='Weiter &#8594;';}
-  document.getElementById('lTitle').textContent='&#128260; Wiederholung ('+cb.length+' Karten)';
+  document.getElementById('lTitle').textContent='🔄 Wiederholung ('+cb.length+' Karten)';
   showSc('scLearn');loadCard();
 }
 

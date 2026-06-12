@@ -19,7 +19,7 @@ Stand: 11.06.2026
 - [x] Sanfte Voraussetzungen statt Level-Sperren: Pfade immer anklickbar, bei fehlender Empfehlung gedimmt mit „💡 Tipp: erst X lernen" (SEC_REQS)
 - [x] Dashboard in 4 Gruppen: Grundlagen / Wortschatz / Fertigkeiten / Deine Welt
 - [x] Level umgedeutet zum „Hilfe-Level" (steuert nur noch Hilfen/Versuche/Rundengröße/XP — keine Freischaltung mehr); Hören & Sprechen damit ab Tag 1 zugänglich
-- [ ] Später: Tages-Session als Standardeinstieg („Heute für dich: 5 neue + 3 Wiederholungen + 1 Hörübung") — der eigentliche Duolingo-Faden
+- [x] Tages-Session gebaut (12.06.2026): 🚀-Hauptkarte auf dem Dashboard → Plan-Overlay (Wiederholungen → 1–3 Runden neue Karten je nach dailyMins → rotierende Spiel-Runde), geführte Kette mit Auto-Wiederöffnung nach jedem Schritt, Abschluss-Feier mit Tagesbilanz, danach Erfolgskarte + freies Lernen
 
 ## Aktuell in Arbeit
 - [ ] Alle Lernpfade gemeinsam durchgehen und verbessern
