@@ -18,6 +18,9 @@ Stand: 11.06.2026
 - [ ] Alle Lernpfade gemeinsam durchgehen und verbessern
   - [x] Alphabet: didaktische Lern-Reihenfolge (Wie im Deutschen → Falsche Freunde → Neue Formen → Besonderheiten), Kleinbuchstaben auf Karten, Buchstaben-Auswahlmenü zum Wiederholen einzelner gelernter Buchstaben (ohne Fortschritts-Verfälschung)
   - [x] Alphabet: Lese-Belohnung (49 Wörter, schalten sich mit gelernten Buchstaben frei, mit Audio) + Verwechsler-Training (6 Paare, 10 Schnellfragen, 3 Fragetypen, +2 XP pro Treffer)
+  - [x] Alphabet: 66 Alternativ-Lückensätze (s3/s4) — Wiederholungen rotieren jetzt die Satz-Paare; Ы-Satzfehler korrigiert ("собаки" endete auf и)
+  - [x] Alphabet: aktives Lese-Quiz (hören→Wort / Wort→Bedeutung, 10 Fragen), Handschrift-Vorschau auf Lernkarte (kursiv), Meisterschafts-Sterne pro Buchstabe (1=gelernt, 2=wiederholt, 3=≥85% Trefferquote)
+  - [x] Tracing/Nachzeichnen bewusst gestrichen (Entscheidung 12.06.2026)
   - [ ] Vokabeln (47 Karten — Inhalt ausbauen)
   - [ ] Grammatik (65 Karten in 5 Themen — Quiz-Form überdenken, Übersetze-die-Regel passt nicht)
   - [ ] Hören (78 — audio-first machen, Lernkarten zeigen das Wort als Text)
