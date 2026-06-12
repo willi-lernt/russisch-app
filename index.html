@@ -1287,8 +1287,8 @@ function updateLastSession(){
     var btn=document.getElementById('lastSessionBtn');
     if(!ls||!info||!btn){return;}
     var secNames={alphabet:'Alphabet',vocabulary:'Vokabeln',grammar:'Grundgrammatik',
-      grammar_cases:'Fälle & Deklination',grammar_verbs:'Verben & Zeitformen',
-      grammar_pronouns:'Pronomen',grammar_prepositions:'Präpositionen',
+      grammar_faelle:'Fälle & Deklination',grammar_verben:'Verben & Zeitformen',
+      grammar_pronomen:'Pronomen',grammar_praepositionen:'Präpositionen',
       listening:'Hören',speaking:'Sprechen',sentences:'Sätze',
       reading:'Lesen',numbers:'Zahlen',colors:'Farben',
       weekdays:'Wochentage',custom:'Eigene Vokabeln'};
@@ -1538,6 +1538,7 @@ function startSec(sec){
   // Alphabet: Quiz-Modus (keine Lernkarten, direkt Lückensätze)
   if(sec==='alphabet'){
     ci=0;sp=0;sc=0;sw=0;sxp=0;
+    try{localStorage.setItem('lastSession',JSON.stringify({sec:sec,cd:cd,ts:Date.now()}));}catch(e){}
     const from=done+1,to=Math.min(done+bs,data.length);
     document.getElementById('lTitle').textContent='Alphabet A1 ('+from+'–'+to+'/'+data.length+')';
     // Direkt Alphabet-Quiz starten (ohne Lernkarten davor)
@@ -1831,6 +1832,8 @@ function startAlphabetQuiz2(letters,review){
   _aqReview=!!review;
   aqLetters=letters.filter(function(c){return !c.type;});
   aqIdx=0;aqGapIdx=0;
+  // cb/ci synchron halten — Nachsprechen-Button (startMic) liest cb[ci]
+  cb=aqLetters;ci=0;
   window._aqCurrent=null;
   if(!aqLetters.length){showAlphabetFinish();return;}
   loadAQ();
@@ -1943,14 +1946,19 @@ function startDrill(){
       return;
     }
     var q=qs[qi2],it=byLetter[q.target];
+    // Stumme Zeichen heißen "(Weichheitszeichen)" — Frage anders formulieren
+    var tl=it.t,isZeichen=tl.charAt(0)==='(';
+    if(isZeichen)tl=tl.replace(/[()]/g,'');
     var frage;
-    if(q.typ===0){frage='Welcher Buchstabe klingt wie <span style="color:var(--cyan);">&bdquo;'+it.t+'&ldquo;</span>?';}
-    else if(q.typ===1){frage='Wie sieht <span style="color:var(--cyan);">&bdquo;'+it.t+'&ldquo;</span> aus? (Tipp: '+(it.e||'')+')';}
+    if(q.typ===0){frage=isZeichen?'Welcher Buchstabe ist das <span style="color:var(--cyan);">'+tl+'</span>?':'Welcher Buchstabe klingt wie <span style="color:var(--cyan);">&bdquo;'+tl+'&ldquo;</span>?';}
+    else if(q.typ===1){frage=(isZeichen?'Wie sieht das <span style="color:var(--cyan);">'+tl+'</span> aus?':'Wie sieht <span style="color:var(--cyan);">&bdquo;'+tl+'&ldquo;</span> aus?')+' <span style="color:var(--text3);font-size:.78rem;">(Tipp: '+(it.e||'')+')</span>';}
     else{frage='&#128266; Welchen Buchstaben h&ouml;rst du?';}
     var btns=q.pair.map(function(L){
       return '<button class="drill-opt" data-l="'+L+'" style="flex:1;padding:1rem .5rem;font-size:2rem;font-weight:900;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;color:var(--text);font-family:inherit;">'+L+' <span style="font-size:1.1rem;color:var(--text3);">'+L.toLowerCase()+'</span></button>';
     }).join('');
-    ov.innerHTML='<div class="levelup-box" style="max-width:340px;width:92%;"><div style="font-size:.75rem;color:var(--text3);margin-bottom:.6rem;">&#9889; Verwechsler-Training &middot; '+(qi2+1)+'/'+qs.length+'</div><div style="font-size:.95rem;font-weight:700;margin-bottom:1rem;min-height:2.4rem;">'+frage+'</div><div style="display:flex;gap:.6rem;margin-bottom:.6rem;">'+btns+'</div><div id="drillFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;"></div></div>';
+    ov.innerHTML='<div class="levelup-box" style="max-width:340px;width:92%;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;"><span style="font-size:.75rem;color:var(--text3);">&#9889; Verwechsler-Training &middot; '+(qi2+1)+'/'+qs.length+'</span><button id="drillExit" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.05rem;font-family:inherit;padding:0 .2rem;">&#10005;</button></div><div style="font-size:.95rem;font-weight:700;margin-bottom:1rem;min-height:2.4rem;">'+frage+'</div><div style="display:flex;gap:.6rem;margin-bottom:.6rem;">'+btns+'</div><div id="drillFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;"></div></div>';
+    var exitBtn=ov.querySelector('#drillExit');
+    if(exitBtn)exitBtn.onclick=function(){ov.remove();};
     if(q.typ===2)setTimeout(function(){spk(q.target);},250);
     ov.querySelectorAll('.drill-opt').forEach(function(b){
       b.onclick=function(){
@@ -1989,6 +1997,7 @@ function loadAQ(){
 
 function showAQLearnCard(letter){
   // scLearn befüllen und anzeigen
+  ci=aqIdx; // Mikrofon-Ziel (cb[ci]) auf aktuellen Buchstaben setzen
   document.getElementById('cBadge').textContent=_aqReview?'WIEDERHOLUNG':'BUCHSTABE '+(aqIdx+1)+'/'+aqLetters.length;
   // Groß- UND Kleinbuchstabe zeigen (б sieht ganz anders aus als Б!)
   document.getElementById('cMain').textContent=letter.m+' '+letter.m.toLowerCase();
