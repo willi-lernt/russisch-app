@@ -30,7 +30,8 @@ Stand: 11.06.2026
   - [ ] Sprechen (73 — braucht Internet für Spracherkennung! Offline-Hinweis nötig)
   - [ ] Sätze (25 — Modus wählbar machen statt Zufall)
   - [ ] Lesen (nur 3 Texte!) & Mini-Geschichten (nur 3) — Inhalt ausbauen
-  - [ ] Zahlen (53) / Farben (12) / Wochentage (23)
+  - [x] Zahlen komplett überarbeitet (12.06.2026): Zahlen-Menü mit Zahlen-Trainer (🔊 hören→Ziffernfeld + Ziffer→Wort, Level-abhängig bis 20/100/1000, Audio für alle Zahlen 1–100 + Hunderter, zusammengesetzte >100 aus Teil-Clips), Hör-Verwechsler (12/20…19/90), Level-Bereiche neu (Uhrzeit/Geld nicht mehr Profi-exklusiv), Eselsbrücken fürs -надцать-Muster, Doppelkarte четвёртый/пятый getrennt
+  - [ ] Farben (12) / Wochentage (23)
   - [ ] Eigene Listen (`???`-Platzhalter in Quiz-Vorschlägen ersetzen)
 
 ## Erledigt (11.06.2026) — Offline-Audio

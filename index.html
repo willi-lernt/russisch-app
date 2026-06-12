@@ -1808,6 +1808,28 @@ function registerVocabThemes(){
     if(!C[key])break;
     _enrichOptions(C[key],C[key]);
   }
+  // Zahlen: fehlende Eselsbrücken ergänzen (vor allem das -надцать-Muster)
+  var NUMBER_MN={
+    'шесть':'schestj — „sechs“ mit sch davor','семь':'sjem — kurz wie sieben','восемь':'wo-ssjem — acht',
+    'девять':'djewjat — neun','десять':'djessjat — denk an Dezi = Zehntel',
+    'одиннадцать':'adin-na-zat = eins-auf-zehn → 11','двенадцать':'dwe-na-zat = zwei-auf-zehn → 12',
+    'тринадцать':'tri-na-zat = drei-auf-zehn → 13','четырнадцать':'tschetyr-na-zat = vier-auf-zehn → 14',
+    'пятнадцать':'pjat-na-zat = fünf-auf-zehn → 15','шестнадцать':'schest-na-zat = sechs-auf-zehn → 16',
+    'семнадцать':'sem-na-zat = sieben-auf-zehn → 17','восемнадцать':'wossem-na-zat = acht-auf-zehn → 18',
+    'девятнадцать':'devjat-na-zat = neun-auf-zehn → 19',
+    'двадцать':'dwa-zat = zwei Zehner → 20','тридцать':'tri-zat = drei Zehner → 30',
+    'пятьдесят':'pjat-desjat = fünf Zehner → 50','шестьдесят':'schest-desjat = sechs Zehner → 60',
+    'семьдесят':'sjem-desjat = sieben Zehner → 70','восемьдесят':'wossem-desjat = acht Zehner → 80',
+    'сто':'sto — kurz und knapp: hundert','тысяча':'tyssjatscha — tausend','миллион':'million — fast wie im Deutschen'
+  };
+  (C['numbers']||[]).forEach(function(n){if(!n.mn&&NUMBER_MN[n.m])n.mn=NUMBER_MN[n.m];});
+  // Doppelkarte „четвёртый / пятый" in zwei eigene Karten trennen
+  var qi5=(C['numbers']||[]).findIndex(function(n){return n.m==='четвёртый / пятый';});
+  if(qi5>=0){
+    C['numbers'].splice(qi5,1,
+      {m:'четвёртый',t:'vierte/r/s',s:'Ordinalzahlen',e:'tschetwjortyj',mn:'wie четыре (vier) mit -tyj-Endung',o:['vierte/r/s','fünfte/r/s','vierzig','vier'],r:['четвёртый','пятый','сорок','четыре'],ctx:[{ru:'Это четвёртый этаж.',de:'Das ist der vierte Stock.'}]},
+      {m:'пятый',t:'fünfte/r/s',s:'Ordinalzahlen',e:'pjatyj',mn:'wie пять (fünf) mit -yj-Endung',o:['fünfte/r/s','vierte/r/s','fünfzig','fünf'],r:['пятый','четвёртый','пятьдесят','пять'],ctx:[{ru:'Сегодня пятый день.',de:'Heute ist der fünfte Tag.'}]});
+  }
 }
 // Menü-Einträge inkl. dynamisch erkannter Top-Pakete
 function getVocabTopics(){
@@ -1880,6 +1902,187 @@ function startPairsGame(){
     });
   }
   renderRound();
+}
+
+// ── ZAHLEN-TRAINER ────────────────────────────────────────────────
+const RU_ONES=['','один','два','три','четыре','пять','шесть','семь','восемь','девять','десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+const RU_TENS=['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
+const RU_HUNDREDS=['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+function ruNumber(n){
+  if(n===1000)return 'тысяча';
+  var parts=[],h=Math.floor(n/100),rest=n%100;
+  if(h)parts.push(RU_HUNDREDS[h]);
+  if(rest>0&&rest<20)parts.push(RU_ONES[rest]);
+  else if(rest>=20){var t=Math.floor(rest/10),o=rest%10;parts.push(RU_TENS[t]);if(o)parts.push(RU_ONES[o]);}
+  return parts.join(' ');
+}
+// Mehrere Audio-Clips nacheinander abspielen (für zusammengesetzte Zahlen > 100)
+function spkParts(parts){
+  try{if(_curAudio){_curAudio.pause();_curAudio=null;}}catch(e){}
+  try{if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
+  var i=0;
+  function next(){
+    if(i>=parts.length)return;
+    var a=new Audio(AUDIO_BASE+audioKey(parts[i])+'.mp3');
+    _curAudio=a;i++;
+    a.onended=next;
+    a.onerror=function(){_spkSys(parts.join(' '));};
+    a.play().catch(function(){_spkSys(parts.join(' '));});
+  }
+  next();
+}
+function playRuNumber(n){
+  // 1–100, runde Hunderter und 1000 existieren als einzelne Clips — Rest zusammensetzen
+  if(n<=100||n%100===0||n===1000){spk(ruNumber(n));return;}
+  var h=Math.floor(n/100),rest=n%100;
+  spkParts([RU_HUNDREDS[h],ruNumber(rest)]);
+}
+function _trainerMax(){return cd==='anfaenger'?20:cd==='standard'?100:1000;}
+function _randNum(max){return 1+Math.floor(Math.random()*max);}
+function startNumberTrainer(){
+  var max=_trainerMax();
+  var qs=[];
+  for(var i=0;i<10;i++){
+    var n=_randNum(max);
+    qs.push({n:n,typ:Math.floor(Math.random()*2)});
+  }
+  var qi4=0,score=0;
+  var ov=document.createElement('div');ov.className='levelup-overlay';document.body.appendChild(ov);
+  function render(){
+    if(qi4>=qs.length){
+      var xp=score*2;
+      var us=GU();if(us[cu]){us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+xp;SU(us);}
+      ov.innerHTML='<div class="levelup-box"><div style="font-size:2rem;margin-bottom:.4rem;">'+(score>=8?'&#127881;':'&#128290;')+'</div><div style="font-weight:800;font-size:1.1rem;margin-bottom:.3rem;">'+score+' von '+qs.length+' richtig!</div><div style="font-size:.85rem;color:var(--cyan);margin-bottom:1rem;">+'+xp+' XP</div><button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="ntAgain">&#128290; Nochmal</button><button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);" id="ntDone">Fertig</button></div>';
+      ov.querySelector('#ntAgain').onclick=function(){ov.remove();startNumberTrainer();};
+      ov.querySelector('#ntDone').onclick=function(){ov.remove();showDash();};
+      return;
+    }
+    var q=qs[qi4];
+    var head='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;"><span style="font-size:.75rem;color:var(--text3);">&#128290; Zahlen-Trainer &middot; '+(qi4+1)+'/'+qs.length+' &middot; bis '+max+'</span><button id="ntExit" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.05rem;font-family:inherit;padding:0 .2rem;">&#10005;</button></div>';
+    if(q.typ===0){
+      // 🔊 Hören → Ziffern eintippen
+      var keys=[1,2,3,4,5,6,7,8,9,0];
+      var pad=keys.map(function(k){return '<button class="nt-key" data-k="'+k+'" style="padding:.7rem;font-size:1.15rem;font-weight:800;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;color:var(--text);font-family:inherit;">'+k+'</button>';}).join('');
+      ov.innerHTML='<div class="levelup-box" style="max-width:320px;width:92%;">'+head+
+        '<div style="font-size:.95rem;font-weight:700;margin-bottom:.7rem;">&#128266; Welche Zahl h&ouml;rst du?</div>'+
+        '<div style="text-align:center;margin-bottom:.7rem;"><button class="btn sm" id="ntReplay">&#128266; Nochmal anh&ouml;ren</button></div>'+
+        '<div id="ntDisplay" style="font-size:1.8rem;font-weight:900;color:var(--cyan);text-align:center;min-height:2.4rem;border-bottom:2px solid var(--border);margin-bottom:.7rem;letter-spacing:2px;">&nbsp;</div>'+
+        '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem;margin-bottom:.5rem;">'+pad+'</div>'+
+        '<div style="display:flex;gap:.4rem;"><button id="ntBack" class="btn" style="flex:1;">&#9003;</button><button id="ntOk" class="btn primary" style="flex:2;">Pr&uuml;fen &#10003;</button></div>'+
+        '<div id="ntFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;margin-top:.5rem;text-align:center;"></div></div>';
+      var val='';
+      var disp=ov.querySelector('#ntDisplay');
+      ov.querySelectorAll('.nt-key').forEach(function(b){b.onclick=function(){if(val.length<4){val+=b.getAttribute('data-k');disp.textContent=val;}};});
+      ov.querySelector('#ntBack').onclick=function(){val=val.slice(0,-1);disp.innerHTML=val||'&nbsp;';};
+      ov.querySelector('#ntReplay').onclick=function(){playRuNumber(q.n);};
+      setTimeout(function(){playRuNumber(q.n);},300);
+      ov.querySelector('#ntOk').onclick=function(){
+        if(!val)return;
+        var fb=ov.querySelector('#ntFb');
+        var ok=parseInt(val,10)===q.n;
+        if(ok){score++;fb.style.color='#22c55e';fb.textContent='✓ Richtig! '+q.n+' = '+ruNumber(q.n);}
+        else{fb.style.color='#ef4444';fb.textContent='✗ Das war '+q.n+' ('+ruNumber(q.n)+')';}
+        ov.querySelectorAll('button').forEach(function(b){if(b.id!=='ntExit')b.disabled=true;});
+        setTimeout(function(){qi4++;render();},ok?900:1900);
+      };
+    } else {
+      // Ziffer sehen → russisches Wort wählen
+      var opts=[q.n];
+      while(opts.length<4){
+        var c;
+        var art=Math.floor(Math.random()*4);
+        if(art===0&&q.n<20)c=q.n*10<=max?q.n*10:q.n+10; // 13 → 30 (Verwechsler!)
+        else if(art===1)c=q.n+(1+Math.floor(Math.random()*3));
+        else if(art===2)c=Math.max(1,q.n-(1+Math.floor(Math.random()*3)));
+        else c=_randNum(max);
+        if(c>=1&&c<=max&&opts.indexOf(c)<0)opts.push(c);
+      }
+      opts.sort(function(){return Math.random()-.5;});
+      var btns=opts.map(function(o){return '<button class="nt-opt" data-n="'+o+'" style="display:block;width:100%;margin-bottom:.45rem;padding:.65rem;font-size:.95rem;font-weight:700;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;color:var(--text);font-family:inherit;">'+ruNumber(o)+'</button>';}).join('');
+      ov.innerHTML='<div class="levelup-box" style="max-width:340px;width:92%;">'+head+
+        '<div style="font-size:.95rem;font-weight:700;margin-bottom:.4rem;">Wie hei&szlig;t diese Zahl auf Russisch?</div>'+
+        '<div style="font-size:2.6rem;font-weight:900;color:var(--cyan);text-align:center;margin-bottom:.8rem;">'+q.n+'</div>'+btns+
+        '<div id="ntFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;margin-top:.3rem;text-align:center;"></div></div>';
+      ov.querySelectorAll('.nt-opt').forEach(function(b){
+        b.onclick=function(){
+          var ok=parseInt(b.getAttribute('data-n'),10)===q.n;
+          var fb=ov.querySelector('#ntFb');
+          ov.querySelectorAll('.nt-opt').forEach(function(x){x.disabled=true;if(parseInt(x.getAttribute('data-n'),10)===q.n){x.style.borderColor='#22c55e';x.style.color='#22c55e';}});
+          if(ok){score++;fb.style.color='#22c55e';fb.textContent='✓ Richtig!';}
+          else{b.style.borderColor='#ef4444';b.style.color='#ef4444';fb.style.color='#ef4444';fb.textContent='✗ '+q.n+' = '+ruNumber(q.n);}
+          playRuNumber(q.n);
+          setTimeout(function(){qi4++;render();},ok?900:1900);
+        };
+      });
+    }
+    var ex=ov.querySelector('#ntExit');if(ex)ex.onclick=function(){ov.remove();};
+  }
+  render();
+}
+
+// Hör-Verwechsler für Zahlen: 12/20, 13/30 … 19/90
+const NUM_CONFUSION=[[12,20],[13,30],[14,40],[15,50],[16,60],[17,70],[18,80],[19,90]];
+function startNumberDrill(){
+  var qs=[];
+  for(var i=0;i<10;i++){
+    var pair=NUM_CONFUSION[Math.floor(Math.random()*NUM_CONFUSION.length)];
+    qs.push({pair:pair.slice().sort(function(){return Math.random()-.5;}),target:pair[Math.floor(Math.random()*2)]});
+  }
+  var qi6=0,score=0;
+  var ov=document.createElement('div');ov.className='levelup-overlay';document.body.appendChild(ov);
+  function render(){
+    if(qi6>=qs.length){
+      var xp=score*2;
+      var us=GU();if(us[cu]){us[cu].stats.totalXp=(us[cu].stats.totalXp||0)+xp;SU(us);}
+      ov.innerHTML='<div class="levelup-box"><div style="font-size:2rem;margin-bottom:.4rem;">'+(score>=8?'&#127881;':'&#128066;')+'</div><div style="font-weight:800;font-size:1.1rem;margin-bottom:.3rem;">'+score+' von '+qs.length+' richtig!</div><div style="font-size:.85rem;color:var(--cyan);margin-bottom:1rem;">+'+xp+' XP</div><button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="ndAgain">&#9889; Nochmal</button><button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);" id="ndDone">Fertig</button></div>';
+      ov.querySelector('#ndAgain').onclick=function(){ov.remove();startNumberDrill();};
+      ov.querySelector('#ndDone').onclick=function(){ov.remove();showDash();};
+      return;
+    }
+    var q=qs[qi6];
+    var btns=q.pair.map(function(n){return '<button class="nd-opt" data-n="'+n+'" style="flex:1;padding:1rem .5rem;font-size:1.8rem;font-weight:900;background:var(--glass2);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;color:var(--text);font-family:inherit;">'+n+'</button>';}).join('');
+    ov.innerHTML='<div class="levelup-box" style="max-width:320px;width:92%;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;"><span style="font-size:.75rem;color:var(--text3);">&#128066; Zahlen-Verwechsler &middot; '+(qi6+1)+'/'+qs.length+'</span><button id="ndExit" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.05rem;font-family:inherit;padding:0 .2rem;">&#10005;</button></div>'+
+      '<div style="font-size:.95rem;font-weight:700;margin-bottom:.7rem;">&#128266; Welche Zahl h&ouml;rst du?</div>'+
+      '<div style="text-align:center;margin-bottom:.8rem;"><button class="btn sm" id="ndReplay">&#128266; Nochmal anh&ouml;ren</button></div>'+
+      '<div style="display:flex;gap:.6rem;margin-bottom:.5rem;">'+btns+'</div>'+
+      '<div id="ndFb" style="min-height:1.3rem;font-size:.85rem;font-weight:600;text-align:center;"></div></div>';
+    ov.querySelector('#ndExit').onclick=function(){ov.remove();};
+    ov.querySelector('#ndReplay').onclick=function(){playRuNumber(q.target);};
+    setTimeout(function(){playRuNumber(q.target);},300);
+    ov.querySelectorAll('.nd-opt').forEach(function(b){
+      b.onclick=function(){
+        var ok=parseInt(b.getAttribute('data-n'),10)===q.target;
+        var fb=ov.querySelector('#ndFb');
+        ov.querySelectorAll('.nd-opt').forEach(function(x){x.disabled=true;if(parseInt(x.getAttribute('data-n'),10)===q.target){x.style.borderColor='#22c55e';x.style.color='#22c55e';}});
+        if(ok){score++;fb.style.color='#22c55e';fb.textContent='✓ '+q.target+' = '+ruNumber(q.target);}
+        else{b.style.borderColor='#ef4444';b.style.color='#ef4444';fb.style.color='#ef4444';fb.textContent='✗ Das war '+q.target+' ('+ruNumber(q.target)+')';}
+        setTimeout(function(){qi6++;render();},ok?800:1800);
+      };
+    });
+  }
+  render();
+}
+
+function showNumbersMenu(){
+  var us=GU();
+  var data=getDifficultyPool(C['numbers']||[],cd,'numbers');
+  var done=us[cu]&&us[cu].progress?Math.min(us[cu].progress['numbers']||0,data.length):0;
+  var ov=document.createElement('div');
+  ov.className='levelup-overlay';
+  var inner='<div class="levelup-box" style="max-width:360px;width:94%;padding:1.5rem 1.2rem;">';
+  inner+='<div style="font-size:1.1rem;font-weight:900;margin-bottom:.3rem;color:var(--cyan);">&#128290; Zahlen</div>';
+  inner+='<div style="font-size:.75rem;color:var(--text3);margin-bottom:1rem;">'+done+' / '+data.length+' Karten gelernt</div>';
+  inner+='<button class="btn primary" style="width:100%;margin-bottom:.5rem;" id="numLearn">&#9654; Karten lernen</button>';
+  inner+='<button class="btn" style="width:100%;margin-bottom:.5rem;border-color:rgba(0,229,200,.35);color:var(--cyan);" id="numTrainer">&#128290; Zahlen-Trainer (1&ndash;'+_trainerMax()+')</button>';
+  inner+='<button class="btn" style="width:100%;margin-bottom:.8rem;border-color:rgba(251,191,36,.4);color:#fbbf24;" id="numDrill">&#128066; H&ouml;r-Verwechsler (12/20, 15/50 &hellip;)</button>';
+  inner+='<button class="btn" style="width:100%;background:var(--glass);border-color:var(--border);font-size:.82rem;" id="numCancel">Abbrechen</button>';
+  inner+='</div>';
+  ov.innerHTML=inner;
+  document.body.appendChild(ov);
+  ov.querySelector('#numLearn').onclick=function(){ov.remove();startSec('numbers');};
+  ov.querySelector('#numTrainer').onclick=function(){ov.remove();startNumberTrainer();};
+  ov.querySelector('#numDrill').onclick=function(){ov.remove();startNumberDrill();};
+  ov.querySelector('#numCancel').onclick=function(){ov.remove();};
 }
 
 function showVocabMenu(){
@@ -2134,7 +2337,7 @@ function showDash(){
     const doneN=d.progress[sec.id]||0,pctN=data.length?Math.min(100,Math.round((doneN/data.length)*100)):0;
     const bdg=Object.entries(srs).filter(([k,v])=>k.startsWith(sec.id+':')&&v.nr&&v.nr<=now).length;
     const row=document.createElement('div');row.className='pfad-row glass'+(lk?' locked':'');
-    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():sec.id==='vocabulary'?()=>showVocabMenu():()=>startSec(sec.id);
+    row.onclick=lk?()=>alert('Level erh\xf6hen um freizuschalten!'):sec.id==='custom'?()=>showCustomScreen():sec.id==='grammar'?()=>showGrammarMenu():sec.id==='alphabet'?()=>showAlphabetMenu():sec.id==='vocabulary'?()=>showVocabMenu():sec.id==='numbers'?()=>showNumbersMenu():()=>startSec(sec.id);
     const nF=doneN%data.length+1,nT=Math.min(doneN%data.length+cfg.bs,data.length);
     row.innerHTML='<div class="pfad-icon">'+sec.icon+'</div><div class="pfad-info"><h3>'+sec.title+(bdg>0&&!lk?' <span style="font-size:.63rem;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.08rem .32rem;border-radius:20px;">'+bdg+' WH</span>':'')+'</h3><p>'+sec.desc+'</p><div class="prog-bar"><div class="prog-fill" style="width:'+(lk?0:pctN)+'%"></div></div><div class="prog-lbl">'+(lk?'Gesperrt':doneN+' / '+data.length+' gelernt'+(doneN>0?' \xb7 N\xe4chste: '+nF+'\u2013'+nT:''))+'</div></div><div class="pfad-arr">'+(lk?'&#128274;':doneN>0?'&#8635;':'&#9654;')+'</div>';
     pfEl.appendChild(row);
@@ -2155,7 +2358,7 @@ const DIFF_RANGES={
   grammar_verben:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
   grammar_pronomen:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
   grammar_praepositionen:{anfaenger:[0,999],standard:[0,999],fort:[0,999],profi:[0,999]},
-  numbers:{anfaenger:[0,10],standard:[0,16],fort:[0,22],profi:[0,999]},
+  numbers:{anfaenger:[0,10],standard:[0,32],fort:[0,46],profi:[0,999]},
   colors:{anfaenger:[0,5],standard:[0,8],fort:[0,12],profi:[0,999]},
   weekdays:{anfaenger:[0,7],standard:[0,14],fort:[0,20],profi:[0,999]},
   speaking:{anfaenger:[0,5],standard:[0,12],fort:[0,20],profi:[0,999]},
@@ -2529,10 +2732,10 @@ function showTimeUp(mins){
 function prefetchAudio(){
   try{
     if(!navigator.onLine)return;
-    if(_lg('ru_audio_prefetched')==='v4')return;
+    if(_lg('ru_audio_prefetched')==='v5')return;
     fetch(AUDIO_BASE+'manifest.json').then(r=>r.json()).then(async files=>{
       for(let i=0;i<files.length;i++){try{await fetch(AUDIO_BASE+files[i]);}catch(e){return;}}
-      _ls('ru_audio_prefetched','v4');
+      _ls('ru_audio_prefetched','v5');
     }).catch(()=>{});
   }catch(e){}
 }
