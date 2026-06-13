@@ -37,7 +37,8 @@ Stand: 11.06.2026
   - [x] Vokabeln Bugfixes (12.06.2026): Themen-Wörter verdrängten die Grundlagen aus dem Anfänger-Pool (jetzt nach den 10 Kern-Basics eingefügt, richtige Reihenfolge); Themen-Karten ohne Antwortoptionen (werden jetzt generiert); Lernkarte zeigte Kategorie als „Aussprache" (jetzt echte Transliteration); Hilfe zeigt Aussprache wenn keine Eselsbrücke da
   - [x] Vokabeln: Themen-Menü gebaut (12.06.2026) — alle 7 Bereiche wählbar (Grundwortschatz 47 + Urlaub 25, Beruf 20, Familie 19, Kultur 16, Studium 12, Alltag 14 = 153 Karten), eigener Fortschritt pro Thema, Onboarding-Ziel als „⭐ Dein Ziel" markiert, alte 10-Wörter-Einmischung entfernt
   - [x] Vokabeln Groß-Ausbau (12.06.2026): 520 Top-Frequenz-Wörter in 6 Paketen (Pipeline: tools/top500.json + inject_top500.js); Wort-Paare-Spiel (3 Runden à 5 Paare); Beispielsätze antippbar mit Audio (alle ctx vertont); Richtungs-SRS (RU→DE/DE→RU getrennt); 4 fehlende Themen-Erfolge + 2 Top-100-Erfolge; Lern-Timer mit Tagesbilanz (Onboarding-Zeit läuft beim Lernen, Chip unten rechts, Bilanz-Popup bei Ablauf). Audio gesamt: 1.345 Clips / 19 MB
-  - [ ] Vokabeln später: Themen-Karten ctx/mn ergänzen; Betonungszeichen; SRS-fällige Karten in neue Runden mischen; Distraktoren nach Wortart filtern
+  - [x] Inhalt ausgebaut (13.06.2026): Lesen 3→16 Karten, Mini-Geschichten 3→15, Beispielsätze für alle Top-100-Wörter (vocab_top1). Audio gesamt 1.578 Clips / 23 MB. Pipeline-Skripte: add_reading_stories.js, add_top100_sentences.js
+  - [ ] Vokabeln später: Beispielsätze für Top-101…520 + Themen-Karten (ctx); mehr Dialoge (DLG 5→15) fürs Sprechen; Betonungszeichen; SRS-fällige Karten in neue Runden mischen
   - [ ] Grammatik (65 Karten in 5 Themen — Quiz-Form überdenken, Übersetze-die-Regel passt nicht)
   - [ ] Hören (78 — audio-first machen, Lernkarten zeigen das Wort als Text)
   - [ ] Sprechen (73 — braucht Internet für Spracherkennung! Offline-Hinweis nötig)
