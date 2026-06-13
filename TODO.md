@@ -21,6 +21,12 @@ Stand: 11.06.2026
 - [x] Level umgedeutet zum „Hilfe-Level" (steuert nur noch Hilfen/Versuche/Rundengröße/XP — keine Freischaltung mehr); Hören & Sprechen damit ab Tag 1 zugänglich
 - [x] Tages-Session gebaut (12.06.2026): 🚀-Hauptkarte auf dem Dashboard → Plan-Overlay (Wiederholungen → 1–3 Runden neue Karten je nach dailyMins → rotierende Spiel-Runde), geführte Kette mit Auto-Wiederöffnung nach jedem Schritt, Abschluss-Feier mit Tagesbilanz, danach Erfolgskarte + freies Lernen
 
+## Erledigt (13.06.2026) — Streak-Kalender
+- [x] Streak-Box auf dem Dashboard ist antippbar → Streak-Kalender (Monatsansicht mit 🔥 auf jedem Lerntag, blätterbar bis in die Vergangenheit, Zukunft gesperrt)
+- [x] Statistik: aktueller Streak / Rekord (längster je) / Lerntage gesamt
+- [x] Lerntage werden jetzt dauerhaft gespeichert (vorher nur 14 Tage zurück) — fürs Kalender-Archiv
+- [Hinweis] Streak-Zähler ist seit 11.06. unbegrenzt (kein 7-Tage-Deckel mehr); die 7 Kästchen neben der Flamme bleiben Wochen-Vorschau
+
 ## Aktuell in Arbeit
 - [ ] Alle Lernpfade gemeinsam durchgehen und verbessern
   - [x] Alphabet: didaktische Lern-Reihenfolge (Wie im Deutschen → Falsche Freunde → Neue Formen → Besonderheiten), Kleinbuchstaben auf Karten, Buchstaben-Auswahlmenü zum Wiederholen einzelner gelernter Buchstaben (ohne Fortschritts-Verfälschung)

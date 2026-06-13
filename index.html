@@ -346,7 +346,7 @@ body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:50%;height:50
 <div class="stat-box glass"><div class="v" id="dRep" style="cursor:pointer;" onclick="startSRSSession()" title="Jetzt wiederholen">0</div><div class="l">&#128260; Wiederholen</div></div>
 <div class="stat-box glass"><div class="v" id="dRetry">0</div><div class="l">&#128260; Fehler</div></div>
 </div>
-<div class="glass streak-box">
+<div class="glass streak-box" onclick="showStreakCalendar()" style="cursor:pointer;" title="Antippen für den Streak-Kalender">
 <div class="streak-fire">&#128293;</div>
 <div class="streak-info"><div class="sv"><span id="streakNum">0</span> Tage</div><div class="sl">T&#228;glich lernen f&#252;r Streak!</div></div>
 <div class="streak-cal" id="streakCal"></div>
@@ -1767,6 +1767,77 @@ function GT(){try{const t=new Date().toDateString(),s=JSON.parse(_lg('ru_today_'
 const ST=d=>{try{_ls('ru_today_'+cu,JSON.stringify(d));}catch(e){}};
 function getSD(){try{return JSON.parse(_lg('ru_str_'+cu)||'{"days":[],"last":""}');}catch(e){return{days:[],last:''};}}
 function saveSD(d){_ls('ru_str_'+cu,JSON.stringify(d));}
+
+// Längster je erreichter Streak (Rekord) — aus den gespeicherten Lerntagen berechnet
+function computeBestStreak(daysSet){
+  var dates=Object.keys(daysSet).map(function(s){return new Date(s);}).sort(function(a,b){return a-b;});
+  if(!dates.length)return 0;
+  var best=1,run=1;
+  for(var i=1;i<dates.length;i++){
+    var diff=Math.round((dates[i]-dates[i-1])/86400000);
+    if(diff===1)run++;else if(diff>1)run=1;
+    if(run>best)best=run;
+  }
+  return best;
+}
+
+var _streakCalMonth=null; // 0-basiert relativ: 0 = aktueller Monat, -1 = Vormonat …
+function showStreakCalendar(){
+  if(_streakCalMonth===null)_streakCalMonth=0;
+  var sd=getSD();
+  var daysSet={};(sd.days||[]).forEach(function(s){daysSet[new Date(s).toDateString()]=1;});
+  var totalDays=Object.keys(daysSet).length;
+  var best=Math.max(computeBestStreak(daysSet),sd.count||0);
+  var cur=sd.count||0;
+  var now=new Date();
+  var view=new Date(now.getFullYear(),now.getMonth()+_streakCalMonth,1);
+  var monthNames=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  var y=view.getFullYear(),mo=view.getMonth();
+  var firstDow=(new Date(y,mo,1).getDay()+6)%7; // Montag=0
+  var daysInMonth=new Date(y,mo+1,0).getDate();
+  var todayStr=now.toDateString();
+
+  var ov=document.querySelector('.streak-cal-ov');
+  if(!ov){ov=document.createElement('div');ov.className='levelup-overlay streak-cal-ov';document.body.appendChild(ov);}
+  var inner='<div class="levelup-box" style="max-width:360px;width:94%;">';
+  inner+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;"><span style="font-size:1.05rem;font-weight:900;color:var(--cyan);">&#128293; Dein Streak-Kalender</span><button id="scClose" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.1rem;font-family:inherit;padding:0 .2rem;">&#10005;</button></div>';
+  // Statistik-Zeile
+  inner+='<div style="display:flex;gap:.5rem;margin-bottom:1rem;">';
+  inner+='<div class="glass" style="flex:1;padding:.55rem .3rem;border-radius:var(--r-sm);"><div style="font-size:1.3rem;font-weight:900;color:#f97316;">'+cur+'</div><div style="font-size:.62rem;color:var(--text3);">Aktuell</div></div>';
+  inner+='<div class="glass" style="flex:1;padding:.55rem .3rem;border-radius:var(--r-sm);"><div style="font-size:1.3rem;font-weight:900;color:#fbbf24;">'+best+'</div><div style="font-size:.62rem;color:var(--text3);">Rekord</div></div>';
+  inner+='<div class="glass" style="flex:1;padding:.55rem .3rem;border-radius:var(--r-sm);"><div style="font-size:1.3rem;font-weight:900;color:var(--cyan);">'+totalDays+'</div><div style="font-size:.62rem;color:var(--text3);">Tage gesamt</div></div>';
+  inner+='</div>';
+  // Monats-Navigation
+  inner+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">';
+  inner+='<button id="scPrev" class="btn sm" style="padding:.3rem .7rem;">&#8592;</button>';
+  inner+='<span style="font-weight:700;font-size:.92rem;">'+monthNames[mo]+' '+y+'</span>';
+  inner+='<button id="scNext" class="btn sm" style="padding:.3rem .7rem;'+(_streakCalMonth>=0?'opacity:.3;pointer-events:none;':'')+'">&#8594;</button>';
+  inner+='</div>';
+  // Wochentags-Kopf
+  inner+='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:.25rem;margin-bottom:.25rem;">';
+  ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(function(w){inner+='<div style="text-align:center;font-size:.6rem;color:var(--text3);font-weight:700;">'+w+'</div>';});
+  inner+='</div>';
+  // Tageszellen
+  inner+='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:.25rem;">';
+  for(var b=0;b<firstDow;b++)inner+='<div></div>';
+  for(var dnum=1;dnum<=daysInMonth;dnum++){
+    var dstr=new Date(y,mo,dnum).toDateString();
+    var learned=daysSet[dstr];
+    var isToday=dstr===todayStr;
+    var bg=learned?'rgba(249,115,22,.18)':'var(--glass)';
+    var bd=isToday?'2px solid var(--cyan)':'1px solid var(--border)';
+    inner+='<div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:'+bg+';border:'+bd+';border-radius:6px;font-size:.62rem;color:var(--text3);">';
+    inner+='<span>'+dnum+'</span>'+(learned?'<span style="font-size:.7rem;line-height:1;">&#128293;</span>':'');
+    inner+='</div>';
+  }
+  inner+='</div>';
+  inner+='<button class="btn" style="width:100%;margin-top:1rem;background:var(--glass);border-color:var(--border);" id="scDone">Schlie&szlig;en</button>';
+  inner+='</div>';
+  ov.innerHTML=inner;
+  ov.querySelector('#scClose').onclick=ov.querySelector('#scDone').onclick=function(){_streakCalMonth=null;ov.remove();};
+  ov.querySelector('#scPrev').onclick=function(){_streakCalMonth--;showStreakCalendar();};
+  var nx=ov.querySelector('#scNext');if(nx)nx.onclick=function(){if(_streakCalMonth<0){_streakCalMonth++;showStreakCalendar();}};
+}
 function getErrs(){try{return JSON.parse(_lg('ru_errs_'+cu)||'[]');}catch(e){return[];}}
 function saveErrs(e){_ls('ru_errs_'+cu,JSON.stringify(e));}
 
@@ -2320,7 +2391,7 @@ function updateStreak(){
   // Echter Streak-Zähler ohne Deckel — sd.days bleibt nur der Kalender der letzten Tage
   sd.count=sd.last===yest?(sd.count||sd.days.length||0)+1:1;
   if(!sd.days.includes(today))sd.days.push(today);
-  sd.last=today;if(sd.days.length>14)sd.days=sd.days.slice(-14);
+  sd.last=today; // Lerntage dauerhaft behalten — fürs Streak-Kalender-Archiv
   saveSD(sd);
   const us=GU();
   if(us[cu]){
@@ -4479,7 +4550,7 @@ function finishQ(){
   us[cu].progress[cs]=(us[cu].progress[cs]||0)+cb.length;
   const ts=GT();ts.cards=(ts.cards||0)+cb.length;ts.words=(ts.words||0)+cb.length;ts.points=(ts.points||0)+sp;ts.date=new Date().toDateString();ST(ts);SU(us);
   // Streak ohne Login-Bonus-Popup
-  {const _sd=getSD(),_today=new Date().toDateString();if(_sd.last!==_today){const _y=new Date(Date.now()-86400000).toDateString();_sd.count=_sd.last===_y?(_sd.count||_sd.days.length||0)+1:1;if(!_sd.days.includes(_today))_sd.days.push(_today);_sd.last=_today;if(_sd.days.length>14)_sd.days=_sd.days.slice(-14);saveSD(_sd);const _u2=GU();if(_u2[cu]){_u2[cu].stats.streak=_sd.count;SU(_u2);}}}
+  {const _sd=getSD(),_today=new Date().toDateString();if(_sd.last!==_today){const _y=new Date(Date.now()-86400000).toDateString();_sd.count=_sd.last===_y?(_sd.count||_sd.days.length||0)+1:1;if(!_sd.days.includes(_today))_sd.days.push(_today);_sd.last=_today;saveSD(_sd);const _u2=GU();if(_u2[cu]){_u2[cu].stats.streak=_sd.count;SU(_u2);}}}
   document.getElementById('rEmoji').innerHTML=acc>=90?'&#127881;':acc>=70?'&#128522;':acc>=50?'&#128530;':'&#128549;';
   document.getElementById('rTitle').textContent=acc>=90?'Perfekt!':acc>=70?'Sehr gut!':acc>=50?'Gut gemacht!':'Weiter \xfcben!';
   document.getElementById('rPts').textContent='+'+sp;
