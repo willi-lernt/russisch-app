@@ -39,7 +39,7 @@ Stand: 11.06.2026
   - [x] Vokabeln Groß-Ausbau (12.06.2026): 520 Top-Frequenz-Wörter in 6 Paketen (Pipeline: tools/top500.json + inject_top500.js); Wort-Paare-Spiel (3 Runden à 5 Paare); Beispielsätze antippbar mit Audio (alle ctx vertont); Richtungs-SRS (RU→DE/DE→RU getrennt); 4 fehlende Themen-Erfolge + 2 Top-100-Erfolge; Lern-Timer mit Tagesbilanz (Onboarding-Zeit läuft beim Lernen, Chip unten rechts, Bilanz-Popup bei Ablauf). Audio gesamt: 1.345 Clips / 19 MB
   - [x] Inhalt ausgebaut (13.06.2026): Lesen 3→16 Karten, Mini-Geschichten 3→15, Beispielsätze für alle Top-100-Wörter (vocab_top1). Audio gesamt 1.578 Clips / 23 MB. Pipeline-Skripte: add_reading_stories.js, add_top100_sentences.js
   - [ ] Vokabeln später: Beispielsätze für Top-101…520 + Themen-Karten (ctx); mehr Dialoge (DLG 5→15) fürs Sprechen; Betonungszeichen; SRS-fällige Karten in neue Runden mischen
-  - [ ] Grammatik (65 Karten in 5 Themen — Quiz-Form überdenken, Übersetze-die-Regel passt nicht)
+  - [x] Grammatik überarbeitet (13.06.2026): (1) Grammatik-Trainer mit 36 Anwendungs-Aufgaben (Lückentext: richtige Fallendung/Verbform/Possessiv wählen, mit Erklärung bei Fehler) — behebt das „Übersetze-die-Regel"-Problem; in Tages-Session-Rotation. (2) Deklinations-Tabelle (стол/книга/окно mit hervorgehobenen Endungen) auf allen 6 Fall-Karten. (3) Jede der 65 Regeln hat jetzt 2 Beispielsätze (130 total), alle vertont. Audio gesamt 1.663 / 24,3 MB
   - [ ] Hören (78 — audio-first machen, Lernkarten zeigen das Wort als Text)
   - [ ] Sprechen (73 — braucht Internet für Spracherkennung! Offline-Hinweis nötig)
   - [ ] Sätze (25 — Modus wählbar machen statt Zufall)

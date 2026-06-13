@@ -25,7 +25,7 @@ vm.createContext(sandbox);
 // const/let im Script werden nicht global — Daten am Ende explizit exportieren
 const exportCode = ';if(typeof registerVocabThemes==="function"){try{registerVocabThemes();}catch(e){}}' +
   'var __nums=[];if(typeof ruNumber==="function"){for(var __i=1;__i<=100;__i++)__nums.push(ruNumber(__i));for(var __h=1;__h<=9;__h++)__nums.push(ruNumber(__h*100));__nums.push(ruNumber(1000));}' +
-  ';globalThis.__EXPORT={C:typeof C!=="undefined"?C:{},GAP_DATA:typeof GAP_DATA!=="undefined"?GAP_DATA:{},STORIES:typeof STORIES!=="undefined"?STORIES:[],DLG:typeof DLG!=="undefined"?DLG:[],THEME_VOCAB:typeof THEME_VOCAB!=="undefined"?THEME_VOCAB:{},READ_WORDS:typeof READ_WORDS!=="undefined"?READ_WORDS:[],NUMS:__nums};';
+  ';globalThis.__EXPORT={C:typeof C!=="undefined"?C:{},GAP_DATA:typeof GAP_DATA!=="undefined"?GAP_DATA:{},STORIES:typeof STORIES!=="undefined"?STORIES:[],DLG:typeof DLG!=="undefined"?DLG:[],THEME_VOCAB:typeof THEME_VOCAB!=="undefined"?THEME_VOCAB:{},READ_WORDS:typeof READ_WORDS!=="undefined"?READ_WORDS:[],NUMS:__nums,GDRILL:typeof GRAMMAR_DRILL!=="undefined"?GRAMMAR_DRILL:[]};';
 vm.runInContext(m[1] + exportCode, sandbox);
 const X = sandbox.__EXPORT || {};
 
@@ -42,6 +42,8 @@ for (const l in GAP) ['s1', 's2', 's3', 's4'].forEach(k => { if (GAP[l][k] && GA
 (X.DLG || []).forEach(d => { if (d.ai) texts.add(d.ai.trim()); });
 const TV = X.THEME_VOCAB || {};
 for (const t in TV) TV[t].forEach(it => { if (it.m) texts.add(it.m.trim()); });
+// Grammatik-Trainer: vollständige Sätze (Lücke mit richtiger Antwort gefüllt) werden vorgesprochen
+(X.GDRILL || []).forEach(it => { if (it.q && it.answer) texts.add(it.q.replace('___', it.answer).trim()); });
 (X.READ_WORDS || []).forEach(w => { if (w.w) texts.add(w.w.trim()); });
 // Zahlen 1–100, Hunderter und 1000 für den Zahlen-Trainer
 (X.NUMS || []).forEach(n => { if (n) texts.add(n.trim()); });
